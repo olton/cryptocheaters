@@ -1,0 +1,22 @@
+<header class="pos-fixed fixed-top z-fixed bg-hero">
+    <nav data-role="appbar" class="pos-relative container bg-hero" data-expand-point="lg">
+        <a href="/" class="brand no-hover text-bold">CryptoCheaters.com</a>
+        <ul class="app-bar-menu ml-auto">
+            <li><a href="/">Home</a></li>
+            <li><a href="/scams">Scams</a></li>
+            <?php
+                if ($_SESSION['current']) {
+                    ?>
+                    <li><a href="/add" class="fg-red text-bold">Report scam</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                    <?php
+                } else {
+                    ?>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/signup">Sign Up</a></li>
+                    <?php
+                }
+            ?>
+        </ul>
+    </nav>
+</header>

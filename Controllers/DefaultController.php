@@ -13,6 +13,14 @@ class DefaultController extends GeneralController {
         echo $view->Render("index", $params);
     }
 
+    public function Terms(){
+        $params = [
+            "page_title" => "CryptoCheaters.com - Terms and conditions"
+        ];
+        $view = new Viewer(TEMPLATE_PATH);
+        echo $view->Render("terms", $params);
+    }
+
     public function PageNotFound(){
         $params = array(
             "page_title" => "CryptoCheaters.com - Page not found"

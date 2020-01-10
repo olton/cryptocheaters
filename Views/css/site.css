@@ -132,4 +132,29 @@ textarea {
   font-size: 12px;
   padding: 8px;
 }
+#evidences {
+  display: flex;
+  flex-flow: row wrap;
+  background: url("../images/evidences.jpg") center center no-repeat;
+  min-height: 120px;
+}
+#evidences .evidence {
+  width: calc(25% - 8px);
+  margin: 4px;
+  position: relative;
+}
+#evidences .evidence .photo-container {
+  display: block;
+  height: 120px;
+  overflow: hidden;
+}
+#evidences .evidence .photo-container img {
+  max-width: 100%;
+  height: auto;
+}
+#evidences .evidence .button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
 /*# sourceMappingURL=site.css.map */

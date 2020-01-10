@@ -38,7 +38,7 @@ $config = array(
 if (!isset($_SESSION['lang'])) $_SESSION['lang'] = 'en';
 if (!isset($_SESSION['current'])) $_SESSION['current'] = 0;
 
-if (!isset($_SESSION['current']) && ($_SERVER['REQUEST_URI'] === "/add") ) {
+if ((!isset($_SESSION['current']) || !$_SESSION['current']) && ($_SERVER['REQUEST_URI'] === "/add") ) {
     Url::Redirect("/login");
     exit(0);
 }

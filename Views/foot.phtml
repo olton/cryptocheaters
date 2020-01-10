@@ -1,9 +1,11 @@
 <script src="<?php echo TEMPLATE_PATH?>metro/js/metro<?php echo PRODUCTION_MODE ? "" : ".min"?>.js"></script>
+<script src="<?php echo TEMPLATE_PATH?>js/site.js"></script>
 
 <?php
     if (isset($scripts)) foreach ($scripts as $script) {
-        echo "<script src=".TEMPLATE_PATH."'$script'></script>";
+        echo "<script src='".TEMPLATE_PATH."js/".$script."'></script>";
     }
 ?>
 
+</body>
 </html>

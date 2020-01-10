@@ -1,7 +1,5 @@
 <?php include "head.phtml" ?>
 
-<body class="m4-cloak">
-
 <?php include "header.phtml" ?>
 
 <div class="hero hero-bg">
@@ -17,12 +15,12 @@
                     <br><br><span class="text-bold">ARE YOU A VICTIM?  REPORT IT!</span>
                 </span></div>
                     <div class="mt-10 d-none d-block-md">
-                        <button class="button secondary large">View scams</button>
-                        <button class="button alert large">Report new scam</button>
+                        <a href="#" class="button secondary large">View scams</a>
+                        <a href="<?php echo $_SESSION['current'] ? "/add" : "/login" ?>" class="button alert large">Report new scam</a>
                     </div>
                     <div class="mt-10 d-none-md">
-                        <button class="button secondary">View scams</button>
-                        <button class="button alert">Report new scam</button>
+                        <a href="#" class="button secondary">View scams</a>
+                        <a href="<?php echo $_SESSION['current'] ? "/add" : "/login" ?>" class="button alert">Report new scam</a>
                     </div>
                 </div>
             </div>
@@ -67,7 +65,7 @@
                     <div>
                         We are constantly monitoring the crypto currency market in search of fraudsters and how do they
                         work.
-                        If you are a Victim of any Crypto Scam - Please report the incident to <a href="index.html">CryptoCheaters.com</a>
+                        If you are a Victim of any Crypto Scam - Please report the incident to <a href="/">CryptoCheaters.com</a>
                     </div>
                 </div>
             </div>
@@ -100,7 +98,7 @@
             <p class="reduce-1 enlarge-1-md pl-5-fs pr-5-fs pl-20-md pr-20-md">
                 The <span class="text-bold">Crypto<span class="fg-red">Cheaters</span></span> database contains the most up-to-date information about Crypto ICOs, Crypto Blogers,
                 Crypto Exchanges and how some of them scam people.
-                If you've witnessed or been the victim of crypto scam, please report it <a href="add.html">here!</a>
+                If you've witnessed or been the victim of crypto scam, please report it <a href="/add">here!</a>
             </p>
         </div>
 
@@ -263,3 +261,4 @@
 </footer>
 
 <?php include "foot.phtml" ?>
+

@@ -19,4 +19,11 @@ class GeneralController extends Controller {
             exit(0);
         }
     }
+
+    public function CheckSessionAdmin(){
+        if (!$_SESSION['current'] || intval($_SESSION['user']['admin']) !== 1) {
+            $this->ReturnJSON(false, "Admin role required!", []);
+            exit(0);
+        }
+    }
 }

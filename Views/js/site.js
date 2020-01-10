@@ -89,5 +89,12 @@ $(function(){
         });
 
         Metro.getPlugin(this, "file").clear();
-    })
+    });
+
+    if (window.markdownit) {
+        const md_target = $(".markdown-source");
+        const md = window.markdownit();
+
+        md_target.html(md.render(md_target.html()));
+    }
 });

@@ -2,50 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="989ad5b0-2c15-499e-a052-68c37e147710" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Controllers/ReportController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/ReportModel.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Views/add.phtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Views/copyright.phtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Views/terms.phtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/report.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classes/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/Classes/Controller.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Config/routes.php" beforeDir="false" afterPath="$PROJECT_DIR$/Config/routes.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/AuthController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/DefaultController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/DefaultController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/GeneralController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/GeneralController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/UserModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/Models/UserModel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/css/site.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/css/site.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.css.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/css/site.less" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/ReportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ReportController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/ReportModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ReportModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/add.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/add.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/foot.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/foot.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/footer.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/footer.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/head.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/head.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/index.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/index.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/js/site.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/js/site.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/login.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/login.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-rtl.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-rtl.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-third.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-third.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/signup.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/signup.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,7 +133,7 @@
       <workItem from="1577984157132" duration="16791000" />
       <workItem from="1578392613414" duration="13971000" />
       <workItem from="1578590465019" duration="3848000" />
-      <workItem from="1578596462959" duration="6215000" />
+      <workItem from="1578596462959" duration="11922000" />
     </task>
     <servers />
   </component>
@@ -209,9 +177,9 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="781" y="343" key="SettingsEditor/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578511929944" />
-    <state x="989" y="342" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1578601324060">
+    <state x="989" y="342" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1578652665468">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="989" y="342" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578601324060" />
+    <state x="989" y="342" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578652665468" />
   </component>
 </project>

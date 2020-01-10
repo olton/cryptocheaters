@@ -9,6 +9,8 @@ return array(
     array('GET', "/terms", array("controller" => "DefaultController", "action" => "Terms")),
 
     // Report ---------------------------------------------------------------------------------------------------------
+    array('GET', "/scams", array("controller" => "ReportController", "action" => "Index")),
+    array('GET', "/report/:id", array("controller" => "ReportController", "action" => "Report"), ["id"=>'[\d]+']),
     array('GET', "/add", array("controller" => "ReportController", "action" => "Add")),
     array('POST', "/add/process", array("controller" => "ReportController", "action" => "AddProcess")),
 

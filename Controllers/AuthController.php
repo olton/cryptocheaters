@@ -8,6 +8,12 @@ use Classes\Viewer;
 use Models\UserModel;
 
 class AuthController extends GeneralController {
+    private $user_model;
+
+    public function __construct(){
+        $this->user_model = new UserModel();
+    }
+
     public function Login(){
         $params = [
             "page_title" => "Login to CryptoCheaters.com",
@@ -35,26 +41,24 @@ class AuthController extends GeneralController {
     public function SignupProcess(){
         global $POST, $config;
 
-        $user_model = new UserModel();
-
         $n = $POST["nickname"];
         $u = $POST["email"];
         $p = $POST["password"] ."===". $config['salt'];
 
-        if ($user_model->Check($n, "nickname")) {
+        if ($this->user_model->Check($n, "nickname")) {
             $this->ReturnJSON(false, "Nickname already registered!", []);
         }
 
-        if ($user_model->Check($u, "email")) {
+        if ($this->user_model->Check($u, "email")) {
             $this->ReturnJSON(false, "Email already registered!", []);
         }
 
-        $user_id = $user_model->Create($n, $u, $p);
+        $user_id = $this->user_model->Create($n, $u, $p);
         if ($user_id === false) {
             $this->ReturnJSON(false, "User can't be registered with this credentials!", []);
         }
 
-        $user = $user_model->User($user_id);
+        $user = $this->user_model->User($user_id);
         $_SESSION['current'] = $user_id;
         $_SESSION['user'] = $user;
         $this->ReturnJSON(true, "OK", $user);
@@ -63,17 +67,15 @@ class AuthController extends GeneralController {
     public function LoginProcess(){
         global $POST, $config;
 
-        $user_model = new UserModel();
-
         $u = $POST["email"];
         $p = $POST["password"] ."===". $config['salt'];
 
-        $user_id = $user_model->Login($u, $p);
+        $user_id = $this->user_model->Login($u, $p);
         if ($user_id === false) {
             $this->ReturnJSON(false, "User not registered with this credentials!", []);
         }
 
-        $user = $user_model->User($user_id);
+        $user = $this->user_model->User($user_id);
         $_SESSION['current'] = $user_id;
         $_SESSION['user'] = $user;
         $this->ReturnJSON(true, "OK", $user);

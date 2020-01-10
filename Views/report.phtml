@@ -1,0 +1,77 @@
+<?php include "head.phtml"?>
+
+<?php include "header.phtml"?>
+
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="cell-md-10 order-2 order-md-1">
+                <h1>Scam Report</h1>
+                <div class="text-leader2">
+                    This report describes the fraudster and his actions, how the fraudster acts.
+                </div>
+            </div>
+            <div class="cell-md-2 order-1 order-md-2 d-flex flex-align-center">
+                <img src="/<?php echo TEMPLATE_PATH?>images/logo-no-text.png">
+            </div>
+        </div>
+        <hr class="mb-5 mt-5">
+
+        <?php if (isset($report)) {?>
+
+        <div class="row">
+            <div class="cell-md-8">
+                <div class="report-label">Scammer name</div>
+                <div class="report-name"><?php echo $report['report_name']?></div>
+
+                <input data-role="tag-input" data-static="true" value="<?php echo $report['report_tags']?>" class="input-small">
+            </div>
+            <div class="cell-md-4">
+                <div class="report-label">Report created</div>
+                <div class="report-name"><?php echo $report['report_created']?></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="cell-md-8">
+                <div class="report-label">Scammer link</div>
+                <div class="report-desc"><?php echo $report['report_link']?></div>
+            </div>
+            <div class="cell-md-4">
+                <div class="report-label">Scammer type</div>
+                <div class="report-desc"><?php echo $report['report_type_name']?></div>
+            </div>
+        </div>
+
+
+        <div class="report-label">Scam description</div>
+        <div class="report-desc markdown-source"><?php echo $report['report_desc'] ?></div>
+
+        <?php if (isset($evidences) && count($evidences) > 0) {?>
+        <div class="report-label">Photo evidence</div>
+        <div id="evidences">
+            <?php foreach ($evidences as $index => $evidence) {?>
+                <div class="evidence">
+                <div class="photo-container c-pointer">
+                    <img src="<?php echo $evidence['evidence_image']?>">
+                </div>
+                <div class="p-2 bg-light">
+                    <?php echo $evidence['evidence_desc']?>
+                </div>
+                </div>
+            <?php }?>
+        </div>
+        <?php }?>
+
+        <br>
+
+        <?php }?>
+
+    </div>
+</div>
+
+<footer>
+    <?php include "footer.phtml" ?>
+</footer>
+
+<?php include "foot.phtml"?>

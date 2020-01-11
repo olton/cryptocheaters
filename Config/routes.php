@@ -13,6 +13,7 @@ return array(
     array('GET', "/report/:id", array("controller" => "ReportController", "action" => "Report"), ["id"=>'[\d]+']),
     array('GET', "/add", array("controller" => "ReportController", "action" => "Add")),
     array('POST', "/add/process", array("controller" => "ReportController", "action" => "AddProcess")),
+    array('POST', "/delete/process", array("controller" => "ReportController", "action" => "DeleteProcess")),
 
     // Auth -----------------------------------------------------------------------------------------------------------
     array('GET', "/login", array("controller" => "AuthController", "action" => "Login")),

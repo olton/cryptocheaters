@@ -1,18 +1,3 @@
-function post(to, form, ret) {
-    $.post(to, form).then(function(data){
-        const result = JSON.parse(json(data));
-        if (result.result === false) {
-            Metro.infobox.create("<div class='h4 text-normal'>"+result.message+"</div>", "alert", {}, true);
-        } else {
-            if (ret !== "stop") {
-                window.location.href = ret || "/";
-            }
-        }
-    }, function(xhr){
-        Metro.infobox.create("Server operation error!", "alert", {}, true);
-    })
-}
-
 function json(data){
     const index = data.indexOf("{\"json\":\"ok\"");
     if (index === -1) {
@@ -21,8 +6,25 @@ function json(data){
     return (""+data).substr(index);
 }
 
+function post(to, form, cb) {
+    $.post(to, form).then(function(data){
+        const result = JSON.parse(json(data));
+        if (result.result === false) {
+            Metro.infobox.create("<div class='h4 text-normal'>"+result.message+"</div>", "alert", {}, true);
+        } else {
+            if (typeof  cb === "function") {
+                cb(result);
+            } else {
+                window.location.href = cb || "/";
+            }
+        }
+    }, function(xhr){
+        Metro.infobox.create("Server operation error!", "alert", {}, true);
+    })
+}
+
 function login(form){
-    post("/login/process", form, "/");
+    post("/login/process", form);
 }
 
 function signup(form){
@@ -30,30 +32,102 @@ function signup(form){
 }
 
 function addReport(form){
-    $.post("/add/process", form).then(function(data){
-        const result = JSON.parse(json(data));
-        if (result.result === false) {
-            Metro.infobox.create("<div class='h4 text-normal'>"+result.message+"</div>", "alert", {}, true);
-            return ;
-        }
-
-        const report_id = result.data['report_id'];
-
-        console.log(form.elements);
-
-        //window.location.href = "/scams";
-    })
+    post("/add/process", form, function(result){
+        Metro.dialog.create({
+            removeOnClose: true,
+            title: "Report added!",
+            content: "The report is successfully added to database. What next?",
+            clsDialog: "secondary",
+            actions: [
+                {
+                    caption: "Goto scam list",
+                    cls: "js-dialog-close primary",
+                    onclick: function(){
+                        window.location.href = "/scams";
+                    }
+                },
+                {
+                    caption: "Open report",
+                    cls: "js-dialog-close",
+                    onclick: function(){
+                        window.location.href = "/report/" + result.data['report_id'];
+                    }
+                },
+                {
+                    caption: "Add new report",
+                    cls: "js-dialog-close",
+                    onclick: function(){
+                        window.location.href = "/add";
+                    }
+                }
+            ]
+        });
+    });
 }
 
 function updateReport(form){
-    post("/update/process", form);
+    post("/update/process", form, function(result){
+        window.location.href = "/report/" + result.data['report_id'];
+    });
 }
 
-function delReport(form){
-    post("/delete/process", form);
+function delReport(id, ret){
+    Metro.dialog.create({
+        title: "Delete report",
+        content: "Do you want to really delete this report?",
+        removeOnClose: true,
+        clsDialog: "alert",
+        actions: [
+            {
+                caption: "Yes, delete",
+                cls: "js-dialog-close alert",
+                onclick: function(){
+                    post("/delete/process", {id: id}, ret || "/");
+                }
+            },
+            {
+                caption: "No, keep it",
+                cls: "js-dialog-close link"
+            }
+        ]
+    });
+}
+
+function pageLinkClick(l){
+    const link = $(l);
+    const item = link.parent();
+    const pagination = link.closest("#pagination");
+    const pagesCount = Math.ceil(parseInt(pagination.data("length")) / parseInt(pagination.data("rows")));
+    let currentPage = parseInt(pagination.data("page"));
+
+    if (item.hasClass("active")) {
+        return ;
+    }
+
+    if (item.hasClass("service")) {
+        if (link.data("page") === "prev") {
+            currentPage--;
+            if (currentPage === 0) {
+                currentPage = 1;
+            }
+        } else {
+            currentPage++;
+            if (currentPage > pagesCount) {
+                currentPage = pagesCount;
+            }
+        }
+    } else {
+        currentPage = link.data("page");
+    }
+
+    window.location.href = "/scams?page="+currentPage
 }
 
 $(function(){
+    $.document().on("click", ".pagination .page-link", function(){
+        pageLinkClick(this)
+    });
+
     $.document().on("click", "#go-to-top", function(){
         $("html, body").animate({
             scrollTop: 0
@@ -93,8 +167,35 @@ $(function(){
 
     if (window.markdownit) {
         const md_target = $(".markdown-source");
-        const md = window.markdownit();
+        const md = window.markdownit({
+            linkify: true
+        });
 
         md_target.html(md.render(md_target.html()));
+    }
+
+    $.document().on("click", ".report-evidences .evidence .photo-container", function(e){
+        const img = $(this).children("img");
+        const desc = $(this).siblings(".evidence-desc");
+        const title = "Evidence #" + img.data("evidence") + " for report # " + img.data("report") + (desc.length && desc.text().trim() !== '' ? "<hr><div class='evidence-image-desc'>"+desc.html()+"</div>" : "");
+        const content = "<div class='evidence-image-wrapper'><img src='"+img.attr("src")+"'/></div>";
+
+        Metro.dialog.create({
+            title: title,
+            content: content,
+            closeButton: true,
+            clsDialog: "light dialog-view-evidence",
+            removeOnClose: true
+        })
+    });
+
+    const pagination = $("#pagination");
+    if (pagination.length > 0) {
+        Metro.pagination({
+            target: "#pagination",
+            length: parseInt(pagination.data("length")),
+            rows: parseInt(pagination.data("rows")),
+            current: parseInt(pagination.data("page"))
+        })
     }
 });

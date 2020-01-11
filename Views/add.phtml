@@ -23,7 +23,7 @@
                 <div class="row mt-4">
                     <div class="cell-md-8 pr-0 pr-8-md">
 
-                        <label class="text-leader">Scammer name:</label>
+                        <label class="text-leader">Scammer's name:</label>
                         <input type="text" data-role="input" name="name" placeholder="Enter scammer name" data-validate="minlength=1">
                         <span class="invalid_feedback">Please enter a scammer name</span>
                         <div class="text-small">
@@ -31,14 +31,8 @@
                         </div>
 
                         <div class="mt-4">
-                            <label class="text-leader">Scam short desc: <span class="text-small float-right mt-3 bg-cyan fg-white p-1">max 255 symbols</span></label>
-                            <textarea style="min-height: 100px" name="short"></textarea>
-                            <div class="text-small">Short description of scam.</div>
-                        </div>
-
-                        <div class="mt-4">
-                            <label class="text-leader">Scam description: <span class="text-small float-right mt-3 bg-cyan fg-white p-1">use markdown</span></label>
-                            <textarea style="min-height: 300px" name="desc"></textarea>
+                            <label class="text-leader">Scam description: <a href="https://markdown-it.github.io/" target="_blank"><span class="text-small float-right mt-3 bg-cyan fg-white p-1">use markdown</span></a></label>
+                            <textarea style="min-height: 400px" name="desc"></textarea>
                             <div class="text-small">Describe in detail how you became a victim of a fraudster.</div>
                         </div>
 
@@ -67,17 +61,13 @@
 
                         <br>
                         <label class="text-leader">
-                            Photo evidence:
+                            Scammer's Photo:
                         </label>
                         <div class="text-small mb-2">
                             You can add more than one image Subscribing ICO or scammers working as a team.
                         </div>
 
                         <input type="file" data-role="file" data-button-title="Select file(s) or drop file(s) here" data-mode="button" data-cls-component="drop-zone" multiple>
-
-                        <div class="text-small mb-2 p-2 bg-light">
-                            After adding photo, you can add short description to added evidence.
-                        </div>
                     </div>
                 </div>
 
@@ -87,7 +77,7 @@
                     <span class="button square alert z-1"><span class="mif-bin"></span></span>
                     <div class="photo-container"><img/></div>
                     <input type="hidden"/>
-                    <textarea placeholder="Enter evidence short description..."></textarea>
+                    <textarea placeholder="Enter photo short description..."></textarea>
                 </div>
 
                 <div id="evidences">
@@ -106,8 +96,6 @@
     </div>
 </div>
 
-<footer>
-    <?php include "footer.phtml" ?>
-</footer>
+<?php include "footer.phtml" ?>
 
 <?php include "foot.phtml" ?>

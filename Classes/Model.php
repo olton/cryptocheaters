@@ -211,12 +211,9 @@ class Model extends Super {
      * @param null $page
      * @return string
      */
-    public function Limit($page = null){
-        $start = (!$page ? 0 : $page) * $this->page_size - $this->page_size;
-        $start = ($start < 0) ? 0 : $start;
-        $limit = $start >= 0 ? "limit $start, {$this->page_size}" : "limit {$this->page_size}";
-        //var_dump($limit);
-        return $limit;
+    public function Limit($page = 1){
+        $offset = $page > 1 ? $this->page_size * $page - 1 : 0;
+        return $offset > 0 ? "limit {$this->page_size} offset $offset" : "limit {$this->page_size}";
     }
 
     /**

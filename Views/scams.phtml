@@ -1,0 +1,72 @@
+<?php include "head.phtml" ?>
+
+<?php include "header.phtml"?>
+
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="cell-md-10 order-2 order-md-1">
+                <h1>Scams</h1>
+                <div class="text-leader2">
+                    Below are the list of scammers in the CryptoCheaters database. Scammers list ordered by voting.
+                </div>
+            </div>
+            <div class="cell-md-2 order-1 order-md-2 d-flex flex-align-center">
+                <img src="<?php echo TEMPLATE_PATH?>images/logo-no-text.png">
+            </div>
+        </div>
+        <hr class="mt-5">
+    </div>
+</div>
+
+<?php if (isset($reports) && count($reports) > 0) {?>
+
+    <div class="container-fluid">
+        <div class="container pb-10">
+
+            <div class="row">
+                <?php foreach ($reports as $index => $report) {?>
+                <div class="cell-lg-4">
+                    <div class="scam-card">
+                        <div class="text-small text-bold">Scammer</div>
+                        <div class="h5 fg-hero2 mb-3 mt-0"><?php echo $report['report_name']?></div>
+                        <div class="text-small">Report #: <span class="text-bold"><?php echo $report['report_id']?></span></div>
+                        <div class="text-small">Scam type: <span class="text-bold"><?php echo $report['report_type_name']?></span></div>
+                        <div class="text-small">Voted: <span class="text-bold"><?php echo $report['report_likes']?></span></div>
+                        <div class="text-small">Reported by: <span class="text-bold"><?php echo $report['nickname']?></span></div>
+                        <div class="text-small">Report at: <span class="text-bold"><?php echo $report['report_created']?></span></div>
+                        <div>
+                            <hr class="bg-lightGray thin mt-2">
+                            <div class="d-flex">
+                                <a href="/report/<?php echo $report['report_id']?>">See details <span class="mif-arrow-right"></span></a>
+                                <?php if (isset($_SESSION['current']) && intval($_SESSION['user']['admin']) === 1) {?>
+                                <button class="button square alert small ml-auto" onclick="delReport(<?php echo $report['report_id']?>, '/scams')"><span class="mif-bin"></span></button>
+                                <?php }?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                if ($index + 1 % 3 === 0) { ?>
+            </div>
+            <div class="row">
+                <?php }}?>
+            </div>
+
+            <div class="mt-10">
+                <hr class="bg-gray thin mb-10">
+                <div id="pagination"
+                     data-length="<?php echo isset($length) ? $length : 0?>"
+                     data-rows="<?php echo isset($rows) ? $rows : 0?>"
+                     data-page="<?php echo isset($page) ? $page : 0?>"
+                ></div>
+            </div>
+
+        </div>
+    </div>
+
+<?php }?>
+
+<?php include "footer.phtml" ?>
+
+<?php include "foot.phtml" ?>

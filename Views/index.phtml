@@ -102,7 +102,7 @@
             </p>
         </div>
 
-        <div class="d-none1">
+        <div class="d-none">
             <hr class="thin bg-gray mt-10 mb-4" style="width: 300px">
             <div class="text-center text-normal" style="background: url('images/logo-no-text-transparency.png') center center no-repeat; background-size: contain;">
                 <h2>DONATION</h2>
@@ -132,9 +132,53 @@
     </div>
 </div>
 
-<?php if (isset($reports) && count($reports) > 0) {?>
+<?php if (isset($newest) && is_array($newest) && count($newest) > 0) {?>
 
 <div class="container-fluid bg-light">
+    <div class="container pt-10 pb-10">
+        <div class="display1 fg-hero2 mb-0">Newest on <span class="fg-dark">Crypto</span><span class="fg-red">Cheaters</span></div>
+        <div class="text-leader2">
+            Below are the latest added scammers to the CryptoCheaters database
+        </div>
+
+        <hr class="bg-gray thin mt-2">
+
+        <div class="row">
+
+        <?php foreach ($newest as $index => $report) {?>
+            <div class="cell-lg-4">
+                <div class="scam-card bg-white">
+                    <div class="text-small text-bold">Scammer</div>
+                    <div class="h5 fg-hero2 mb-3 mt-0"><?php echo $report['report_name']?></div>
+                    <div class="text-small">Report #: <span class="text-bold"><?php echo $report['report_id']?></span></div>
+                    <div class="text-small">Scam type: <span class="text-bold"><?php echo $report['report_type_name']?></span></div>
+                    <div class="text-small">Voted: <span class="text-bold"><?php echo $report['report_likes']?></span></div>
+                    <div class="text-small">Reported by: <span class="text-bold"><?php echo $report['nickname']?></span></div>
+                    <div class="text-small">Report at: <span class="text-bold"><?php echo $report['report_created']?></span></div>
+                    <div>
+                        <hr class="bg-lightGray thin mt-2">
+                        <div class="d-flex">
+                            <a href="/report/<?php echo $report['report_id']?>">See details <span class="mif-arrow-right"></span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php
+        if ($index + 1 % 3 === 0) { ?>
+        </div>
+        <div class="row">
+        <?php }}?>
+
+        </div>
+
+    </div>
+</div>
+
+<?php }?>
+
+<?php if (isset($reports) && is_array($reports) && count($reports) > 0) {?>
+
+<div class="container-fluid">
     <div class="container pt-10 pb-10">
         <div class="display1 fg-hero2 mb-0">Top on <span class="fg-dark">Crypto</span><span class="fg-red">Cheaters</span></div>
         <div class="text-leader2">
@@ -147,20 +191,24 @@
 
         <?php foreach ($reports as $index => $report) {?>
             <div class="cell-lg-4">
-                <div class="feature">
-                    <div class="h5 fg-hero2 mb-1"><?php echo $report['report_name']?></div>
-                    <div class="mb-2">Scam type: <span class="text-bold"><?php echo $report['report_type_name']?></span></div>
-                    <div>
-                        <?php echo $report['report_short']?>...
-                    </div>
+                <div class="scam-card">
+                    <div class="text-small text-bold">Scammer</div>
+                    <div class="h5 fg-hero2 mb-3 mt-0"><?php echo $report['report_name']?></div>
+                    <div class="text-small">Report #: <span class="text-bold"><?php echo $report['report_id']?></span></div>
+                    <div class="text-small">Scam type: <span class="text-bold"><?php echo $report['report_type_name']?></span></div>
+                    <div class="text-small">Voted: <span class="text-bold"><?php echo $report['report_likes']?></span></div>
+                    <div class="text-small">Reported by: <span class="text-bold"><?php echo $report['nickname']?></span></div>
+                    <div class="text-small">Report at: <span class="text-bold"><?php echo $report['report_created']?></span></div>
                     <div>
                         <hr class="bg-lightGray thin mt-2">
-                        <a href="/report/<?php echo $report['report_id']?>">See more...</a>
+                        <div class="d-flex">
+                            <a href="/report/<?php echo $report['report_id']?>">See details <span class="mif-arrow-right"></span></a>
+                        </div>
                     </div>
                 </div>
             </div>
         <?php
-        if ($index % 3 === 0) { ?>
+        if ($index + 1 % 3 === 0) { ?>
         </div>
         <div class="row">
         <?php }}?>
@@ -169,7 +217,7 @@
 
         <div class="mt-10">
             <hr class="bg-gray thin mb-10">
-            <a href="#" class="text-leader no-decor fg-hero2 fg-dark-hover">
+            <a href="/scams" class="text-leader no-decor fg-hero2 fg-dark-hover">
                 See all reports <span class="mif-arrow-right"></span>
             </a>
         </div>
@@ -195,9 +243,7 @@
     </div>
 </div>
 
-<footer>
-    <?php include "footer.phtml" ?>
-</footer>
+<?php include "footer.phtml" ?>
 
 <?php include "foot.phtml" ?>
 

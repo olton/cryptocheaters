@@ -193,7 +193,20 @@ textarea {
 .scam-card {
   background: #f8f8f8 url("../images/logo-no-text-transparency.png") no-repeat;
   background-size: 64px;
-  background-position: top 10px right 0px;
+  background-position: top 10px right 0;
   padding: 8px 16px;
+}
+#evidences .present-photo {
+  width: calc(25% - 8px);
+}
+@media screen and (min-width: 768px) {
+  #evidences .present-photo {
+    width: calc(15% - 8px) !important;
+  }
+}
+@media screen and (min-width: 1024px) {
+  #evidences .present-photo {
+    width: calc(10% - 8px) !important;
+  }
 }
 /*# sourceMappingURL=site.css.map */

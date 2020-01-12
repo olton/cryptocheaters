@@ -18,6 +18,8 @@ class ReportController extends GeneralController {
 
         $page = isset($GET['page']) ? intval($GET['page']) : 1;
 
+        $this->report_model->page_size = 12;
+
         $filter = "1=1";
         if (isset($GET['q'])) {
             $q = $this->report_model->_e('%'.$GET['q'].'%');

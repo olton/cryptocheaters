@@ -147,6 +147,20 @@ class ReportModel extends Model {
         return $result;
     }
 
+    public function RandEvidences($count){
+        $count = $this->_e($count);
+        $sql = "select * from evidences order by rand() limit $count";
+        $h = $this->Select($sql);
+        if ($this->Rows($h) === 0) {
+            return false;
+        }
+        $result = [];
+        while($r = $this->FetchArray($h)) {
+            $result[$r['evidence_id']] = $r;
+        }
+        return $result;
+    }
+
     public function DeleteReport($id){
         $id = $this->_e($id);
         $this->DeleteEvidences($id);

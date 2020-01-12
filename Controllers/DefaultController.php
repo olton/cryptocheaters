@@ -18,7 +18,8 @@ class DefaultController extends GeneralController {
         $params = [
             "page_title" => "Report Crypto Scam",
             "reports" => $this->report_model->Index("1=1", 1),
-            "newest" => $this->report_model->Newest()
+            "newest" => $this->report_model->Newest(),
+            "evidences" => $this->report_model->RandEvidences(10)
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("index", $params);

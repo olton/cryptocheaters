@@ -220,6 +220,34 @@
 
 <?php }?>
 
+<?php if (isset($evidences) && is_array($evidences) && count($evidences) > 0) {?>
+
+<div class="container-fluid bg-light">
+    <div class="container pt-10 pb-10">
+        <div class="display1 fg-hero2 mb-0"><span class="fg-dark">Crypto</span><span class="fg-red">Cheaters</span> Gallery</div>
+        <div class="text-leader2">
+            Random scammers in the CryptoCheaters database
+        </div>
+
+        <hr class="bg-gray thin mt-2">
+
+        <div id="evidences" class="row" style="background-image: none">
+            <?php foreach ($evidences as $index => $evidence) {?>
+                <div class="evidence present-photo">
+                    <div class="photo-container c-pointer">
+                        <a href="/report/<?php echo $evidence['evidence_report']?>">
+                            <img src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
+                        </a>
+                    </div>
+                </div>
+            <?php }?>
+        </div>
+
+    </div>
+</div>
+
+<?php }?>
+
 <div class="container-fluid promotion">
     <div class="container">
         <div class="bg-transparent" data-role="carousel" data-auto-start="true" data-width="100%" data-height="50"

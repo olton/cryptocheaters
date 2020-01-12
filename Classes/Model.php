@@ -212,8 +212,8 @@ class Model extends Super {
      * @return string
      */
     public function Limit($page = 1){
-        $offset = $page > 1 ? $this->page_size * $page - 1 : 0;
-        return $offset > 0 ? "limit {$this->page_size} offset $offset" : "limit {$this->page_size}";
+        $offset = $page > 1 ? $this->page_size * ($page - 1) : 0;
+        return $offset === 0 ? "limit {$this->page_size}" : "limit {$this->page_size} offset $offset";
     }
 
     /**

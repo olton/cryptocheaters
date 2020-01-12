@@ -1,3 +1,7 @@
+function back(){
+    window.history.back();
+}
+
 function json(data){
     const index = data.indexOf("{\"json\":\"ok\"");
     if (index === -1) {
@@ -67,7 +71,35 @@ function addReport(form){
 
 function updateReport(form){
     post("/update/process", form, function(result){
-        window.location.href = "/report/" + result.data['report_id'];
+        Metro.dialog.create({
+            removeOnClose: true,
+            title: "Report updated!",
+            content: "The report is successfully updated to database. What next?",
+            clsDialog: "secondary",
+            actions: [
+                {
+                    caption: "Goto scam list",
+                    cls: "js-dialog-close primary",
+                    onclick: function(){
+                        window.location.href = "/scams";
+                    }
+                },
+                {
+                    caption: "Open report",
+                    cls: "js-dialog-close",
+                    onclick: function(){
+                        window.location.href = "/report/" + result.data['report_id'];
+                    }
+                },
+                {
+                    caption: "Add new report",
+                    cls: "js-dialog-close",
+                    onclick: function(){
+                        window.location.href = "/add";
+                    }
+                }
+            ]
+        });
     });
 }
 
@@ -90,6 +122,16 @@ function delReport(id, ret){
                 cls: "js-dialog-close link"
             }
         ]
+    });
+}
+
+function printReport(id){
+
+}
+
+function voteReport(id){
+    post("/vote", {id: id}, function(result){
+        $("#votes").text(result.data['votes']);
     });
 }
 
@@ -120,7 +162,38 @@ function pageLinkClick(l){
         currentPage = link.data("page");
     }
 
-    window.location.href = "/scams?page="+currentPage
+    const q = Metro.utils.getURIParameter(null, "q");
+    const params = [];
+
+    if (q) {
+        params.push("q="+q);
+    }
+    params.push("page="+currentPage);
+
+    window.location.href = "/scams?" + params.join("&");
+}
+
+function openScammerLink(a){
+    const link = $(a).text();
+    Metro.dialog.create({
+        title: "Open link",
+        content: "Do you want to really open scammer link?<br>"+link,
+        removeOnClose: true,
+        clsDialog: "warning",
+        actions: [
+            {
+                caption: "Yes, open",
+                cls: "js-dialog-close warning",
+                onclick: function(){
+                    window.location.href = link;
+                }
+            },
+            {
+                caption: "No, thanks",
+                cls: "js-dialog-close link"
+            }
+        ]
+    });
 }
 
 $(function(){

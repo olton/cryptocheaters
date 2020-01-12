@@ -99,9 +99,6 @@ class MySQL {
             return 'NULL';
         }
 
-        if (get_magic_quotes_gpc()) {
-            $value = stripslashes($value);
-        }
         if (!is_numeric($value) && (strtoupper($value) !== 'NULL')) {
             $value = "'" . mysqli_real_escape_string($this->conn, $value) . "'";
         }

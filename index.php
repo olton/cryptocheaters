@@ -14,7 +14,9 @@ define('PRODUCTION_MODE', false);
 
 error_reporting(E_ALL);
 
-ini_set('session.gc_maxlifetime', 60*60);
+ini_set('session.gc_maxlifetime', 2592000);
+ini_set('session.cookie_lifetime', 2592000);
+ini_set('session.save_path', APP_ROOT.'Sessions');
 ini_set('max_input_vars', 10000);
 ini_set('memory_limit', '256M');
 

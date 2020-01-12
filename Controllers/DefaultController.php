@@ -16,6 +16,7 @@ class DefaultController extends GeneralController {
     public function Index(){
         $this->report_model->page_size = 6;
         $params = [
+            "page_title" => "Report Crypto Scam",
             "reports" => $this->report_model->Index("1=1", 1),
             "newest" => $this->report_model->Newest()
         ];

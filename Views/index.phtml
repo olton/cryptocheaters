@@ -35,19 +35,14 @@
         <div class="row">
             <div class="cell-md-2"></div>
             <div class="cell-md-8">
-                <div class="d-none d-block-md">
-                    <input type="text" class="input-large"
+                <form action="/scams" method="get">
+                    <input type="text" class="input-large" name="q"
                            data-role="input"
                            data-prepend="<span class='text-leader'>CryptoCheaters:</span>"
+                           data-cls-prepend=" d-none d-block-md"
                            data-search-button="true"
                            placeholder="Enter domain, resource or company name">
-                </div>
-                <div class="d-none-md">
-                    <input type="text"
-                           data-role="input"
-                           data-search-button="true"
-                           placeholder="Enter domain, resource or company name">
-                </div>
+                </form>
             </div>
             <div class="cell-md-2"></div>
         </div>
@@ -150,9 +145,8 @@
                 <div class="scam-card bg-white">
                     <div class="text-small text-bold">Scammer</div>
                     <div class="h5 fg-hero2 mb-3 mt-0"><?php echo $report['report_name']?></div>
-                    <div class="text-small">Report #: <span class="text-bold"><?php echo $report['report_id']?></span></div>
                     <div class="text-small">Scam type: <span class="text-bold"><?php echo $report['report_type_name']?></span></div>
-                    <div class="text-small">Voted: <span class="text-bold"><?php echo $report['report_likes']?></span></div>
+                    <div class="text-small">Voted: <span class="text-bold"><?php echo $report['votes']?></span></div>
                     <div class="text-small">Reported by: <span class="text-bold"><?php echo $report['nickname']?></span></div>
                     <div class="text-small">Report at: <span class="text-bold"><?php echo $report['report_created']?></span></div>
                     <div>
@@ -194,9 +188,8 @@
                 <div class="scam-card">
                     <div class="text-small text-bold">Scammer</div>
                     <div class="h5 fg-hero2 mb-3 mt-0"><?php echo $report['report_name']?></div>
-                    <div class="text-small">Report #: <span class="text-bold"><?php echo $report['report_id']?></span></div>
                     <div class="text-small">Scam type: <span class="text-bold"><?php echo $report['report_type_name']?></span></div>
-                    <div class="text-small">Voted: <span class="text-bold"><?php echo $report['report_likes']?></span></div>
+                    <div class="text-small">Voted: <span class="text-bold"><?php echo $report['votes']?></span></div>
                     <div class="text-small">Reported by: <span class="text-bold"><?php echo $report['nickname']?></span></div>
                     <div class="text-small">Report at: <span class="text-bold"><?php echo $report['report_created']?></span></div>
                     <div>

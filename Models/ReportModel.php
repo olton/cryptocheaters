@@ -111,6 +111,26 @@ class ReportModel extends Model {
         return $result;
     }
 
+    public function All($filter = "1=1"){
+        $sql = "
+            select *, (SELECT COUNT(*) FROM likes l WHERE t1.report_id = l.report_id) AS votes 
+            from reports t1 
+            left join reports_types t2 on (t1.report_type = t2.report_type_id) 
+            left join users t3 on (t1.report_user_id = t3.id) 
+            where $filter 
+            order by votes desc 
+        ";
+        $h = $this->Select($sql);
+        if ($this->Rows($h) === 0) {
+            return false;
+        }
+        $result = [];
+        while($r = $this->FetchArray($h)) {
+            $result[$r['report_id']] = $r;
+        }
+        return $result;
+    }
+
     public function Newest($filter = "1=1", $count = 6){
         $count = $this->_e($count);
         $sql = "

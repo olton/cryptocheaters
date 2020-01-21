@@ -250,7 +250,7 @@ $(function(){
     $.document().on("click", ".report-evidences .evidence .photo-container", function(e){
         const img = $(this).children("img");
         const desc = $(this).siblings(".evidence-desc");
-        const title = "Evidence #" + img.data("evidence") + " for report # " + img.data("report") + (desc.length && desc.text().trim() !== '' ? "<hr><div class='evidence-image-desc'>"+desc.html()+"</div>" : "");
+        const title = "<h2>Scammer's photo</h2>" + (desc.length && desc.text().trim() !== '' ? "<hr><div class='evidence-image-desc'>"+desc.html()+"</div>" : "");
         const content = "<div class='evidence-image-wrapper'><img src='"+img.attr("src")+"'/></div>";
 
         Metro.dialog.create({

@@ -1,0 +1,117 @@
+<?php include "head.phtml" ?>
+
+<?php include "header.phtml" ?>
+
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="cell-md-10 order-2 order-md-1">
+                <h1>Request Verification</h1>
+                <div class="text-leader2">
+                    Interested in investing in crypto? Have not found your potential partner on our scammers data but still have doubts?
+                    <strong>We can help!</strong>
+                    We will do and provide you with our research and recommendation on any company or individual.
+                </div>
+            </div>
+            <div class="cell-md-2 order-1 order-md-2 d-flex flex-align-center">
+                <img src="<?php echo TEMPLATE_PATH?>images/logo-no-text.png">
+            </div>
+        </div>
+        <hr class="mb-5 mt-5">
+
+        <div class="mb-10">
+
+            <div class="row">
+                <div class="cell-lg-7 order-2 order-lg-1">
+                    <div class="pr-10-md">
+                        <form action="javascript:" data-role="validator" onsubmit="sendVerificationRequest(this)">
+                            <div class="form-group">
+                                <label>Your Name:</label>
+                                <input name="name" type="text" data-role="input" data-validate="required" placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label>Your Email:</label>
+                                <input name="email" type="text" data-role="input" data-validate="required email" placeholder="Enter contact email">
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="cell-md-3">
+                                        <label>Currency:</label>
+                                        <select name="tr_type" data-role="select" data-filter="false" data-validate="required">
+                                            <option value="btc" selected>BTC</option>
+                                            <option value="eth">ETH</option>
+                                        </select>
+                                    </div>
+                                    <div class="cell-md-5">
+                                        <label>Transaction address:</label>
+                                        <input name="tr_detail" type="text" data-role="input" data-validate="required" placeholder="Transaction address from">
+                                    </div>
+                                    <div class="cell-md-4">
+                                        <label>Transaction date:</label>
+                                        <input name="tr_date" type="text" data-validate="required" placeholder="Pay date" data-role="calendarpicker" data-dialog-mode="false">
+                                    </div>
+                                </div>
+                                <div class="text-small">
+                                    eth ot btc address you sent payment from
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Request:</label>
+                                <textarea style="min-height: 200px" name="desc" data-validate="required"></textarea>
+                                <div class="text-small">Please write down as much information as possible</div>
+                            </div>
+
+                            <div class="form-actions mt-4">
+                                <button class="button primary large">Request Verification</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="cell-lg-5 order-1 order-lg-2">
+                    <div class="p-2 p-10-lg bg-light">
+                        <script>
+                            function copyText(){
+                                var input = $(this).closest(".input").find("input[type=text]")[0];
+                                input.select();
+                                input.setSelectionRange(0, 99999);
+                                document.execCommand("copy");
+                            }
+
+                            var copyBtn = [
+                                {
+                                    html: "<span class='mif-copy'></span>",
+                                    cls: "info",
+                                    onclick: copyText
+                                }
+                            ];
+                        </script>
+                        <div class="text-leader">
+                            <span class="reduce-2 enlarge-1-lg">You can pay using ETH or BTC. Price for the research:</span>
+                        </div>
+                        <div class="mt-4">
+                            <div class="h4">BTC - 0.012</div>
+                            <div class="text-small">Our Btc address:</div>
+                            <input type="text" data-role="input" data-custom-buttons="copyBtn" value="1M24NovHG8zcrpa3z28cpDGy4eBxicKure" readonly>
+                        </div>
+                        <div class="mt-4 mb-4">
+                            <div class="h4">ETH - 0.5</div>
+                            <div class="text-small">Our Eth address:</div>
+                            <input type="text" data-role="input" data-custom-buttons="copyBtn" value="0xebE321bc7a19dDbdA2550068840fdE5e0FfeE542" readonly>
+                        </div>
+
+                        <hr class="thin bg-gray mt-8 mb-8">
+
+                        <div>
+                            Fill in the form and send us your request. Thank you for using our service!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include "footer.phtml" ?>
+
+<?php include "foot.phtml" ?>

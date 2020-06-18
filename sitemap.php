@@ -28,11 +28,11 @@ echo
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9">
 ';
 
-echo "<url><loc>https://cryptocheaters.com</loc></url>";
+echo "<url><loc>https://cryptoscamalert.com</loc></url>";
 
 if ($reports) {
     foreach ($reports as $key => $report) {
-        echo "<url><loc>https://cryptocheaters.com/report/$key</loc></url>";
+        echo "<url><loc>https://cryptoscamalert.com/report/$key</loc></url>";
     }
 }
 

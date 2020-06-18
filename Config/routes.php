@@ -8,8 +8,14 @@ return array(
     array('GET', "/", array("controller" => "DefaultController", "action" => "Index")),
     array('GET', "/terms", array("controller" => "DefaultController", "action" => "Terms")),
 
+    // Requests
+    array('GET', "/verification", array("controller" => "RequestController", "action" => "RequestVerification")),
+    array('POST', "/verification/process", array("controller" => "RequestController", "action" => "RequestVerificationProcess")),
+
     // Report ---------------------------------------------------------------------------------------------------------
     array('GET', "/scams", array("controller" => "ReportController", "action" => "Index")),
+    array('GET', "/newest", array("controller" => "ReportController", "action" => "Newest")),
+    array('GET', "/top", array("controller" => "ReportController", "action" => "Top")),
     array('GET', "/report/:id", array("controller" => "ReportController", "action" => "Report"), ["id"=>'[\d]+']),
     array('GET', "/add", array("controller" => "ReportController", "action" => "Add")),
     array('GET', "/update/:id", array("controller" => "ReportController", "action" => "Update"), ["id"=>'[\d]+']),

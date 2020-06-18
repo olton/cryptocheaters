@@ -24,17 +24,17 @@
             <span class="w-100 w-auto-md">Votes: <span id="votes" class="text-leader2"><?php echo $report['votes']?></span></span>
 
             <div class="ml-auto-md mt-2 mt-0-md">
-                <?php if ($_SESSION['current']) {?>
+                <?php if (isset($_SESSION['current'])) {?>
                 <button class="button info" onclick="voteReport(<?php echo $report['report_id']?>)"><span class="mif-thumbs-up"></span> Vote this report</button>
                 <?php }?>
 
                 <button class="button d-none" onclick="printReport(<?php echo $report['report_id']?>)"><span class="mif-print"></span></button>
 
-                <?php if ($_SESSION['current'] && (($_SESSION['current']) === $report['report_user_id'] || intval($_SESSION['user']['admin']) === 1)) {?>
+                <?php if (isset($_SESSION['current']) && (($_SESSION['current']) === $report['report_user_id'] || intval($_SESSION['user']['admin']) === 1)) {?>
                     <a class="button secondary" href="/update/<?php echo $report['report_id']?>"><span class="mif-pencil"></span> Edit</a>
                 <?php }?>
 
-                <?php if (intval($_SESSION['user']['admin']) === 1) {?>
+                <?php if (isset($_SESSION['user']) && intval($_SESSION['user']['admin']) === 1) {?>
                 <button class="button alert" onclick="delReport(<?php echo $report['report_id']?>, '/scams')"><span class="mif-bin"></span> Delete</button>
                 <?php }?>
             </div>
@@ -89,6 +89,23 @@
 
                 <br>
 
+                <?php if (isset($docs) && is_array($docs) && count($docs) > 0) {?>
+                    <div class="report-label">Additional Doc's Photo</div>
+                    <div id="evidences" class="report-evidences row" style="background-image: none">
+                        <?php foreach ($docs as $index => $evidence) {?>
+                            <div class="evidence m-0 cell-6 cell-md-4 cell-lg-6">
+                                <div class="photo-container c-pointer">
+                                    <img src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
+                                </div>
+                                <?php if ($evidence['evidence_desc'] !== '') {?>
+                                    <div class="p-2 bg-light text-small evidence-desc">
+                                        <?php echo $evidence['evidence_desc']?>
+                                    </div>
+                                <?php }?>
+                            </div>
+                        <?php }?>
+                    </div>
+                <?php }?>
             </div>
         </div>
 

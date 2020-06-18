@@ -3,8 +3,10 @@ namespace Controllers;
 
 
 use Classes\Controller;
+use Classes\SimpleEmail;
 use Classes\Viewer;
 use Models\ReportModel;
+use Models\RequestModel;
 
 class DefaultController extends GeneralController {
     private $report_model;

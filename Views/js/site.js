@@ -27,6 +27,53 @@ function post(to, form, cb) {
     })
 }
 
+function sendVerificationRequest(form){
+    $(form).find("button").addClass("disabled");
+    var activity = Metro.activity.open({
+        type: 'cycle',
+        overlayColor: '#000',
+        overlayAlpha: .8,
+        text: '<div class=\'mt-2 text-small\'>Please, wait...</div>',
+        overlayClickClose: false
+    });
+    post("/verification/process", form, function(result){
+        $(form).find("button").removeClass("disabled");
+        Metro.activity.close(activity);
+        Metro.dialog.create({
+            removeOnClose: true,
+            title: "We receive your request!",
+            content: "" +
+                "Thank you for trusting us. We will analyze your request as soon as possible and give you a comprehensive answer." +
+                "<br><br>Your Request UID:<div class='text-bold'>"+result.data.request_uid+"</div>" +
+                "<br>Please store this UID for additional information about your request. Thanks!",
+            clsDialog: "secondary",
+            actions: [
+                {
+                    caption: "Goto scam list",
+                    cls: "js-dialog-close primary",
+                    onclick: function(){
+                        window.location.href = "/scams";
+                    }
+                },
+                {
+                    caption: "New request",
+                    cls: "js-dialog-close warning",
+                    onclick: function(){
+                        window.location.href = "/verification";
+                    }
+                },
+                {
+                    caption: "Add new report",
+                    cls: "js-dialog-close alert",
+                    onclick: function(){
+                        window.location.href = "/add";
+                    }
+                }
+            ]
+        });
+    })
+}
+
 function login(form){
     post("/login/process", form);
 }
@@ -36,7 +83,15 @@ function signup(form){
 }
 
 function addReport(form){
+    var activity = Metro.activity.open({
+        type: 'cycle',
+        overlayColor: '#000',
+        overlayAlpha: .8,
+        text: '<div class=\'mt-2 text-small\'>Please, wait...</div>',
+        overlayClickClose: false
+    });
     post("/add/process", form, function(result){
+        Metro.activity.close(activity);
         Metro.dialog.create({
             removeOnClose: true,
             title: "Report added!",
@@ -70,7 +125,15 @@ function addReport(form){
 }
 
 function updateReport(form){
+    var activity = Metro.activity.open({
+        type: 'cycle',
+        overlayColor: '#000',
+        overlayAlpha: .8,
+        text: '<div class=\'mt-2 text-small\'>Please, wait...</div>',
+        overlayClickClose: false
+    });
     post("/update/process", form, function(result){
+        Metro.activity.close(activity);
         Metro.dialog.create({
             removeOnClose: true,
             title: "Report updated!",
@@ -139,6 +202,7 @@ function pageLinkClick(l){
     const link = $(l);
     const item = link.parent();
     const pagination = link.closest("#pagination");
+    const view = pagination.attr("data-view");
     const pagesCount = Math.ceil(parseInt(pagination.data("length")) / parseInt(pagination.data("rows")));
     let currentPage = parseInt(pagination.data("page"));
 
@@ -170,7 +234,7 @@ function pageLinkClick(l){
     }
     params.push("page="+currentPage);
 
-    window.location.href = "/scams?" + params.join("&");
+    window.location.href = "/"+view+"?" + params.join("&");
 }
 
 function openScammerLink(a){
@@ -211,7 +275,7 @@ $(function(){
         $(this).parent().remove();
     });
 
-    $("input[type=file]").on("select", function(e){
+    $("#add_evidence").on("select", function(e){
         const files = e.detail.files;
         const template = $("#evidence-template");
         const container = $("#evidences");
@@ -230,6 +294,33 @@ $(function(){
                 evidence.find("img").attr("src", reader.result);
                 evidence.find("input").val(reader.result).attr("name", "evidence[]");
                 evidence.find("textarea").attr("name", "evidence_desc[]");
+                evidence.appendTo(container);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        Metro.getPlugin(this, "file").clear();
+    });
+
+    $("#add_doc").on("select", function(e){
+        const files = e.detail.files;
+        const template = $("#evidence-template");
+        const container = $("#docs");
+
+        $.each(files, function(index, file){
+            const reader = new FileReader();
+            reader.onloadend = function(){
+                const result = reader.result;
+                const evidence = template.clone(true).removeClass("d-none");
+
+                if (!result.contains("data:image")) {
+                    return ;
+                }
+
+                evidence.removeAttr("id").addClass("evidence");
+                evidence.find("img").attr("src", reader.result);
+                evidence.find("input").val(reader.result).attr("name", "doc[]");
+                evidence.find("textarea").attr("name", "doc_desc[]");
                 evidence.appendTo(container);
             };
             reader.readAsDataURL(file);

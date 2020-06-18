@@ -100,6 +100,23 @@
 
                 <hr class="mt-4 mb-8">
 
+                <?php if (isset($docs) && is_array($docs)) {?>
+                <div id="docs" class="report-evidences row">
+                    <?php foreach ($docs as $index => $evidence) {?>
+                        <div class="evidence">
+                            <span class="button square alert z-1"><span class="mif-bin"></span></span>
+                            <div class="photo-container">
+                                <img src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
+                            </div>
+                            <input type="hidden" name="doc[]" value="<?php echo $evidence['evidence_image']?>"/>
+                            <textarea placeholder="Enter photo short description..." name="doc_desc[]"><?php echo $evidence['evidence_desc']?></textarea>
+                        </div>
+                    <?php }?>
+                </div>
+                <?php }?>
+
+                <hr class="mt-4 mb-8">
+
                 <div class="form-actions">
                     <button class="button secondary">Update Report</button>
                     <button class="button link no-decor" type="button" onclick="back()"><span class="fg-hero fg-dark-hover">Cancel</span></button>

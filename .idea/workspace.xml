@@ -2,25 +2,60 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="989ad5b0-2c15-499e-a052-68c37e147710" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/sitemap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.htaccess" beforeDir="false" afterPath="$PROJECT_DIR$/.htaccess" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controllers/RequestController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/RequestModel.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/newest.phtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/request-verification.phtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/top.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/routes.php" beforeDir="false" afterPath="$PROJECT_DIR$/Config/routes.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/DefaultController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/DefaultController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/ReportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ReportController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/ReportModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ReportModel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sessions/sess_7kds9bpv87j70tf0n07t5kvss6" beforeDir="false" afterPath="$PROJECT_DIR$/Sessions/sess_7kds9bpv87j70tf0n07t5kvss6" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sessions/sess_7kds9bpv87j70tf0n07t5kvss6" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/404.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/404.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/500.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/500.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/add.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/add.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/copyright.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/copyright.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/css/site.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/css/site.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.css.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/css/site.less" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/foot.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/foot.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/footer.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/footer.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/head.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/head.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/header.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/header.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/images/hero-bg.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Views/images/hero-bg.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/images/logo-no-text-transparency.png" beforeDir="false" afterPath="$PROJECT_DIR$/Views/images/logo-no-text-transparency.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/images/logo-no-text.png" beforeDir="false" afterPath="$PROJECT_DIR$/Views/images/logo-no-text.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/images/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/Views/images/logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/index.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/index.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/js/site.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/js/site.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/login.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/login.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-colors.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-colors.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-icons.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-icons.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.json" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.svg" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.woff" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/report.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/report.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/scams.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/scams.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/signup.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/signup.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/update.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/update.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sitemap.php" beforeDir="false" afterPath="$PROJECT_DIR$/sitemap.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,53 +63,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ComposerSettings">
-    <execution>
-      <executable />
-    </execution>
-  </component>
-  <component name="DatabaseView">
-    <option name="SHOW_INTERMEDIATE" value="true" />
-    <option name="GROUP_DATA_SOURCES" value="true" />
-    <option name="GROUP_SCHEMA" value="true" />
-    <option name="GROUP_CONTENTS" value="false" />
-    <option name="SORT_POSITIONED" value="false" />
-    <option name="SHOW_EMPTY_GROUPS" value="false" />
-    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
-    <option name="HIDDEN_KINDS">
-      <set />
-    </option>
-    <expand>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="MariaDB - cryptocheaters@localhost" type="feb32156:DbDataSourceImpl" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="MariaDB - cryptocheaters@localhost" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="MariaDB - cryptocheaters@localhost" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="asvzdafa_cryptocheaters: schema" type="ebfa3cd1:MariaImplModel$Schema" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="MariaDB - cryptocheaters@localhost" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="asvzdafa_cryptocheaters: schema" type="ebfa3cd1:MariaImplModel$Schema" />
-        <item name="evidences: table" type="dbc44a63:MariaImplModel$Table" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="MariaDB - cryptocheaters@localhost" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="asvzdafa_cryptocheaters: schema" type="ebfa3cd1:MariaImplModel$Schema" />
-        <item name="reports: table" type="dbc44a63:MariaImplModel$Table" />
-      </path>
-    </expand>
-    <select />
+    <execution />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -86,11 +75,15 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
+    <include_path>
+      <path value="C:/xampp/php/PEAR" />
+    </include_path>
+  </component>
   <component name="ProjectId" id="1VqcdgLeeFHjNeuyLbZKtU58GEg" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -100,25 +93,20 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Views" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="settings.php.debug.servers" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\Projects\cryptocheaters.com\Views" />
       <recent name="G:\Projects\cryptocheaters.com\Controllers" />
+      <recent name="G:\Projects\cryptocheaters.com\Models" />
     </key>
-  </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -134,61 +122,40 @@
       <workItem from="1578392613414" duration="13971000" />
       <workItem from="1578590465019" duration="3848000" />
       <workItem from="1578596462959" duration="60754000" />
-      <workItem from="1579631322013" duration="692000" />
+      <workItem from="1579631322013" duration="1291000" />
+      <workItem from="1579640140360" duration="703000" />
+      <workItem from="1579783726998" duration="1111000" />
+      <workItem from="1579860429653" duration="1544000" />
+      <workItem from="1579959343991" duration="785000" />
+      <workItem from="1580379087333" duration="713000" />
+      <workItem from="1580472559679" duration="12000" />
+      <workItem from="1580552918342" duration="2903000" />
+      <workItem from="1586857990315" duration="1902000" />
+      <workItem from="1589875021998" duration="3339000" />
+      <workItem from="1591475465526" duration="14000" />
+      <workItem from="1592289719956" duration="24059000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="872" y="359" key="#SQL_Dialects" timestamp="1578513595878">
+    <state x="860" y="354" key="#CLI_Interpreters" timestamp="1589875128652">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="872" y="359" key="#SQL_Dialects/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578513595878" />
-    <state x="872" y="359" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1578819381435">
+    <state x="860" y="354" key="#CLI_Interpreters/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1589875128652" />
+    <state x="987" y="342" key="#PHP" timestamp="1589875146252">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="872" y="359" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578819381435" />
-    <state x="1010" y="456" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1578935149389">
+    <state x="987" y="342" key="#PHP/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1589875146252" />
+    <state x="1060" y="454" key="FileChooserDialogImpl" timestamp="1590135656175">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1010" y="456" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578935149389" />
-    <state x="914" y="479" key="EditFileWatcherDialog" timestamp="1577989496196">
+    <state x="1060" y="454" key="FileChooserDialogImpl/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1590135656175" />
+    <state x="781" y="344" key="SettingsEditor" timestamp="1592293971706">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="914" y="479" key="EditFileWatcherDialog/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1577989496196" />
-    <state x="1060" y="456" key="FileChooserDialogImpl" timestamp="1578828854244">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="1060" y="456" key="FileChooserDialogImpl/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578828854244" />
-    <state width="1741" height="393" key="GridCell.Tab.0.bottom" timestamp="1578515700218">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state width="1741" height="393" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578515700218" />
-    <state width="1741" height="393" key="GridCell.Tab.0.center" timestamp="1578515700218">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state width="1741" height="393" key="GridCell.Tab.0.center/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578515700218" />
-    <state width="1741" height="393" key="GridCell.Tab.0.left" timestamp="1578515700218">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state width="1741" height="393" key="GridCell.Tab.0.left/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578515700218" />
-    <state width="1741" height="393" key="GridCell.Tab.0.right" timestamp="1578515700218">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state width="1741" height="393" key="GridCell.Tab.0.right/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578515700218" />
-    <state x="1114" y="624" key="NewPhpFileDialog" timestamp="1578590644034">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="1114" y="624" key="NewPhpFileDialog/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578590644034" />
-    <state x="781" y="343" key="SettingsEditor" timestamp="1578511929944">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="781" y="343" key="SettingsEditor/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578511929944" />
-    <state x="989" y="342" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1578652665468">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="989" y="342" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.2560.1400/2560.365.1858.1080/-2498.365.2498.1080@0.0.2560.1400" timestamp="1578652665468" />
+    <state x="781" y="344" key="SettingsEditor/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1592293971706" />
   </component>
 </project>

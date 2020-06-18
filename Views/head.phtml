@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <meta name="description" content="If you've witnessed or been the victim of crypto scam, please report it to CryptoCheaters.com" />
-    <meta name="keywords" content="report crypto scam, crypto scam, crypto cheaters, crypto scammers, ico scam, blogger scam" />
-    <meta name="author" content="CryptoCheaters.com">
+    <meta name="description" content="<?php echo isset($description) ? $description : 'If you`ve witnessed or been the victim of crypto scam, please report it to CryptoScamAlert.com' ?>"/>
+    <meta name="keywords" content="<?php echo isset($keywords) ? $keywords : " "?> report crypto scam, crypto scam, crypto cheaters, crypto scammers, ico scam, blogger scam" />
+    <meta name="author" content=" CryptoScamAlert.com ">
     <meta name="robots" content="index,follow" />
     <meta name="googlebot" content="index,follow" />
-
-    <link rel="stylesheet" href="/<?php echo TEMPLATE_PATH?>metro/css/metro-all.css?rnd=<?php echo rand()?>">
-    <link rel="stylesheet" href="/<?php echo TEMPLATE_PATH?>css/site.css?rnd=<?php echo rand()?>">
+    
+    <link rel="stylesheet" href="/<?php echo TEMPLATE_PATH?>metro/css/metro-all<?php echo PRODUCTION_MODE ? ".min" : ""?>.css<?php echo PRODUCTION_MODE ? "" : "?rnd=". rand()?>">
+    <link rel="stylesheet" href="/<?php echo TEMPLATE_PATH?>css/site.css<?php echo PRODUCTION_MODE ? "" : "?rnd=". rand()?>">
 
     <title><?php echo isset($page_title) ? $page_title : "CryptoCheaters - The whole truth about crypto scammers" ?></title>
 </head>

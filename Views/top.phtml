@@ -6,9 +6,9 @@
     <div class="container">
         <div class="row">
             <div class="cell-md-10 order-2 order-md-1">
-                <h1>Scams <small>(<?php echo $length?>)</small></h1>
+                <h1>Top Scams <small>(<?php echo $length ?>)</small></h1>
                 <div class="text-leader2">
-                    Below are the list of scammers in the CryptoScamAlert database. Scammers list ordered by voting.
+                    Below are the list of newest scammers in the CryptoScamAlert database.
                 </div>
             </div>
             <div class="cell-md-2 order-1 order-md-2 d-flex flex-align-center">
@@ -73,7 +73,8 @@
         </div>
 
         <div class="mt-10">
-            <div id="pagination" data-view="scams"
+            <hr class="bg-gray thin mb-10">
+            <div id="pagination" data-view="top"
                  data-length="<?php echo isset($length) ? $length : 0?>"
                  data-rows="<?php echo isset($rows) ? $rows : 0?>"
                  data-page="<?php echo isset($page) ? $page : 0?>"

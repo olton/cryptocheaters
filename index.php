@@ -2,6 +2,17 @@
 
 namespace App;
 
+define('PRODUCTION_MODE', false);
+
+if (PRODUCTION_MODE) {
+    header("Cache-control: public");
+    header("Expires: " . gmdate("D, d M Y H:i:s", time() + 7 * 60 * 60 * 24) . " GMT");
+} else {
+    header("Expires: " . gmdate("D, d M Y H:i:s", time()) . " GMT");
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+    header("Cache-Control: no-cache, must-revalidate");
+}
+
 define('DSP', DIRECTORY_SEPARATOR);
 define('APP_ROOT', __DIR__.DSP);
 define('CONFIG_PATH', APP_ROOT.DSP.'Config'.DSP);
@@ -9,8 +20,6 @@ define('CLASSES_PATH', APP_ROOT.DSP.'Classes'.DSP);
 define('MODELS_PATH', APP_ROOT.DSP.'Models'.DSP);
 define('HOOKS_PATH', APP_ROOT.DSP.'Hooks'.DSP);
 define('TEMPLATE_PATH', 'Views/');
-
-define('PRODUCTION_MODE', false);
 
 error_reporting(E_ALL);
 
@@ -39,6 +48,11 @@ $config = array(
 
 if (!isset($_SESSION['lang'])) $_SESSION['lang'] = 'en';
 if (!isset($_SESSION['current'])) $_SESSION['current'] = 0;
+if (!isset($_SESSION['user'])) {
+    $_SESSION['user'] = [
+        "admin" => 0
+    ];
+}
 
 if ((!isset($_SESSION['current']) || !$_SESSION['current']) && ($_SERVER['REQUEST_URI'] === "/add") ) {
     Url::Redirect("/login");

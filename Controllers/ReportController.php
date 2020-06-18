@@ -40,11 +40,52 @@ class ReportController extends GeneralController {
         echo $view->Render("scams", $params);
     }
 
+    public function Newest(){
+        $this->report_model->page_size = 20;
+
+        $params = [
+            "page_title" => "Newest Scam reports on CryptoCheaters.com",
+            "reports" => $this->report_model->Newest("1=1", 20),
+        ];
+
+        $view = new Viewer(TEMPLATE_PATH);
+        echo $view->Render("newest", $params);
+    }
+
+    public function Top(){
+        global $GET;
+
+        $page = isset($GET['page']) ? intval($GET['page']) : 1;
+
+        $this->report_model->page_size = 12;
+
+        $filter = "votes > 0";
+
+        $params = [
+            "page_title" => "Top Scam reports on CryptoCheaters.com",
+            "reports" => $this->report_model->Index($filter, $page),
+            "rows" => $this->report_model->page_size,
+            "page" => $page,
+            "length" => $this->report_model->Total($filter)
+        ];
+
+        $view = new Viewer(TEMPLATE_PATH);
+        echo $view->Render("top", $params);
+    }
+
     public function Report($id){
+        $report = $this->report_model->Report($id);
+        $keywords = $report['report_type_name'] . " " . str_replace(",", " ", $report["report_tags"]);
+        $description = substr($report["report_desc"], 0, 500);
+        $description = substr($description, 0, strrpos($description, ".")+1);
+
         $params = [
             "page_title" => "Report new scam to CryptoCheaters.com",
-            "report" => $this->report_model->Report($id),
+            "report" => $report,
             "evidences" => $this->report_model->Evidences($id),
+            "docs" => $this->report_model->Docs($id),
+            "keywords" => $keywords,
+            "description" => $description,
             "scripts" => ["markdown-it/markdown-it.js"]
         ];
         $view = new Viewer(TEMPLATE_PATH);
@@ -65,7 +106,8 @@ class ReportController extends GeneralController {
             "page_title" => "Report new scam to CryptoCheaters.com",
             "report_types" => $this->report_model->Types(),
             "report" => $this->report_model->Report($id),
-            "evidences" => $this->report_model->Evidences($id)
+            "evidences" => $this->report_model->Evidences($id),
+            "docs" => $this->report_model->Docs($id),
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("update", $params);
@@ -84,6 +126,8 @@ class ReportController extends GeneralController {
         $user = $_SESSION['current'];
         $evidences = $POST['evidence'];
         $evidences_desc = $POST['evidence_desc'];
+        $docs = $POST['doc'];
+        $docs_desc = $POST['doc_desc'];
 
         $report_id = $this->report_model->Create($user, $name, $desc, $type, $tags, $link);
 
@@ -93,6 +137,10 @@ class ReportController extends GeneralController {
 
         foreach ($evidences as $key => $evidence) {
             $this->report_model->AddEvidence($report_id, $_SESSION['current'], $evidence, $evidences_desc[$key]);
+        }
+
+        foreach ($docs as $key => $doc) {
+            $this->report_model->AddDoc($report_id, $_SESSION['current'], $doc, $docs_desc[$key]);
         }
 
         $this->ReturnJSON(true, "OK", ["report_id" => $report_id]);
@@ -117,12 +165,20 @@ class ReportController extends GeneralController {
         $tags = $POST['tags'];
         $evidences = $POST['evidence'];
         $evidences_desc = $POST['evidence_desc'];
+        $docs = $POST['doc'];
+        $docs_desc = $POST['doc_desc'];
 
         $this->report_model->Edit($report_id, $name, $desc, $type, $tags, $link);
 
         $this->report_model->DeleteEvidences($report_id);
+        $this->report_model->DeleteDocs($report_id);
+
         foreach ($evidences as $key => $evidence) {
             $this->report_model->AddEvidence($report_id, $_SESSION['current'], $evidence, $evidences_desc[$key]);
+        }
+
+        foreach ($docs as $key => $doc) {
+            $this->report_model->AddDoc($report_id, $_SESSION['current'], $doc, $docs_desc[$key]);
         }
 
         $this->ReturnJSON(true, "OK", ["report_id" => $report_id]);

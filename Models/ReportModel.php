@@ -34,7 +34,7 @@ class ReportModel extends Model {
 
         $h = $this->Update("reports", $data, "report_id = $report_id");
 
-        return $this->Rows($h) > 0 ? true : false;
+        return $this->Rows($h) > 0;
     }
 
     public function AddEvidence($report_id, $user_id, $photo, $desc){
@@ -46,6 +46,19 @@ class ReportModel extends Model {
         ];
 
         $h = $this->Insert("evidences", $data, false, true);
+
+        return $this->Rows($h) > 0 ? $this->ID() : false;
+    }
+
+    public function AddDoc($report_id, $user_id, $photo, $desc){
+        $data = [
+            "evidence_report" => $report_id,
+            "evidence_user" => $user_id,
+            "evidence_image" => $this->_e($photo),
+            "evidence_desc" => $this->_e($desc),
+        ];
+
+        $h = $this->Insert("docs", $data, false, true);
 
         return $this->Rows($h) > 0 ? $this->ID() : false;
     }
@@ -63,13 +76,7 @@ class ReportModel extends Model {
 
     public function Report($id){
         $id = $this->_e($id);
-        $sql = "
-            select *, (SELECT COUNT(*) FROM likes l WHERE t1.report_id = l.report_id) AS votes 
-            from reports t1 
-            left join reports_types t2 on (t1.report_type = t2.report_type_id) 
-            left join users t3 on (t1.report_user_id = t3.id) 
-            where report_id = $id
-        ";
+        $sql = "select * from v_reports t1 where report_id = $id";
         $h = $this->Select($sql);
         if ($this->Rows($h) === 0) {
             return false;
@@ -78,13 +85,7 @@ class ReportModel extends Model {
     }
 
     public function Total($filter = "1=1"){
-        $sql = "
-            select count(report_id) from reports t1 
-            left join reports_types t2 on (t1.report_type = t2.report_type_id) 
-            left join users t3 on (t1.report_user_id = t3.id) 
-            where $filter
-        ";
-
+        $sql = "select count(report_id) from v_reports t1 where $filter";
         $h = $this->Select($sql);
         return $this->FetchResult($h, 0, 0);
     }
@@ -92,10 +93,7 @@ class ReportModel extends Model {
     public function Index($filter = "1=1", $page = false){
         $limit = $page === false ? "" : " ".$this->Limit($page);
         $sql = "
-            select *, (SELECT COUNT(*) FROM likes l WHERE t1.report_id = l.report_id) AS votes 
-            from reports t1 
-            left join reports_types t2 on (t1.report_type = t2.report_type_id) 
-            left join users t3 on (t1.report_user_id = t3.id) 
+            select SQL_CALC_FOUND_ROWS  * from v_reports t1 
             where $filter 
             order by votes desc 
             $limit 
@@ -113,13 +111,11 @@ class ReportModel extends Model {
 
     public function All($filter = "1=1"){
         $sql = "
-            select *, (SELECT COUNT(*) FROM likes l WHERE t1.report_id = l.report_id) AS votes 
-            from reports t1 
-            left join reports_types t2 on (t1.report_type = t2.report_type_id) 
-            left join users t3 on (t1.report_user_id = t3.id) 
+            select SQL_CALC_FOUND_ROWS * from v_reports t1 
             where $filter 
             order by votes desc 
         ";
+        var_dump($sql);
         $h = $this->Select($sql);
         if ($this->Rows($h) === 0) {
             return false;
@@ -134,10 +130,7 @@ class ReportModel extends Model {
     public function Newest($filter = "1=1", $count = 6){
         $count = $this->_e($count);
         $sql = "
-            select *, (SELECT COUNT(*) FROM likes l WHERE t1.report_id = l.report_id) AS votes 
-            from reports t1 
-            left join reports_types t2 on (t1.report_type = t2.report_type_id) 
-            left join users t3 on (t1.report_user_id = t3.id) 
+            select SQL_CALC_FOUND_ROWS * from v_reports t1 
             where $filter 
             order by report_created desc 
             limit $count 
@@ -167,6 +160,20 @@ class ReportModel extends Model {
         return $result;
     }
 
+    public function Docs($id){
+        $id = $this->_e($id);
+        $sql = "select * from docs where evidence_report = $id";
+        $h = $this->Select($sql);
+        if ($this->Rows($h) === 0) {
+            return false;
+        }
+        $result = [];
+        while($r = $this->FetchArray($h)) {
+            $result[$r['evidence_id']] = $r;
+        }
+        return $result;
+    }
+
     public function RandEvidences($count){
         $count = $this->_e($count);
         $sql = "select * from evidences order by rand() limit $count";
@@ -184,6 +191,7 @@ class ReportModel extends Model {
     public function DeleteReport($id){
         $id = $this->_e($id);
         $this->DeleteEvidences($id);
+        $this->DeleteDocs($id);
         $h = $this->Delete("reports", "report_id = $id");
         return $this->Rows($h) !== 0;
     }
@@ -191,6 +199,12 @@ class ReportModel extends Model {
     public function DeleteEvidences($report_id){
         $report_id = $this->_e($report_id);
         $h = $this->Delete("evidences", "evidence_report = $report_id");
+        return $this->Rows($h) !== 0;
+    }
+
+    public function DeleteDocs($report_id){
+        $report_id = $this->_e($report_id);
+        $h = $this->Delete("docs", "evidence_report = $report_id");
         return $this->Rows($h) !== 0;
     }
 

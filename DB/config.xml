@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <Collation>utf8_general_ci</Collation>
+  <ServerVersion>10.2.32</ServerVersion>
+  <Entity>asvzdafa_cryptocheaters</Entity>
+  <ServerType>MariaDb</ServerType>
+  <SupportsConnectEngine>False</SupportsConnectEngine>
+</Configuration>

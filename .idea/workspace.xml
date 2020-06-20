@@ -2,19 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="989ad5b0-2c15-499e-a052-68c37e147710" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Controllers/RequestController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/RequestModel.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Views/newest.phtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Views/request-verification.phtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Views/top.phtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/scam-card.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Config/routes.php" beforeDir="false" afterPath="$PROJECT_DIR$/Config/routes.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/AuthController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/DefaultController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/DefaultController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/ReportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ReportController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/RequestController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/RequestController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/ReportModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ReportModel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sessions/sess_7kds9bpv87j70tf0n07t5kvss6" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/404.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/404.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/500.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/500.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/add.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/add.phtml" afterDir="false" />
@@ -22,40 +17,15 @@
       <change beforePath="$PROJECT_DIR$/Views/css/site.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.css.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/css/site.less" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.less" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/foot.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/foot.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/footer.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/footer.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/head.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/head.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/header.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/header.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/images/logo-no-text-transparency.png" beforeDir="false" afterPath="$PROJECT_DIR$/Views/images/logo-no-text-transparency.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/images/logo-no-text.png" beforeDir="false" afterPath="$PROJECT_DIR$/Views/images/logo-no-text.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/images/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/Views/images/logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/index.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/index.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/js/site.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/js/site.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-colors.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-colors.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-icons.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-icons.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.json" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.svg" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.woff" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/newest.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/newest.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/report.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/report.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/scams.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/scams.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/top.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/top.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/update.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/update.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sitemap.php" beforeDir="false" afterPath="$PROJECT_DIR$/sitemap.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,6 +69,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="settings.php.debug.servers" />
   </component>
   <component name="RecentsManager">
@@ -133,7 +104,8 @@
       <workItem from="1586857990315" duration="1902000" />
       <workItem from="1589875021998" duration="3339000" />
       <workItem from="1591475465526" duration="14000" />
-      <workItem from="1592289719956" duration="24059000" />
+      <workItem from="1592289719956" duration="43428000" />
+      <workItem from="1592638109907" duration="2108000" />
     </task>
     <servers />
   </component>
@@ -157,5 +129,9 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="781" y="344" key="SettingsEditor/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1592293971706" />
+    <state x="929" y="249" width="1158" height="1009" key="find.popup" timestamp="1592639173378">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="929" y="249" width="1158" height="1009" key="find.popup/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1592639173378" />
   </component>
 </project>

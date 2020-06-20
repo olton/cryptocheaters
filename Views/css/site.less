@@ -163,6 +163,10 @@ textarea {
     padding: 16px;
     background-color: #f8f8f8;
     overflow: hidden;
+
+    img {
+        width: auto;
+    }
 }
 
 .report-resources {
@@ -259,6 +263,23 @@ textarea {
     background-size: 64px;
     background-position: top 10px right 0;
     padding: 8px 16px;
+    transition: transform .1s linear;
+    z-index: 1;
+
+    .scammer-name {
+        color: #888e92;
+    }
+
+    &:hover {
+        background-color: #ffffff!important;
+        transform: scale(1.05);
+        z-index: 2;
+        box-shadow: 2px 2px 5px #888e92;
+
+        .scammer-name {
+            color: #617d89;
+        }
+    }
 }
 
 #evidences .present-photo {
@@ -274,4 +295,32 @@ textarea {
     #evidences .present-photo {
         width: ~"calc(10% - 8px)"!important;
     }
+}
+
+.editormd-form {
+    & > * {
+        float: none!important;
+        width: 100%!important;
+    }
+
+    label {
+        padding-bottom: 0;
+    }
+
+}
+
+.editormd-image-dialog {
+    height: auto!important;
+}
+
+.editormd-dialog-footer {
+    margin-top: 10px;
+}
+
+.report-text.markdown-source {
+
+}
+
+.br-wrap {
+    margin-top: -10px;
 }

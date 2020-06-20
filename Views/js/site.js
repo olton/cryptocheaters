@@ -1,3 +1,5 @@
+var editor;
+
 function back(){
     window.history.back();
 }
@@ -11,7 +13,7 @@ function json(data){
 }
 
 function post(to, form, cb) {
-    $.post(to, form).then(function(data){
+    m4q.post(to, form).then(function(data){
         const result = JSON.parse(json(data));
         if (result.result === false) {
             Metro.infobox.create("<div class='h4 text-normal'>"+result.message+"</div>", "alert", {}, true);
@@ -28,7 +30,6 @@ function post(to, form, cb) {
 }
 
 function sendVerificationRequest(form){
-    $(form).find("button").addClass("disabled");
     var activity = Metro.activity.open({
         type: 'cycle',
         overlayColor: '#000',
@@ -37,7 +38,6 @@ function sendVerificationRequest(form){
         overlayClickClose: false
     });
     post("/verification/process", form, function(result){
-        $(form).find("button").removeClass("disabled");
         Metro.activity.close(activity);
         Metro.dialog.create({
             removeOnClose: true,
@@ -52,7 +52,7 @@ function sendVerificationRequest(form){
                     caption: "Goto scam list",
                     cls: "js-dialog-close primary",
                     onclick: function(){
-                        window.location.href = "/scams";
+                        window.location.href = "/crypto_scammers";
                     }
                 },
                 {
@@ -66,7 +66,7 @@ function sendVerificationRequest(form){
                     caption: "Add new report",
                     cls: "js-dialog-close alert",
                     onclick: function(){
-                        window.location.href = "/add";
+                        window.location.href = "/report_crypto_scam";
                     }
                 }
             ]
@@ -83,13 +83,17 @@ function signup(form){
 }
 
 function addReport(form){
-    var activity = Metro.activity.open({
+    const $ = m4q;
+    const activity = Metro.activity.open({
         type: 'cycle',
         overlayColor: '#000',
         overlayAlpha: .8,
         text: '<div class=\'mt-2 text-small\'>Please, wait...</div>',
         overlayClickClose: false
     });
+
+    $(form).find("#desc-editor > textarea").val(editor.getMarkdown());
+
     post("/add/process", form, function(result){
         Metro.activity.close(activity);
         Metro.dialog.create({
@@ -102,21 +106,21 @@ function addReport(form){
                     caption: "Goto scam list",
                     cls: "js-dialog-close primary",
                     onclick: function(){
-                        window.location.href = "/scams";
+                        window.location.href = "/crypto_scammers";
                     }
                 },
                 {
                     caption: "Open report",
                     cls: "js-dialog-close",
                     onclick: function(){
-                        window.location.href = "/report/" + result.data['report_id'];
+                        window.location.href = "/crypto_scam_report/" + result.data['report_id'];
                     }
                 },
                 {
                     caption: "Add new report",
                     cls: "js-dialog-close",
                     onclick: function(){
-                        window.location.href = "/add";
+                        window.location.href = "/report_crypto_scam";
                     }
                 }
             ]
@@ -125,13 +129,17 @@ function addReport(form){
 }
 
 function updateReport(form){
-    var activity = Metro.activity.open({
+    const $ = m4q;
+    const activity = Metro.activity.open({
         type: 'cycle',
         overlayColor: '#000',
         overlayAlpha: .8,
         text: '<div class=\'mt-2 text-small\'>Please, wait...</div>',
         overlayClickClose: false
     });
+
+    $(form).find("#desc-editor > textarea").val(editor.getMarkdown());
+
     post("/update/process", form, function(result){
         Metro.activity.close(activity);
         Metro.dialog.create({
@@ -144,21 +152,21 @@ function updateReport(form){
                     caption: "Goto scam list",
                     cls: "js-dialog-close primary",
                     onclick: function(){
-                        window.location.href = "/scams";
+                        window.location.href = "/crypto_scammers";
                     }
                 },
                 {
                     caption: "Open report",
                     cls: "js-dialog-close",
                     onclick: function(){
-                        window.location.href = "/report/" + result.data['report_id'];
+                        window.location.href = "/crypto_scam_report/" + result.data['report_id'];
                     }
                 },
                 {
                     caption: "Add new report",
                     cls: "js-dialog-close",
                     onclick: function(){
-                        window.location.href = "/add";
+                        window.location.href = "/report_crypto_scam";
                     }
                 }
             ]
@@ -193,15 +201,17 @@ function printReport(id){
 }
 
 function voteReport(id){
-    post("/vote", {id: id}, function(result){
+    const $ = m4q;
+    post("/vote/process", {id: id}, function(result){
         $("#votes").text(result.data['votes']);
     });
 }
 
 function pageLinkClick(l){
+    const $ = m4q;
     const link = $(l);
     const item = link.parent();
-    const pagination = link.closest("#pagination");
+    const pagination = link.closest(".pagination").parent();
     const view = pagination.attr("data-view");
     const pagesCount = Math.ceil(parseInt(pagination.data("length")) / parseInt(pagination.data("rows")));
     let currentPage = parseInt(pagination.data("page"));
@@ -227,17 +237,22 @@ function pageLinkClick(l){
     }
 
     const q = Metro.utils.getURIParameter(null, "q");
+    const order = Metro.utils.getURIParameter(null, "order");
     const params = [];
 
     if (q) {
         params.push("q="+q);
     }
     params.push("page="+currentPage);
+    if (order) {
+        params.push("order="+order);
+    }
 
     window.location.href = "/"+view+"?" + params.join("&");
 }
 
 function openScammerLink(a){
+    const $ = m4q;
     const link = $(a).text();
     Metro.dialog.create({
         title: "Open link",
@@ -260,7 +275,25 @@ function openScammerLink(a){
     });
 }
 
+function sortChange(val){
+    const q = Metro.utils.getURIParameter(null, "q");
+    const page = Metro.utils.getURIParameter(null, "page");
+    const view = window.location.pathname;
+    const params = [];
+
+    if (q) {
+        params.push("q="+q);
+    }
+    if (page) {
+        params.push("page="+page);
+    }
+    params.push("order="+val[0]);
+
+    window.location.href = view+"?" + params.join("&");
+}
+
 $(function(){
+    const $ = m4q;
     $.document().on("click", ".pagination .page-link", function(){
         pageLinkClick(this)
     });
@@ -302,37 +335,40 @@ $(function(){
         Metro.getPlugin(this, "file").clear();
     });
 
-    $("#add_doc").on("select", function(e){
-        const files = e.detail.files;
-        const template = $("#evidence-template");
-        const container = $("#docs");
-
-        $.each(files, function(index, file){
-            const reader = new FileReader();
-            reader.onloadend = function(){
-                const result = reader.result;
-                const evidence = template.clone(true).removeClass("d-none");
-
-                if (!result.contains("data:image")) {
-                    return ;
-                }
-
-                evidence.removeAttr("id").addClass("evidence");
-                evidence.find("img").attr("src", reader.result);
-                evidence.find("input").val(reader.result).attr("name", "doc[]");
-                evidence.find("textarea").attr("name", "doc_desc[]");
-                evidence.appendTo(container);
-            };
-            reader.readAsDataURL(file);
-        });
-
-        Metro.getPlugin(this, "file").clear();
-    });
+    // $("#add_doc").on("select", function(e){
+    //     const files = e.detail.files;
+    //     const template = $("#evidence-template");
+    //     const container = $("#docs");
+    //
+    //     $.each(files, function(index, file){
+    //         const reader = new FileReader();
+    //         reader.onloadend = function(){
+    //             const result = reader.result;
+    //             const evidence = template.clone(true).removeClass("d-none");
+    //
+    //             if (!result.contains("data:image")) {
+    //                 return ;
+    //             }
+    //
+    //             evidence.removeAttr("id").addClass("evidence");
+    //             evidence.find("img").attr("src", reader.result);
+    //             evidence.find("input").val(reader.result).attr("name", "doc[]");
+    //             evidence.find("textarea").attr("name", "doc_desc[]");
+    //             evidence.appendTo(container);
+    //         };
+    //         reader.readAsDataURL(file);
+    //     });
+    //
+    //     Metro.getPlugin(this, "file").clear();
+    // });
 
     if (window.markdownit) {
         const md_target = $(".markdown-source");
         const md = window.markdownit({
-            linkify: true
+            linkify: true,
+            html: true,
+            breaks: true,
+            typographer: true
         });
 
         md_target.html(md.render(md_target.html()));
@@ -353,13 +389,36 @@ $(function(){
         })
     });
 
-    const pagination = $("#pagination");
-    if (pagination.length > 0) {
-        Metro.pagination({
-            target: "#pagination",
-            length: parseInt(pagination.data("length")),
-            rows: parseInt(pagination.data("rows")),
-            current: parseInt(pagination.data("page"))
-        })
+    $.each(["pagination", "pagination-top", "pagination-bottom"], function(){
+        const pagination = $("#"+this);
+        if (pagination.length > 0) {
+            Metro.pagination({
+                target: "#"+this,
+                length: parseInt(pagination.data("length")),
+                rows: parseInt(pagination.data("rows")),
+                current: parseInt(pagination.data("page"))
+            })
+        }
+    });
+
+    if ($("#desc-editor").length) {
+        editor = editormd("desc-editor", {
+            width  : "100%",
+            height : 400,
+            path   : "/Views/editor.md/lib/",
+            watch : false,
+            toolbarIcons : function() {
+                return [
+                    "undo", "redo", "|",
+                    "bold", "del", "italic", "quote", "uppercase", "lowercase", "|",
+                    "list-ul", "list-ol", "hr", "|",
+                    "link", "image", "table", "|",
+                    "preview", "clear"
+                ]
+            }
+        });
     }
+
+    var br = $(".report-text.markdown-source").find("br");
+    if (br.length) br.wrap("<div>").addClass("br-wrap");
 });

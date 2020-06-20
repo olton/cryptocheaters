@@ -90,12 +90,12 @@ class ReportModel extends Model {
         return $this->FetchResult($h, 0, 0);
     }
 
-    public function Index($filter = "1=1", $page = false){
+    public function Index($filter = "1=1", $order = 'report_name', $page = false){
         $limit = $page === false ? "" : " ".$this->Limit($page);
         $sql = "
             select SQL_CALC_FOUND_ROWS  * from v_reports t1 
             where $filter 
-            order by votes desc 
+            order by $order
             $limit 
         ";
         $h = $this->Select($sql);

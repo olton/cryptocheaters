@@ -13,16 +13,18 @@ return array(
     array('POST', "/verification/process", array("controller" => "RequestController", "action" => "RequestVerificationProcess")),
 
     // Report ---------------------------------------------------------------------------------------------------------
-    array('GET', "/scams", array("controller" => "ReportController", "action" => "Index")),
-    array('GET', "/newest", array("controller" => "ReportController", "action" => "Newest")),
-    array('GET', "/top", array("controller" => "ReportController", "action" => "Top")),
-    array('GET', "/report/:id", array("controller" => "ReportController", "action" => "Report"), ["id"=>'[\d]+']),
-    array('GET', "/add", array("controller" => "ReportController", "action" => "Add")),
-    array('GET', "/update/:id", array("controller" => "ReportController", "action" => "Update"), ["id"=>'[\d]+']),
+    array('GET', "/crypto_scammers", array("controller" => "ReportController", "action" => "Index")),
+    array('GET', "/newest_crypto_scam", array("controller" => "ReportController", "action" => "Newest")),
+    array('GET', "/top_crypto_scammers", array("controller" => "ReportController", "action" => "Top")),
+
+    array('GET', "/crypto_scam_report/:id", array("controller" => "ReportController", "action" => "Report"), ["id"=>'[\d]+']),
+    array('GET', "/report_crypto_scam", array("controller" => "ReportController", "action" => "Add")),
+    array('GET', "/update_crypto_scam_report/:id", array("controller" => "ReportController", "action" => "Update"), ["id"=>'[\d]+']),
+
     array('POST', "/add/process", array("controller" => "ReportController", "action" => "AddProcess")),
     array('POST', "/update/process", array("controller" => "ReportController", "action" => "UpdateProcess")),
     array('POST', "/delete/process", array("controller" => "ReportController", "action" => "DeleteProcess")),
-    array('POST', "/vote", array("controller" => "ReportController", "action" => "VoteProcess")),
+    array('POST', "/vote/process", array("controller" => "ReportController", "action" => "VoteProcess")),
 
     // Auth -----------------------------------------------------------------------------------------------------------
     array('GET', "/login", array("controller" => "AuthController", "action" => "Login")),

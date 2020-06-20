@@ -7,7 +7,7 @@
         <?php if (isset($report)) {?>
         <div class="row">
             <div class="cell-md-10 order-2 order-md-1">
-                <h1><span class="c-pointer mif-arrow-left reduce-2" onclick="back()"></span> Scam Report</h1>
+                <h1><span class="c-pointer mif-arrow-left reduce-2" onclick="back()"></span> Crypto Scam Report</h1>
                 <div class="mt-1 text-muted">
                     Reported by : <?php echo $report['nickname'] . ", " . date("d/m/Y", strtotime($report['report_created']))?>
                 </div>
@@ -31,11 +31,11 @@
                 <button class="button d-none" onclick="printReport(<?php echo $report['report_id']?>)"><span class="mif-print"></span></button>
 
                 <?php if (isset($_SESSION['current']) && (($_SESSION['current']) === $report['report_user_id'] || intval($_SESSION['user']['admin']) === 1)) {?>
-                    <a class="button secondary" href="/update/<?php echo $report['report_id']?>"><span class="mif-pencil"></span> Edit</a>
+                    <a class="button secondary" href="/update_crypto_scam_report/<?php echo $report['report_id']?>"><span class="mif-pencil"></span> Edit</a>
                 <?php }?>
 
                 <?php if (isset($_SESSION['user']) && intval($_SESSION['user']['admin']) === 1) {?>
-                <button class="button alert" onclick="delReport(<?php echo $report['report_id']?>, '/scams')"><span class="mif-bin"></span> Delete</button>
+                <button class="button alert" onclick="delReport(<?php echo $report['report_id']?>, '/crypto_scammers')"><span class="mif-bin"></span> Delete</button>
                 <?php }?>
             </div>
         </div>
@@ -58,7 +58,7 @@
             <div class="cell-lg-8 pr-0 pr-4-lg">
 
                 <div class="report-label">Scam description</div>
-                <div class="report-desc markdown-source reduce-1 enlarge-md"><?php echo $report['report_desc'] ?></div>
+                <div class="report-desc report-text markdown-source reduce-1 enlarge-md"><?php echo $report['report_desc'] ?></div>
 
             </div>
 

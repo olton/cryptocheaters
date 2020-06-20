@@ -34,8 +34,8 @@
                         </div>
 
                         <div class="mt-4">
-                            <label class="text-leader">Scam description: <a href="https://markdown-it.github.io/" target="_blank"><span class="text-small float-right mt-3 bg-cyan fg-white p-1">use markdown</span></a></label>
-                            <textarea style="min-height: 400px" name="desc"><?php echo $report['report_desc']?></textarea>
+                            <label class="text-leader">Scam description: <a href="https://markdown-it.github.io/" target="_blank"><span class="text-small float-right mt-3 bg-cyan fg-white p-1">You use markdown syntax</span></a></label>
+                            <div id="desc-editor"><textarea name="desc"><?php echo $report['report_desc']?></textarea></div>
                             <div class="text-small">Describe in detail how you became a victim of a fraudster.</div>
                         </div>
 
@@ -70,7 +70,7 @@
                             You can add more than one image Subscribing ICO or scammers working as a team.
                         </div>
 
-                        <input type="file" data-role="file" data-button-title="Select file(s) or drop file(s) here" data-mode="button" data-cls-component="drop-zone" multiple>
+                        <input id="add_evidence" type="file" data-role="file" data-button-title="Select file(s) or drop file(s) here" data-mode="button" data-cls-component="drop-zone" multiple>
                     </div>
                 </div>
 
@@ -83,8 +83,8 @@
                     <textarea placeholder="Enter photo short description..."></textarea>
                 </div>
 
-                <?php if (isset($evidences) && is_array($evidences)) {?>
                 <div id="evidences" class="report-evidences row">
+                <?php if (isset($evidences) && is_array($evidences)) {?>
                     <?php foreach ($evidences as $index => $evidence) {?>
                         <div class="evidence">
                             <span class="button square alert z-1"><span class="mif-bin"></span></span>
@@ -95,30 +95,41 @@
                             <textarea placeholder="Enter photo short description..." name="evidence_desc[]"><?php echo $evidence['evidence_desc']?></textarea>
                         </div>
                     <?php }?>
-                </div>
                 <?php }?>
-
-                <hr class="mt-4 mb-8">
-
-                <?php if (isset($docs) && is_array($docs)) {?>
-                <div id="docs" class="report-evidences row">
-                    <?php foreach ($docs as $index => $evidence) {?>
-                        <div class="evidence">
-                            <span class="button square alert z-1"><span class="mif-bin"></span></span>
-                            <div class="photo-container">
-                                <img src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
-                            </div>
-                            <input type="hidden" name="doc[]" value="<?php echo $evidence['evidence_image']?>"/>
-                            <textarea placeholder="Enter photo short description..." name="doc_desc[]"><?php echo $evidence['evidence_desc']?></textarea>
-                        </div>
-                    <?php }?>
                 </div>
-                <?php }?>
+
+<!--                <hr class="mt-4 mb-8">-->
+<!---->
+<!--                <label class="text-leader">-->
+<!--                    Additional docs:-->
+<!--                </label>-->
+<!--                <div class="text-small mb-2">-->
+<!--                    You can add one or more scan photos of documents.-->
+<!--                </div>-->
+<!---->
+<!--                <input id="add_doc" type="file" data-role="file" data-button-title="Select file(s) or drop file(s) here" data-mode="button" multiple>-->
+<!---->
+<!--                <hr class="mt-4 mb-8">-->
+<!---->
+<!--                <div id="docs" class="report-evidences row">-->
+<!--                --><?php //if (isset($docs) && is_array($docs)) {?>
+<!--                    --><?php //foreach ($docs as $index => $evidence) {?>
+<!--                        <div class="evidence">-->
+<!--                            <span class="button square alert z-1"><span class="mif-bin"></span></span>-->
+<!--                            <div class="photo-container">-->
+<!--                                <img src="--><?php //echo $evidence['evidence_image']?><!--" data-evidence="--><?php //echo $evidence['evidence_id']?><!--" data-report="--><?php //echo $evidence['evidence_report']?><!--">-->
+<!--                            </div>-->
+<!--                            <input type="hidden" name="doc[]" value="--><?php //echo $evidence['evidence_image']?><!--"/>-->
+<!--                            <textarea placeholder="Enter photo short description..." name="doc_desc[]">--><?php //echo $evidence['evidence_desc']?><!--</textarea>-->
+<!--                        </div>-->
+<!--                    --><?php //}?>
+<!--                --><?php //}?>
+<!--                </div>-->
 
                 <hr class="mt-4 mb-8">
 
                 <div class="form-actions">
-                    <button class="button secondary">Update Report</button>
+                    <button class="button alert large">Update Report</button>
                     <button class="button link no-decor" type="button" onclick="back()"><span class="fg-hero fg-dark-hover">Cancel</span></button>
                 </div>
 

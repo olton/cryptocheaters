@@ -119,6 +119,9 @@ textarea {
   background-color: #f8f8f8;
   overflow: hidden;
 }
+.report-desc img {
+  width: auto;
+}
 .report-resources {
   display: flex;
   flex-flow: row wrap;
@@ -203,6 +206,20 @@ textarea {
   background-size: 64px;
   background-position: top 10px right 0;
   padding: 8px 16px;
+  transition: transform 0.1s linear;
+  z-index: 1;
+}
+.scam-card .scammer-name {
+  color: #888e92;
+}
+.scam-card:hover {
+  background-color: #ffffff !important;
+  transform: scale(1.05);
+  z-index: 2;
+  box-shadow: 2px 2px 5px #888e92;
+}
+.scam-card:hover .scammer-name {
+  color: #617d89;
 }
 #evidences .present-photo {
   width: calc(25% - 8px);
@@ -216,5 +233,21 @@ textarea {
   #evidences .present-photo {
     width: calc(10% - 8px) !important;
   }
+}
+.editormd-form > * {
+  float: none!important;
+  width: 100%!important;
+}
+.editormd-form label {
+  padding-bottom: 0;
+}
+.editormd-image-dialog {
+  height: auto!important;
+}
+.editormd-dialog-footer {
+  margin-top: 10px;
+}
+.br-wrap {
+  margin-top: -10px;
 }
 /*# sourceMappingURL=site.css.map */

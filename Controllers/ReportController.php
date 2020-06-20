@@ -8,17 +8,20 @@ use Models\ReportModel;
 
 class ReportController extends GeneralController {
     private $report_model;
+    private $report_order;
 
     public function __construct() {
         $this->report_model = new ReportModel();
+        $this->report_order = ['report_name', 'report_type', 'votes', 'report_created', 'nickname'];
     }
 
     public function Index(){
         global $GET;
 
         $page = isset($GET['page']) ? intval($GET['page']) : 1;
+        $order = isset($GET['order']) && in_array($GET['order'], $this->report_order) ? $GET['order'] : 'report_name';
 
-        $this->report_model->page_size = 12;
+        $this->report_model->page_size = 24;
 
         $filter = "1=1";
         if (isset($GET['q'])) {
@@ -27,13 +30,16 @@ class ReportController extends GeneralController {
         }
 
         $params = [
-            "page_title" => "Scam reports on CryptoCheaters.com",
-            "reports" => $this->report_model->Index($filter, $page),
+            "page_title" => "All Crypto Scam reports on CryptoScamAlert.com",
+            "reports" => $this->report_model->Index($filter, (in_array($order, ['votes', 'report_created']) ? $order . " desc" : $order), $page),
             "newest" => $this->report_model->Newest(),
             "rows" => $this->report_model->page_size,
             "page" => $page,
             "query" => isset($GET['q']) ? $GET['q'] : "",
-            "length" => $this->report_model->Total($filter)
+            "length" => $this->report_model->Total($filter),
+            "order" => $order,
+            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
         ];
 
         $view = new Viewer(TEMPLATE_PATH);
@@ -44,8 +50,10 @@ class ReportController extends GeneralController {
         $this->report_model->page_size = 20;
 
         $params = [
-            "page_title" => "Newest Scam reports on CryptoCheaters.com",
+            "page_title" => "Newest Crypto Scam reports on CryptoScamAlert.com",
             "reports" => $this->report_model->Newest("1=1", 20),
+            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
         ];
 
         $view = new Viewer(TEMPLATE_PATH);
@@ -56,17 +64,20 @@ class ReportController extends GeneralController {
         global $GET;
 
         $page = isset($GET['page']) ? intval($GET['page']) : 1;
+        $order = 'votes desc';
 
-        $this->report_model->page_size = 12;
+        $this->report_model->page_size = 24;
 
         $filter = "votes > 0";
 
         $params = [
-            "page_title" => "Top Scam reports on CryptoCheaters.com",
-            "reports" => $this->report_model->Index($filter, $page),
+            "page_title" => "Top Crypto scammers reports on CryptoScamAlert.com",
+            "reports" => $this->report_model->Index($filter, $order, $page),
             "rows" => $this->report_model->page_size,
             "page" => $page,
-            "length" => $this->report_model->Total($filter)
+            "length" => $this->report_model->Total($filter),
+            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
         ];
 
         $view = new Viewer(TEMPLATE_PATH);
@@ -80,13 +91,14 @@ class ReportController extends GeneralController {
         $description = substr($description, 0, strrpos($description, ".")+1);
 
         $params = [
-            "page_title" => "Report new scam to CryptoCheaters.com",
+            "page_title" => "Report of scam on CryptoScamAlert.com",
             "report" => $report,
             "evidences" => $this->report_model->Evidences($id),
             "docs" => $this->report_model->Docs($id),
             "keywords" => $keywords,
             "description" => $description,
-            "scripts" => ["markdown-it/markdown-it.js"]
+            "scripts" => ["markdown-it/markdown-it.js", "metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("report", $params);
@@ -94,8 +106,10 @@ class ReportController extends GeneralController {
 
     public function Add(){
         $params = [
-            "page_title" => "Report new scam to CryptoCheaters.com",
-            "report_types" => $this->report_model->Types()
+            "page_title" => "Report new Crypto scam to CryptoScamAlert.com",
+            "report_types" => $this->report_model->Types(),
+            "scripts" => ["js/jquery-3.5.1.min.js", "editor.md/editormd.min.js", "editor.md/languages/en.js", "metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "editor.md/css/editormd.min.css", "css/site.css"]
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("add", $params);
@@ -103,11 +117,13 @@ class ReportController extends GeneralController {
 
     public function Update($id){
         $params = [
-            "page_title" => "Report new scam to CryptoCheaters.com",
+            "page_title" => "Report Crypto scam to CryptoScamAlert.com",
             "report_types" => $this->report_model->Types(),
             "report" => $this->report_model->Report($id),
             "evidences" => $this->report_model->Evidences($id),
             "docs" => $this->report_model->Docs($id),
+            "scripts" => ["js/jquery-3.5.1.min.js", "editor.md/editormd.min.js", "editor.md/languages/en.js", "metro/js/metro.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "editor.md/css/editormd.min.css", "css/site.css"]
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("update", $params);

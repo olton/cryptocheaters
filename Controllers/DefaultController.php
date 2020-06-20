@@ -16,12 +16,16 @@ class DefaultController extends GeneralController {
     }
 
     public function Index(){
+        $order = 'votes desc';
         $this->report_model->page_size = 6;
         $params = [
-            "page_title" => "Report Crypto Scam",
-            "reports" => $this->report_model->Index("1=1", 1),
+            "page_title" => "CryptoScamAlert.com - Report Crypto Scam",
+            "reports" => $this->report_model->Index("1=1", $order, 1),
             "newest" => $this->report_model->Newest(),
-            "evidences" => $this->report_model->RandEvidences(10)
+            "evidences" => $this->report_model->RandEvidences(10),
+            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("index", $params);
@@ -29,7 +33,10 @@ class DefaultController extends GeneralController {
 
     public function Terms(){
         $params = [
-            "page_title" => "CryptoCheaters.com - Terms and conditions"
+            "page_title" => "CryptoScamAlert.com - Terms and conditions",
+            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("terms", $params);
@@ -37,7 +44,10 @@ class DefaultController extends GeneralController {
 
     public function PageNotFound(){
         $params = array(
-            "page_title" => "CryptoCheaters.com - Page not found"
+            "page_title" => "CryptoScamAlert.com - Page not found",
+            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+
         );
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("404", $params);
@@ -45,7 +55,10 @@ class DefaultController extends GeneralController {
 
     public function Page500(){
         $params = array(
-            "page_title" => "CryptoCheaters.com - System error!"
+            "page_title" => "CryptoScamAlert.com - System error!",
+            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+
         );
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("500", $params);

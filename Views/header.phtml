@@ -2,11 +2,11 @@
     <nav data-role="appbar" class="pos-relative container bg-hero" data-expand-point="lg">
         <a href="/" class="brand no-hover text-bold">Crypto<span class="fg-red">ScamAlert</span>.com</a>
         <ul class="app-bar-menu ml-auto">
-            <li><a href="/scams">All Scammers</a></li>
-            <li><a href="/newest">Newest scams</a></li>
-            <li><a href="/top">Top scams</a></li>
-            <li><a href="<?php echo $_SESSION['current'] ? "/add" : "/login" ?>" class="fg-red text-bold">Report scam</a></li>
-            <li><a href="/verification" class="fg-orange text-bold"><div class="ani-vertical">Verification</div></a></li>
+            <li><a href="/crypto_scammers">All Scammers</a></li>
+            <li><a href="/newest_crypto_scam">Newest scams</a></li>
+            <li><a href="/top_crypto_scammers">Top scams</a></li>
+            <li><a href="<?php echo $_SESSION['current'] ? "/report_crypto_scam" : "/login" ?>" class="fg-red text-bold">Report scam</a></li>
+            <li><a href="/verification" class="fg-orange text-bold"><div class="ani-vertical">Check before invest!</div></a></li>
             <?php
                 if ($_SESSION['current']) {
                     ?>

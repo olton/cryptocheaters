@@ -9,10 +9,11 @@
     <meta name="author" content=" CryptoScamAlert.com ">
     <meta name="robots" content="index,follow" />
     <meta name="googlebot" content="index,follow" />
-    
-    <link rel="stylesheet" href="/<?php echo TEMPLATE_PATH?>metro/css/metro-all<?php echo PRODUCTION_MODE ? ".min" : ""?>.css<?php echo PRODUCTION_MODE ? "" : "?rnd=". rand()?>">
-    <link rel="stylesheet" href="/<?php echo TEMPLATE_PATH?>css/site.css<?php echo PRODUCTION_MODE ? "" : "?rnd=". rand()?>">
 
-    <title><?php echo isset($page_title) ? $page_title : "CryptoCheaters - The whole truth about crypto scammers" ?></title>
+    <?php if (isset($styles)) foreach ($styles as $style) { ?>
+        <link rel="stylesheet" href="/<?php echo TEMPLATE_PATH . $style . (PRODUCTION_MODE ? "" : "?rnd=". rand())?>">
+    <?php } ?>
+
+    <title><?php echo isset($page_title) ? $page_title : "CryptoScamAlert.com - The whole truth about crypto scammers" ?></title>
 </head>
 <body class="m4-cloak <?php echo isset($body_class) ? $body_class : "" ?>">

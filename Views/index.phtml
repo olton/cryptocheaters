@@ -15,13 +15,13 @@
                     <br><br><span class="text-bold">ARE YOU A VICTIM?  REPORT IT!</span>
                 </span></div>
                     <div class="mt-10 d-none d-block-md">
-                        <a href="/scams" class="button secondary large">View scams</a>
-                        <a href="<?php echo $_SESSION['current'] ? "/add" : "/login" ?>" class="button alert large">Report new scam</a>
+                        <a href="/crypto_scammers" class="button secondary large">View scams</a>
+                        <a href="<?php echo $_SESSION['current'] ? "/report_crypto_scam" : "/login" ?>" class="button alert large">Report new scam</a>
                         <a href="/verification" class="button warning large">Request verification</a>
                     </div>
                     <div class="mt-10 d-none-md">
-                        <a href="/scams" class="button secondary">View scams</a>
-                        <a href="<?php echo $_SESSION['current'] ? "/add" : "/login" ?>" class="button alert">Report new scam</a>
+                        <a href="/crypto_scammers" class="button secondary">View scams</a>
+                        <a href="<?php echo $_SESSION['current'] ? "/report_crypto_scam" : "/login" ?>" class="button alert">Report new scam</a>
                         <a href="/verification" class="button warning">Request verification</a>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
         <div class="row">
             <div class="cell-md-2"></div>
             <div class="cell-md-8">
-                <form action="/scams" method="get">
+                <form action="/crypto_scammers" method="get">
                     <input type="text" class="input-large" name="q"
                            data-role="input"
                            data-prepend="<span class='text-leader'>Search:</span>"
@@ -95,7 +95,7 @@
             <p class="reduce-1 enlarge-1-md pl-5-fs pr-5-fs pl-20-md pr-20-md">
                 The <span class="text-bold">Crypto<span class="fg-red">ScamAlert</span></span> database contains the most up-to-date information about Crypto ICOs, Crypto Bloggers,
                 Crypto Exchanges and how some of them scam people.
-                If you've witnessed or been the victim of crypto scam, please report it <a href="/add">here!</a>
+                If you've witnessed or been the victim of crypto scam, please report it <a href="/report_crypto_scam">here!</a>
             </p>
         </div>
 
@@ -145,20 +145,7 @@
         <?php foreach ($newest as $index => $report) {?>
             <div class="cell-lg-4">
                 <div class="scam-card bg-white border">
-                    <div class="text-small text-bold">Scammer</div>
-                    <a class="no-decor" href="/report/<?php echo $report['report_id']?>">
-                        <div class="h5 fg-hero2 mb-3 mt-0 text-ellipsis"><?php echo $report['report_name']?></div>
-                    </a>
-                    <div class="text-small">Scam type: <span class="text-bold"><?php echo $report['report_type_name']?></span></div>
-                    <div class="text-small">Voted: <span class="text-bold"><?php echo $report['votes']?></span></div>
-                    <div class="text-small">Reported by: <span class="text-bold"><?php echo $report['nickname']?></span></div>
-                    <div class="text-small">Report at: <span class="text-bold"><?php echo $report['report_created']?></span></div>
-                    <div>
-                        <hr class="bg-lightGray thin mt-2">
-                        <div class="d-flex">
-                            <a href="/report/<?php echo $report['report_id']?>">See details <span class="mif-arrow-right"></span></a>
-                        </div>
-                    </div>
+                    <?php include "scam-card.phtml" ?>
                 </div>
             </div>
         <?php
@@ -170,7 +157,7 @@
         </div>
 
         <div class="mt-4">
-            <a href="/scams" class="text-leader no-decor fg-hero2 fg-dark-hover">
+            <a href="/crypto_scammers" class="text-leader no-decor fg-hero2 fg-dark-hover">
                 See all reports <span class="mif-arrow-right"></span>
             </a>
         </div>
@@ -196,20 +183,7 @@
         <?php foreach ($reports as $index => $report) {?>
             <div class="cell-lg-4">
                 <div class="scam-card border">
-                    <div class="text-small text-bold">Scammer</div>
-                    <a class="no-decor" href="/report/<?php echo $report['report_id']?>">
-                        <div class="h5 fg-hero2 mb-3 mt-0 text-ellipsis"><?php echo $report['report_name']?></div>
-                    </a>
-                    <div class="text-small">Scam type: <span class="text-bold"><?php echo $report['report_type_name']?></span></div>
-                    <div class="text-small">Voted: <span class="text-bold"><?php echo $report['votes']?></span></div>
-                    <div class="text-small">Reported by: <span class="text-bold"><?php echo $report['nickname']?></span></div>
-                    <div class="text-small">Report at: <span class="text-bold"><?php echo $report['report_created']?></span></div>
-                    <div>
-                        <hr class="bg-lightGray thin mt-2">
-                        <div class="d-flex">
-                            <a href="/report/<?php echo $report['report_id']?>">See details <span class="mif-arrow-right"></span></a>
-                        </div>
-                    </div>
+                    <?php include "scam-card.phtml" ?>
                 </div>
             </div>
         <?php
@@ -221,7 +195,7 @@
         </div>
 
         <div class="mt-4">
-            <a href="/scams" class="text-leader no-decor fg-hero2 fg-dark-hover">
+            <a href="/crypto_scammers" class="text-leader no-decor fg-hero2 fg-dark-hover">
                 See all reports <span class="mif-arrow-right"></span>
             </a>
         </div>
@@ -246,7 +220,7 @@
             <?php foreach ($evidences as $index => $evidence) {?>
                 <div class="evidence present-photo">
                     <div class="photo-container c-pointer">
-                        <a href="/report/<?php echo $evidence['evidence_report']?>">
+                        <a href="/crypto_scam_report/<?php echo $evidence['evidence_report']?>">
                             <img src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
                         </a>
                     </div>

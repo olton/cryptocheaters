@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row">
             <div class="cell-md-10 order-2 order-md-1">
-                <h1>Scams <small>(<?php echo $length?>)</small></h1>
+                <h1>All Crypto Scammers <small>(<?php echo $length?>)</small></h1>
                 <div class="text-leader2">
                     Below are the list of scammers in the CryptoScamAlert database. Scammers list ordered by voting.
                 </div>
@@ -20,7 +20,7 @@
 
 <div class="container-fluid">
     <div class="container pt-5">
-        <form action="/scams" method="get">
+        <form action="/crypto_scammers" method="get">
             <input type="text" class="input-large" name="q"
                    data-role="input"
                    data-prepend="<span class='text-leader'>Search:</span>"
@@ -33,36 +33,22 @@
 
 <div class="container-fluid">
     <div class="container pb-10">
-        <hr class="mt-5">
 
-        <?php if (isset($reports) && is_array($reports) > 0) {?>
+        <?php if (isset($reports) && count($reports) > 0) {?>
+
+        <div class="mb-4 mt-4">
+            <div id="pagination-top" data-view="crypto_scammers"
+                 data-length="<?php echo isset($length) ? $length : 0?>"
+                 data-rows="<?php echo isset($rows) ? $rows : 0?>"
+                 data-page="<?php echo isset($page) ? $page : 0?>"
+            ></div>
+        </div>
+
         <div class="row">
             <?php foreach ($reports as $index => $report) {?>
             <div class="cell-lg-4">
                 <div class="scam-card border">
-                    <div class="text-small text-bold">Scammer</div>
-                    <a class="no-decor" href="/report/<?php echo $report['report_id']?>">
-                        <div class="h5 fg-hero2 mb-3 mt-0 text-ellipsis"><?php echo $report['report_name']?></div>
-                    </a>
-                    <div class="text-small">Scam type: <span class="text-bold"><?php echo $report['report_type_name']?></span></div>
-                    <div class="text-small">Voted: <span class="text-bold"><?php echo $report['votes']?></span></div>
-                    <div class="text-small">Reported by: <span class="text-bold"><?php echo $report['nickname']?></span></div>
-                    <div class="text-small">Report at: <span class="text-bold"><?php echo $report['report_created']?></span></div>
-                    <div>
-                        <hr class="bg-lightGray thin mt-2">
-                        <div class="d-flex">
-                            <a href="/report/<?php echo $report['report_id']?>">See details <span class="mif-arrow-right"></span></a>
-                            <div class="ml-auto">
-                                <button class="button square secondary small d-none" onclick="printReport(<?php echo $report['report_id']?>)"><span class="mif-print"></span></button>
-                                <?php if ($_SESSION['current'] && (($_SESSION['current']) === $report['report_user_id'] || intval($_SESSION['user']['admin']) === 1)) {?>
-                                <a class="button square secondary small" href="/update/<?php echo $report['report_id']?>"><span class="mif-pencil"></span></a>
-                                <?php }?>
-                                <?php if (isset($_SESSION['user']) && intval($_SESSION['user']['admin']) === 1) {?>
-                                <button class="button square alert small" onclick="delReport(<?php echo $report['report_id']?>, '/scams')"><span class="mif-bin"></span></button>
-                                <?php }?>
-                            </div>
-                        </div>
-                    </div>
+                    <?php include "scam-card.phtml" ?>
                 </div>
             </div>
             <?php
@@ -72,8 +58,8 @@
             <?php }}?>
         </div>
 
-        <div class="mt-10">
-            <div id="pagination" data-view="scams"
+        <div class="mt-4">
+            <div id="pagination" data-view="crypto_scammers"
                  data-length="<?php echo isset($length) ? $length : 0?>"
                  data-rows="<?php echo isset($rows) ? $rows : 0?>"
                  data-page="<?php echo isset($page) ? $page : 0?>"

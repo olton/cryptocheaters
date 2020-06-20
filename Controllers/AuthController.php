@@ -17,7 +17,10 @@ class AuthController extends GeneralController {
     public function Login(){
         $params = [
             "page_title" => "Login to CryptoCheaters.com",
-            "body_class" => "pt-0 h-vh-100"
+            "body_class" => "pt-0 h-vh-100",
+            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("login", $params);
@@ -26,7 +29,10 @@ class AuthController extends GeneralController {
     public function Signup(){
         $params = [
             "page_title" => "Sign Up to CryptoCheaters.com",
-            "body_class" => "pt-0 h-vh-100"
+            "body_class" => "pt-0 h-vh-100",
+            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("signup", $params);

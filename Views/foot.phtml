@@ -1,9 +1,6 @@
-<script src="/<?php echo TEMPLATE_PATH?>metro/js/metro<?php echo PRODUCTION_MODE ? ".min" : ""?>.js<?php echo PRODUCTION_MODE ? "" : "?rnd=". rand()?>"></script>
-<script src="/<?php echo TEMPLATE_PATH?>js/site.js<?php echo PRODUCTION_MODE ? "" : "?rnd=". rand()?>"></script>
-
 <?php
     if (isset($scripts)) foreach ($scripts as $script) {
-        echo "<script src='/".TEMPLATE_PATH.$script.( PRODUCTION_MODE ? "" : "?rnd=" . rand() )."'></script>";
+        echo "<script src='/".TEMPLATE_PATH.$script.( PRODUCTION_MODE ? "" : "?rnd=" . rand() )."'></script>\n";
     }
 ?>
 

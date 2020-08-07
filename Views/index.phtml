@@ -15,14 +15,14 @@
                     <br><br><span class="text-bold">ARE YOU A VICTIM?  REPORT IT!</span>
                 </span></div>
                     <div class="mt-10 d-none d-block-md">
-                        <a href="/crypto_scammers" class="button secondary large">View scams</a>
-                        <a href="<?php echo $_SESSION['current'] ? "/report_crypto_scam" : "/login" ?>" class="button alert large">Report new scam</a>
-                        <a href="/verification" class="button warning large">Request verification</a>
+                        <a href="/crypto_scammers" class="button secondary large m-1-md">View scams</a>
+                        <a href="<?php echo $_SESSION['current'] ? "/report_crypto_scam" : "/login" ?>" class="button alert large m-1-md">Report new scam</a>
+                        <a href="/verification" class="button warning large m-1-md">Request verification</a>
                     </div>
                     <div class="mt-10 d-none-md">
-                        <a href="/crypto_scammers" class="button secondary">View scams</a>
-                        <a href="<?php echo $_SESSION['current'] ? "/report_crypto_scam" : "/login" ?>" class="button alert">Report new scam</a>
-                        <a href="/verification" class="button warning">Request verification</a>
+                        <a href="/crypto_scammers" class="button secondary m-1">View scams</a>
+                        <a href="<?php echo $_SESSION['current'] ? "/report_crypto_scam" : "/login" ?>" class="button alert m-1">Report new scam</a>
+                        <a href="/verification" class="button warning m-1">Request verification</a>
                     </div>
                 </div>
             </div>
@@ -55,37 +55,59 @@
 <div class="container-fluid services">
     <div class="container pt-5 pb-5 pt-10-md pb-10-md">
         <div class="row">
-            <div class="cell-lg-4">
-                <div class="service-item m-4">
+            <div class="cell-md-6 cell-lg-3">
+                <div class="service-item m-1">
                     <span class="mif-eye mif-6x fg-hero"></span>
                     <div class="h4 fg-hero2">We follow</div>
-                    <div>
+                    <div class="mb-2">
                         We are constantly monitoring the crypto currency market in search of fraudsters and how do they
                         work.
-                        If you are a Victim of any Crypto Scam - Please report the incident to <a href="/">CryptoScamAlert.com</a>
+                        If you are a Victim of any Crypto Scam - Please report the incident to CryptoScamAlert.com
+                    </div>
+                    <div class="mt-auto">
+                        <a class="button alert" href="/report_crypto_scam">Report Now! <span class="mif-arrow-right"></span></a>
                     </div>
                 </div>
             </div>
-            <div class="cell-lg-4">
-                <div class="service-item m-4">
+            <div class="cell-md-6 cell-lg-3">
+                <div class="service-item m-1">
                     <span class="mif-thumbs-up mif-6x fg-hero"></span>
                     <div class="h4 fg-hero2">Actual database</div>
-                    <div>
+                    <div class="mb-2">
                         Our database is constantly updated by us and users of CryptoScamAlert.
                         If you've witnessed or been the victim of crypto scam, please report it here.
                         It may help us to bring the offender to justice and make sure this doesn't happen to anyone
                         else.
                     </div>
+                    <div class="mt-auto">
+                        <a class="button primary" href="/crypto_scammers">See scammers! <span class="mif-arrow-right"></span></a>
+                    </div>
                 </div>
             </div>
-            <div class="cell-lg-4">
-                <div class="service-item m-4">
+            <div class="cell-md-6 cell-lg-3">
+                <div class="service-item m-1">
                     <span class="mif-users mif-6x fg-hero"></span>
                     <div class="h4 fg-hero2">Free and Anonymous!</div>
-                    <div>
+                    <div class="mb-2">
                         This is a free and user-friendly project. We keep your privacy.
                         You just need to have an email to register.
                         No other personal details required. All reports are Anonymous!
+                    </div>
+                    <div class="mt-auto">
+                        <a class="button success" href="/signup">Register now! <span class="mif-arrow-right"></span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="cell-md-6 cell-lg-3">
+                <div class="service-item m-1">
+                    <span class="mif-security mif-6x fg-hero"></span>
+                    <div class="h4 fg-hero2">Verification!</div>
+                    <div class="mb-2">
+                        Interested in investing in crypto? Have not found your potential partner on our scammers data but still have doubts? We can help!
+                        We will do and provide you with our research and recommendation on any company or individual.
+                    </div>
+                    <div class="mt-auto">
+                        <a class="button warning" href="/verification">Request Verification <span class="mif-arrow-right"></span></a>
                     </div>
                 </div>
             </div>
@@ -205,33 +227,7 @@
 
 <?php }?>
 
-<?php if (isset($evidences) && is_array($evidences) && count($evidences) > 0) {?>
-
-<div class="container-fluid bg-light">
-    <div class="container pt-10 pb-10">
-        <div class="display1 fg-hero2 mb-0"><span class="fg-dark">Crypto</span><span class="fg-red">ScamAlert</span> Gallery</div>
-        <div class="text-leader2">
-            Random scammers in the CryptoScamAlert database
-        </div>
-
-        <hr class="bg-gray thin mt-2">
-
-        <div id="evidences" class="row" style="background-image: none">
-            <?php foreach ($evidences as $index => $evidence) {?>
-                <div class="evidence present-photo">
-                    <div class="photo-container c-pointer">
-                        <a href="/crypto_scam_report/<?php echo $evidence['evidence_report']?>">
-                            <img src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
-                        </a>
-                    </div>
-                </div>
-            <?php }?>
-        </div>
-
-    </div>
-</div>
-
-<?php }?>
+<?php include "random-evidences.phtml"?>
 
 <div class="container-fluid promotion">
     <div class="container">

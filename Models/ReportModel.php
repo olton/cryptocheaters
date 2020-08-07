@@ -115,7 +115,6 @@ class ReportModel extends Model {
             where $filter 
             order by votes desc 
         ";
-        var_dump($sql);
         $h = $this->Select($sql);
         if ($this->Rows($h) === 0) {
             return false;

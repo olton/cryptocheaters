@@ -69,13 +69,17 @@
                 <div class="report-label">Scammer's link</div>
                 <div class="report-desc"><a href="#" onclick="openScammerLink(this)"><?php echo $report['report_link']?></a></div>
 
-                <?php if (isset($evidences) && is_array($evidences) && count($evidences) > 0) {?>
+                <?php if (isset($photos) && is_array($photos) && count($photos) > 0) {?>
                     <div class="report-label">Scammer's Photo</div>
-                    <div id="evidences" class="report-evidences row" style="background-image: none">
-                        <?php foreach ($evidences as $index => $evidence) {?>
+                    <div id="evidences" class="report-evidences row" style="background-image: none" data-role="lightbox">
+                        <?php foreach ($photos as $index => $evidence) {?>
                             <div class="evidence m-0 cell-6 cell-md-4 cell-lg-6">
                                 <div class="photo-container c-pointer">
-                                    <img src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
+                                    <img src="<?php echo $evidence['evidence_image']?>"
+                                         data-evidence="<?php echo $evidence['evidence_id']?>"
+                                         data-report="<?php echo $evidence['evidence_report']?>"
+                                         alt="<?php echo $evidence['evidence_desc']?>"
+                                    >
                                 </div>
                                 <?php if ($evidence['evidence_desc'] !== '') {?>
                                 <div class="p-2 bg-light text-small evidence-desc">
@@ -95,7 +99,11 @@
                         <?php foreach ($docs as $index => $evidence) {?>
                             <div class="evidence m-0 cell-6 cell-md-4 cell-lg-6">
                                 <div class="photo-container c-pointer">
-                                    <img src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
+                                    <img src="<?php echo $evidence['evidence_image']?>"
+                                         data-evidence="<?php echo $evidence['evidence_id']?>"
+                                         data-report="<?php echo $evidence['evidence_report']?>"
+                                         alt="<?php echo $evidence['evidence_desc']?>"
+                                    >
                                 </div>
                                 <?php if ($evidence['evidence_desc'] !== '') {?>
                                     <div class="p-2 bg-light text-small evidence-desc">
@@ -115,6 +123,8 @@
 
     </div>
 </div>
+
+<?php include "random-evidences.phtml" ?>
 
 <?php include "footer.phtml" ?>
 

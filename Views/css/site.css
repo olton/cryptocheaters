@@ -50,8 +50,10 @@ img {
 .service-item {
   border: 1px solid #eaeaea;
   height: 100%;
-  padding: 10px 20px 0;
+  padding: 10px 20px 10px;
   font-size: 14px;
+  display: flex;
+  flex-flow: column;
 }
 .feature {
   font-size: 14px;

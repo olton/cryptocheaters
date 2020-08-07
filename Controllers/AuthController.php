@@ -16,7 +16,7 @@ class AuthController extends GeneralController {
 
     public function Login(){
         $params = [
-            "page_title" => "Login to CryptoCheaters.com",
+            "page_title" => "Login to CryptoScamAlert.com",
             "body_class" => "pt-0 h-vh-100",
             "scripts" => ["metro/js/metro.min.js", "js/site.js"],
             "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
@@ -28,7 +28,7 @@ class AuthController extends GeneralController {
 
     public function Signup(){
         $params = [
-            "page_title" => "Sign Up to CryptoCheaters.com",
+            "page_title" => "Sign Up to CryptoScamAlert.com",
             "body_class" => "pt-0 h-vh-100",
             "scripts" => ["metro/js/metro.min.js", "js/site.js"],
             "styles" => ["metro/css/metro-all.min.css", "css/site.css"]

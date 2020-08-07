@@ -1,7 +1,7 @@
 /*
- * Metro 4 Components Library v4.3.8  (https://metroui.org.ua)
+ * Metro 4 Components Library v4.4.0  (https://metroui.org.ua)
  * Copyright 2012-2020 Sergey Pimenov
- * Built at 16/06/2020 19:15:17
+ * Built at 07/08/2020 15:24:07
  * Licensed under MIT
  */
 (function (global, undefined) {
@@ -603,7 +603,7 @@ function hasProp(obj, prop){
 
 /* global hasProp */
 
-var m4qVersion = "v1.0.7. Built at 16/06/2020 10:44:43";
+var m4qVersion = "v1.0.8. Built at 06/08/2020 18:05:15";
 
 /* eslint-disable-next-line */
 var matches = Element.prototype.matches
@@ -3855,14 +3855,14 @@ $.extend({
     hide: function(el, cb){
         var $el = $(el);
 
-        if (el.style.display) {
-            $el.origin('display', (el.style.display ? el.style.display : getComputedStyle(el, null).display));
-        }
+        $el.origin('display', (el.style.display ? el.style.display : getComputedStyle(el, null).display));
         el.style.display = 'none';
+
         if (typeof cb === "function") {
             $.bind(cb, el);
             cb.call(el, arguments);
         }
+
         return this;
     },
 
@@ -4257,6 +4257,7 @@ $.fn.extend({
 
 $.init = function(sel, ctx){
     var parsed, r;
+    var that = this;
 
     this.uid = $.uniqueId();
 
@@ -4314,24 +4315,37 @@ $.init = function(sel, ctx){
 
     if (typeof sel === "string") {
 
-        sel = sel.trim();
+        if (sel[0] === "@") {
 
-        if (sel === "#" || sel === ".") {
-            console.warn("Selector can't be # or .") ;
-            return this;
-        }
+            $("[data-role]").each(function(){
+                var roles = $(this).attr("data-role").split(",").map(function(v){
+                    return (""+v).trim();
+                });
+                if (roles.indexOf(sel.slice(1)) > -1) {
+                    that.push(this);
+                }
+            });
 
-        parsed = $.parseHTML(sel, ctx);
-
-        if (parsed.length === 1 && parsed[0].nodeType === 3) { // Must be a text node -> css sel
-            [].push.apply(this, document.querySelectorAll(sel));
         } else {
-            $.merge(this, parsed);
+            sel = sel.trim();
+
+            if (sel === "#" || sel === ".") {
+                console.warn("Selector can't be # or .") ;
+                return this;
+            }
+
+            parsed = $.parseHTML(sel, ctx);
+
+            if (parsed.length === 1 && parsed[0].nodeType === 3) { // Must be a text node -> css sel
+                [].push.apply(this, document.querySelectorAll(sel));
+            } else {
+                $.merge(this, parsed);
+            }
         }
+
     }
 
     if (ctx !== undefined) {
-        var that = this;
         if (ctx instanceof $) {
             this.each(function () {
                 $(ctx).append(that);
@@ -4451,7 +4465,7 @@ $.noConflict = function() {
         window.METRO_CLOAK_REMOVE = meta_cloak !== undefined ? (""+meta_cloak).toLowerCase() : "fade";
     }
     if (window.METRO_CLOAK_DURATION === undefined) {
-        window.METRO_CLOAK_DURATION = meta_cloak_duration !== undefined ? parseInt(meta_cloak_duration) : 500;
+        window.METRO_CLOAK_DURATION = meta_cloak_duration !== undefined ? parseInt(meta_cloak_duration) : 300;
     }
 
     if (window.METRO_HOTKEYS_FILTER_CONTENT_EDITABLE === undefined) {window.METRO_HOTKEYS_FILTER_CONTENT_EDITABLE = true;}
@@ -4492,9 +4506,9 @@ $.noConflict = function() {
 
     var Metro = {
 
-        version: "4.3.8",
-        compileTime: "16/06/2020 19:15:25",
-        buildNumber: "746",
+        version: "4.4.0",
+        compileTime: "07/08/2020 15:24:07",
+        buildNumber: "750",
         isTouchable: isTouch,
         fullScreenEnabled: document.fullscreenEnabled,
         sheet: null,
@@ -4708,24 +4722,26 @@ $.noConflict = function() {
             };
             observerCallback = function(mutations){
                 mutations.map(function(mutation){
-
                     if (mutation.type === 'attributes' && mutation.attributeName !== "data-role") {
                         if (mutation.attributeName === 'data-hotkey') {
-
                             Metro.initHotkeys([mutation.target], true);
-
                         } else {
-
                             var element = $(mutation.target);
                             var mc = element.data('metroComponent');
-                            var newValue;
+                            var attr = mutation.attributeName, newValue = element.attr(attr), oldValue = mutation.oldValue;
 
                             if (mc !== undefined) {
+                                element.fire("attr-change", {
+                                    attr: attr,
+                                    newValue: newValue,
+                                    oldValue: oldValue,
+                                    __this: element[0]
+                                });
+
                                 $.each(mc, function(){
                                     var plug = Metro.getPlugin(element, this);
                                     if (plug && typeof plug.changeAttribute === "function") {
-                                        newValue = element.attr(mutation.attributeName);
-                                        plug.changeAttribute(mutation.attributeName, newValue, mutation.oldValue);
+                                        plug.changeAttribute(attr, newValue, oldValue);
                                     }
                                 });
                             }
@@ -4812,7 +4828,6 @@ $.noConflict = function() {
         },
 
         initHotkeys: function(hotkeys, redefine){
-            var that = this;
             $.each(hotkeys, function(){
                 var element = $(this);
                 var hotkey = element.attr('data-hotkey') ? element.attr('data-hotkey').toLowerCase() : false;
@@ -4822,13 +4837,17 @@ $.noConflict = function() {
                     return;
                 }
 
-                if (element.data('hotKeyBonded') === true && !that.utils.bool(redefine)) {
+                if (element.data('hotKeyBonded') === true && redefine !== true) {
                     return;
                 }
 
                 Metro.hotkeys[hotkey] = [this, fn];
-
                 element.data('hotKeyBonded', true);
+                element.fire("hot-key-bonded", {
+                    __this: element[0],
+                    hotkey: hotkey,
+                    fn: fn
+                });
             });
         },
 
@@ -4857,8 +4876,17 @@ $.noConflict = function() {
                                 mc.push(_func);
                             }
                             $this.data('metroComponent', mc);
+
+                            $this.fire("create", {
+                                __this: $this[0],
+                                name: _func
+                            });
+                            $(document).fire("component-create", {
+                                element: $this[0],
+                                name: _func
+                            });
                         } catch (e) {
-                            console.error("Error creating component " + func);
+                            console.error("Error creating component " + func + " for ", $this[0]);
                             throw e;
                         }
                     }
@@ -4879,7 +4907,7 @@ $.noConflict = function() {
 
             register(m4q);
 
-            if (window.METRO_JQUERY && window.jquery_present) {
+            if (window.useJQuery) {
                 register(jQuery);
             }
         },
@@ -4987,6 +5015,7 @@ $.noConflict = function() {
                     this.elem = el;
                     this.element = $(el);
                     this.options = $.extend( {}, defaults, options );
+                    this.component = this.elem;
 
                     this._setOptionsFromDOM();
                     this._runtime();
@@ -5041,20 +5070,34 @@ $.noConflict = function() {
                     }
                 },
 
-                _fireEvent: function(eventName, data, log){
+                _fireEvent: function(eventName, data, log, noFire){
                     var element = this.element, o = this.options;
-                    var _data = data ? Object.values(data) : {};
+                    var _data;
                     var event = eventName.camelCase().capitalize();
 
-                    Utils.exec(o["on"+event], _data, element[0]);
-                    element.fire(event.toLowerCase(), data);
+                    data = $.extend({}, data, {__this: element[0]});
+
+                    _data = data ? Object.values(data) : {};
 
                     if (log) {
-                        
-                        
-                        
-                        
+                        console.warn(log);
+                        console.warn("Event: " + "on"+eventName.camelCase().capitalize());
+                        console.warn("Data: ", data);
+                        console.warn("Element: ", element[0]);
                     }
+
+                    if (noFire !== true)
+                        element.fire(event.toLowerCase(), data);
+
+                    return Utils.exec(o["on"+event], _data, element[0]);
+                },
+
+                getComponent: function(){
+                    return this.component;
+                },
+
+                getComponentName: function(){
+                    return this.name;
                 }
             }, compObj);
 
@@ -5122,6 +5165,47 @@ $.noConflict = function() {
                 "random": "随机",
                 "save": "保存",
                 "reset": "重啟"
+            }
+        }
+    });
+}(Metro, m4q));
+
+(function(Metro, $) {
+    $.extend(Metro['locales'], {
+        'da-DK': {
+            "calendar": {
+                "months": [
+                    "Januar", "Februar", "Marts", "April", "Maj", "Juni", "Juli", "August", "September", "Oktober", "November", "December",
+                    "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
+                ],
+                "days": [
+                    "Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag",
+                    "Sø", "Ma", "Ti", "On", "To", "Fr", "Lø",
+                    "Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"
+                ],
+                "time": {
+                    "days": "DAGE",
+                    "hours": "TIMER",
+                    "minutes": "MIN",
+                    "seconds": "SEK",
+                    "month": "MON",
+                    "day": "DAG",
+                    "year": "ÅR"
+                }
+            },
+            "buttons": {
+                "ok": "OK",
+                "cancel": "Annuller",
+                "done": "Færdig",
+                "today": "Idag",
+                "now": "Nu",
+                "clear": "Ryd",
+                "help": "Hjælp",
+                "yes": "Ja",
+                "no": "Nej",
+                "random": "Tilfældig",
+                "save": "Gem",
+                "reset": "Nulstil"
             }
         }
     });
@@ -6077,7 +6161,7 @@ $.noConflict = function() {
         },
 
         $: function(){
-            return window.METRO_JQUERY && window.jquery_present ? jQuery : m4q;
+            return window.useJQuery ? jQuery : m4q;
         },
 
         isMetroObject: function(el, type){
@@ -6109,7 +6193,7 @@ $.noConflict = function() {
         },
 
         isIE11: function(){
-            return !!window.MSInputMethodContext && !!document.documentMode;
+            return !!window.MSInputMethodContext && !!document["documentMode"];
         },
 
         embedObject: function(val){
@@ -6313,8 +6397,9 @@ $.noConflict = function() {
         },
 
         github: function(repo, callback){
+            var that = this;
             $.json('https://api.github.com/repos/' + repo).then(function(data){
-                this.exec(callback, [data]);
+                that.exec(callback, [data]);
             });
         },
 
@@ -6727,9 +6812,9 @@ $.noConflict = function() {
                     range.selectNode(el);
                     sel.addRange(range);
                 }
-            } else if (body.createTextRange) {
-                range = body.createTextRange();
-                range.moveToElementText(el);
+            } else if (body["createTextRange"]) {
+                range = body["createTextRange"]();
+                range["moveToElementText"](el);
                 range.select();
             }
 
@@ -6741,8 +6826,8 @@ $.noConflict = function() {
                 } else if (window.getSelection().removeAllRanges) {  // Firefox
                     window.getSelection().removeAllRanges();
                 }
-            } else if (document.selection) {  // IE?
-                document.selection.empty();
+            } else if (document["selection"]) {  // IE?
+                document["selection"].empty();
             }
         },
 
@@ -9311,12 +9396,10 @@ $.noConflict = function() {
                 if (o.expand !== true) {
                     if (Utils.isValue(o.expandPoint) && Utils.mediaExist(o.expandPoint)) {
                         element.addClass("app-bar-expand");
-                        Utils.exec(o.onMenuExpand, null, element[0]);
-                        element.fire("menuexpand");
+                        that._fireEvent("menu-expand");
                     } else {
                         element.removeClass("app-bar-expand");
-                        Utils.exec(o.onMenuCollapse, null, element[0]);
-                        element.fire("menucollapse");
+                        that._fireEvent("menu-collapse");
                     }
                 }
 
@@ -9348,8 +9431,7 @@ $.noConflict = function() {
                 hamburger.removeClass("active");
             });
 
-            Utils.exec(o.onMenuClose, [menu[0]], element[0]);
-            element.fire("menuclose", {
+            this._fireEvent("menu-close", {
                 menu: menu[0]
             });
         },
@@ -9364,8 +9446,7 @@ $.noConflict = function() {
                 hamburger.addClass("active");
             });
 
-            Utils.exec(o.onMenuOpen, [menu[0]], element[0]);
-            element.fire("menuopen", {
+            this._fireEvent("menu-open", {
                 menu: menu[0]
             });
         },
@@ -10435,9 +10516,7 @@ $.noConflict = function() {
                 });
             }
 
-            this._fireEvent("calendar-create", {
-                element: element
-            });
+            this._fireEvent("calendar-create");
         },
 
         _dates2array: function(val, category){
@@ -10527,14 +10606,12 @@ $.noConflict = function() {
                 setTimeout(function(){
                     that._drawContent();
                     if (el.hasClass("prev-month") || el.hasClass("next-month")) {
-                        Utils.exec(o.onMonthChange, [that.current, element], element[0]);
-                        element.fire("monthchange", {
+                        that._fireEvent("month-change", {
                             current: that.current
                         });
                     }
                     if (el.hasClass("prev-year") || el.hasClass("next-year")) {
-                        Utils.exec(o.onYearChange, [that.current, element], element[0]);
-                        element.fire("yearchange", {
+                        that._fireEvent("year-change", {
                             current: that.current
                         });
                     }
@@ -10543,8 +10620,7 @@ $.noConflict = function() {
 
             element.on(Metro.events.click, ".button.today", function(){
                 that.toDay();
-                Utils.exec(o.onToday, [that.today, element]);
-                element.fire("today", {
+                that._fireEvent("today", {
                     today: that.today
                 });
             });
@@ -10552,20 +10628,17 @@ $.noConflict = function() {
             element.on(Metro.events.click, ".button.clear", function(){
                 that.selected = [];
                 that._drawContent();
-                Utils.exec(o.onClear, [element]);
-                element.fire("clear");
+                that._fireEvent("clear");
             });
 
             element.on(Metro.events.click, ".button.cancel", function(){
                 that._drawContent();
-                Utils.exec(o.onCancel, [element]);
-                element.fire("cancel");
+                that._fireEvent("cancel");
             });
 
             element.on(Metro.events.click, ".button.done", function(){
                 that._drawContent();
-                Utils.exec(o.onDone, [that.selected, element]);
-                element.fire("done");
+                that._fireEvent("done");
             });
 
             if (o.weekDayClick === true) {
@@ -10589,10 +10662,9 @@ $.noConflict = function() {
                         });
                     }
 
-                    Utils.exec(o.onWeekDayClick, [that.selected, day], element[0]);
-                    element.fire("weekdayclick", {
-                        day: day,
-                        selected: that.selected
+                    that._fireEvent("week-day-click", {
+                        selected: that.selected,
+                        day: day
                     });
 
                     e.preventDefault();
@@ -10621,11 +10693,10 @@ $.noConflict = function() {
                         });
                     }
 
-                    Utils.exec(o.onWeekNumberClick, [that.selected, weekNumber, weekNumElement], element[0]);
-                    element.fire("weeknumberclick", {
-                        el: this,
+                    that._fireEvent("week-number-click", {
+                        selected: that.selected,
                         num: weekNumber,
-                        selected: that.selected
+                        numElement: weekNumElement
                     });
 
                     e.preventDefault();
@@ -10648,6 +10719,11 @@ $.noConflict = function() {
                         day: date.getDate()
                     };
                     that._drawContent();
+
+                    that._fireEvent("month-change", {
+                        current: that.current
+                    });
+
                     return ;
                 }
 
@@ -10677,10 +10753,9 @@ $.noConflict = function() {
 
                 }
 
-                Utils.exec(o.onDayClick, [that.selected, day, element]);
-                element.fire("dayclick", {
-                    day: day,
-                    selected: that.selected
+                that._fireEvent("day-click", {
+                    selected: that.selected,
+                    day: day
                 });
 
                 e.preventDefault();
@@ -10713,11 +10788,12 @@ $.noConflict = function() {
             element.on(Metro.events.click, ".calendar-months li", function(e){
                 that.current.month = $(this).index();
                 that._drawContent();
-                Utils.exec(o.onMonthChange, [that.current, element], element[0]);
-                element.fire("monthchange", {
+                element.find(".calendar-months").removeClass("open");
+
+                that._fireEvent("month-change", {
                     current: that.current
                 });
-                element.find(".calendar-months").removeClass("open");
+
                 e.preventDefault();
                 e.stopPropagation();
             });
@@ -10748,11 +10824,12 @@ $.noConflict = function() {
             element.on(Metro.events.click, ".calendar-years li", function(e){
                 that.current.year = $(this).text();
                 that._drawContent();
-                Utils.exec(o.onYearChange, [that.current, element], element[0]);
-                element.fire("yearchange", {
+                element.find(".calendar-years").removeClass("open");
+
+                that._fireEvent("year-change", {
                     current: that.current
                 });
-                element.find(".calendar-years").removeClass("open");
+
                 e.preventDefault();
                 e.stopPropagation();
             });
@@ -10912,10 +10989,9 @@ $.noConflict = function() {
                         }
                     }
 
-                    Utils.exec(o.onDayDraw, [s], d[0]);
-                    element.fire("daydraw", {
-                        cell: d[0],
-                        date: s
+                    this._fireEvent("day-draw", {
+                        date: s,
+                        cell: d[0]
                     });
                 }
 
@@ -10966,10 +11042,9 @@ $.noConflict = function() {
 
                 }
 
-                Utils.exec(o.onDayDraw, [first], d[0]);
-                element.fire("daydraw", {
-                    cell: d[0],
-                    date: first
+                this._fireEvent("day-draw", {
+                    date: first,
+                    cell: d[0]
                 });
 
                 counter++;
@@ -11007,10 +11082,9 @@ $.noConflict = function() {
                         }
                     }
 
-                    Utils.exec(o.onDayDraw, [s], d[0]);
-                    element.fire("daydraw", {
-                        cell: d[0],
-                        date: s
+                    this._fireEvent("day-draw", {
+                        date: s,
+                        cell: d[0]
                     });
 
                 }
@@ -11389,17 +11463,15 @@ $.noConflict = function() {
                     cal.removeClass("open open-up");
                     cal.hide();
 
-                    Utils.exec(o.onChange, [that.value], element[0]);
-                    element.fire("change", {
+                    that._fireEvent("change", {
                         val: that.value
                     });
 
-                    Utils.exec(o.onDayClick, [sel, day, el], element[0]);
-                    element.fire("dayclick", {
+                    that._fireEvent("day-click", {
                         sel: sel,
                         day: day,
                         el: el
-                    })
+                    });
                 },
                 onMonthChange: o.onMonthChange,
                 onYearChange: o.onYearChange
@@ -11514,8 +11586,8 @@ $.noConflict = function() {
                     if (Utils.isOutsider(cal) === false) {
                         cal.addClass("open-up");
                     }
-                    Utils.exec(o.onCalendarShow, [element, cal], cal);
-                    element.fire("calendarshow", {
+
+                    that._fireEvent("calendar-show", {
                         calendar: cal
                     });
 
@@ -11523,8 +11595,8 @@ $.noConflict = function() {
 
                     that._removeOverlay();
                     cal.removeClass("open open-up");
-                    Utils.exec(o.onCalendarHide, [element, cal], cal);
-                    element.fire("calendarhide", {
+
+                    that._fireEvent("calendar-hide", {
                         calendar: cal
                     });
 
@@ -12011,13 +12083,13 @@ $.noConflict = function() {
                     that._stop();
                     that._fireEvent("mouse-enter", {
                         element: element
-                    });
+                    }, false, true);
                 });
                 element.on(Metro.events.leave, function () {
                     that._start();
                     that._fireEvent("mouse-leave", {
                         element: element
-                    });
+                    }, false, true);
                 });
             }
 
@@ -12185,14 +12257,12 @@ $.noConflict = function() {
 
         stop: function () {
             clearInterval(this.interval);
-            Utils.exec(this.options.onStop, [this.element]);
-            this.element.fire("stop");
+            this._fireEvent("stop");
         },
 
         play: function(){
             this._start();
-            Utils.exec(this.options.onPlay, [this.element]);
-            this.element.fire("play");
+            this._fireEvent("play");
         },
 
         setEffect: function(effect){
@@ -12304,25 +12374,23 @@ $.noConflict = function() {
         },
 
         open: function(){
-            var element = this.element, o = this.options;
+            var element = this.element;
 
             element.addClass("open");
 
-            Utils.exec(o.onOpen, null, element[0]);
-            element.fire("open");
+            this._fireEvent("open");
         },
 
         close: function(){
-            var element = this.element, o = this.options;
+            var element = this.element;
 
             element.removeClass("open");
 
-            Utils.exec(o.onClose, null, element[0]);
-            element.fire("close");
+            this._fireEvent("close");
         },
 
         toggle: function(){
-            var element = this.element, o = this.options;
+            var element = this.element;
 
             if (element.hasClass("open") === true) {
                 this.close();
@@ -12330,8 +12398,7 @@ $.noConflict = function() {
                 this.open();
             }
 
-            Utils.exec(o.onToggle, null, element[0]);
-            element.fire("toggle");
+            this._fireEvent("toggle");
         },
 
         opacity: function(v){
@@ -12536,7 +12603,7 @@ $.noConflict = function() {
                 var msg = ""+input.val(), m;
                 if (msg.trim() === "") {return false;}
                 m = {
-                    id: Utils.elementId(""),
+                    id: Utils.elementId("chat-message"),
                     name: o.name,
                     avatar: o.avatar,
                     text: msg,
@@ -12544,11 +12611,10 @@ $.noConflict = function() {
                     time: (new Date())
                 };
                 that.add(m);
-                Utils.exec(o.onSend, [m], element[0]);
-                element.fire("send", {
+                input.val("");
+                that._fireEvent("send", {
                     msg: m
                 });
-                input.val("");
             };
 
             sendButton.on(Metro.events.click, function () {
@@ -12593,16 +12659,7 @@ $.noConflict = function() {
                 }
             }
 
-            Utils.exec(o.onMessage, [msg, {
-                message: message,
-                sender: sender,
-                time: time,
-                item: item,
-                avatar: avatar,
-                text: text
-            }], message[0]);
-
-            element.fire("message", {
+            that._fireEvent("message", {
                 msg: msg,
                 el: {
                     message: message,
@@ -12612,13 +12669,6 @@ $.noConflict = function() {
                     avatar: avatar,
                     text: text
                 }
-            });
-
-            setImmediate(function(){
-                element.fire("onmessage", {
-                    message: msg,
-                    element: message[0]
-                });
             });
 
             messages.animate({
@@ -12739,9 +12789,7 @@ $.noConflict = function() {
         _create: function(){
             this._createStructure();
             this._createEvents();
-            this._fireEvent("checkbox-create", {
-                element: this.element
-            })
+            this._fireEvent("checkbox-create");
         },
 
         _createStructure: function(){
@@ -12752,10 +12800,6 @@ $.noConflict = function() {
 
             element.attr("type", "checkbox");
 
-            if (!Utils.isValue(element.attr("id"))) {
-                element.attr("id", Utils.elementId("checkbox"));
-            }
-
             if (element.attr("readonly") !== undefined) {
                 element.on("click", function(e){
                     e.preventDefault();
@@ -12765,8 +12809,7 @@ $.noConflict = function() {
             checkbox = element
                 .wrap("<label>")
                 .addClass("checkbox " + element[0].className)
-                .addClass(o.style === 2 ? "style2" : "")
-                .attr('for', element.attr('id'));
+                .addClass(o.style === 2 ? "style2" : "");
 
             check.appendTo(checkbox);
             caption.appendTo(checkbox);
@@ -12810,10 +12853,12 @@ $.noConflict = function() {
         },
 
         indeterminate: function(v){
-            if (Utils.isNull(v)) {
-                v = true;
-            }
-            this.element[0].indeterminate = v;
+            var element = this.element;
+
+            v = Utils.isNull(v) ? true : Utils.bool(v);
+
+            element[0].indeterminate = v;
+            element.attr("data-indeterminate", v);
         },
 
         disable: function(){
@@ -12832,6 +12877,23 @@ $.noConflict = function() {
             } else {
                 this.enable();
             }
+        },
+
+        toggle: function(v){
+            var element = this.element;
+
+            this.indeterminate(false);
+
+            if (!Utils.isValue(v)) {
+                element.prop("checked", !Utils.bool(element.prop("checked")));
+            } else {
+                if (v === -1) {
+                    this.indeterminate(true);
+                } else {
+                    element.prop("checked", v === 1);
+                }
+            }
+            return this;
         },
 
         changeAttribute: function(attributeName){
@@ -13006,7 +13068,6 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
-    var Utils = Metro.utils;
     var CollapseDefaultConfig = {
         collapseDeferred: 0,
         collapsed: false,
@@ -13077,8 +13138,8 @@ $.noConflict = function() {
                 el.trigger("onCollapse", null, el);
                 el.data("collapsed", true);
                 el.addClass("collapsed");
-                Utils.exec(options.onCollapse, null, elem[0]);
-                elem.fire("collapse");
+
+                dropdown._fireEvent("collapse");
             });
         },
 
@@ -13095,8 +13156,8 @@ $.noConflict = function() {
                 el.trigger("onExpand", null, el);
                 el.data("collapsed", false);
                 el.removeClass("collapsed");
-                Utils.exec(options.onExpand, null, elem[0]);
-                elem.fire("expand");
+
+                dropdown._fireEvent("expand");
             });
         },
 
@@ -13494,12 +13555,12 @@ $.noConflict = function() {
         },
 
         blink: function(){
-            var element = this.element, o = this.options;
+            var element = this.element;
             element.toggleClass("blink");
-            Utils.exec(o.onBlink, [this.current], element[0]);
-            element.fire("blink", {
+
+            this._fireEvent("blink", {
                 time: this.current
-            })
+            });
         },
 
         tick: function(){
@@ -13517,10 +13578,11 @@ $.noConflict = function() {
             if (left <= -1) {
                 this.stop();
                 element.addClass(o.clsAlarm);
-                Utils.exec(o.onAlarm, [now], element[0]);
-                element.fire("alarm", {
+
+                this._fireEvent("alarm", {
                     time: now
                 });
+
                 return ;
             }
 
@@ -13535,9 +13597,10 @@ $.noConflict = function() {
                 if (this.zeroDaysFired === false) {
                     this.zeroDaysFired = true;
                     days.addClass(o.clsZero);
-                    Utils.exec(o.onZero, ["days", days], element[0]);
-                    element.fire("zero", {
-                        parts: ["days", days]
+
+                    this._fireEvent("zero", {
+                        part: "days",
+                        value: days
                     });
                 }
             }
@@ -13553,9 +13616,10 @@ $.noConflict = function() {
                 if (this.zeroHoursFired === false) {
                     this.zeroHoursFired = true;
                     hours.addClass(o.clsZero);
-                    Utils.exec(o.onZero, ["hours", hours], element[0]);
-                    element.fire("zero", {
-                        parts: ["hours", hours]
+
+                    this._fireEvent("zero", {
+                        part: "hours",
+                        value: hours
                     });
                 }
             }
@@ -13571,9 +13635,10 @@ $.noConflict = function() {
                 if (this.zeroMinutesFired === false) {
                     this.zeroMinutesFired = true;
                     minutes.addClass(o.clsZero);
-                    Utils.exec(o.onZero, ["minutes", minutes], element[0]);
-                    element.fire("zero", {
-                        parts: ["minutes", minutes]
+
+                    this._fireEvent("zero", {
+                        part: "minutes",
+                        value: minutes
                     });
 
                 }
@@ -13589,17 +13654,20 @@ $.noConflict = function() {
                 if (this.zeroSecondsFired === false) {
                     this.zeroSecondsFired = true;
                     seconds.addClass(o.clsZero);
-                    Utils.exec(o.onZero, ["seconds", seconds], element[0]);
-                    element.fire("zero", {
-                        parts: ["seconds", seconds]
+
+                    this._fireEvent("zero", {
+                        part: "seconds",
+                        value: seconds
                     });
 
                 }
             }
 
-            Utils.exec(o.onTick, [{days:d, hours:h, minutes:m, seconds:s}], element[0]);
-            element.fire("tick", {
-                days:d, hours:h, minutes:m, seconds:s
+            this._fireEvent("tick", {
+                days: d,
+                hours: h,
+                minutes: m,
+                seconds: s
             });
         },
 
@@ -13889,8 +13957,11 @@ $.noConflict = function() {
         counterDeferred: 0,
         duration: 2000,
         value: 0,
+        from: 0,
         timeout: 0,
         delimiter: ",",
+        prefix: "",
+        suffix: "",
         onStart: Metro.noop,
         onStop: Metro.noop,
         onTick: Metro.noop,
@@ -13918,53 +13989,77 @@ $.noConflict = function() {
         },
 
         _create: function(){
+            this._createEvents();
+            this._fireEvent("counter-create");
+            this._run();
+        },
+
+        _createEvents: function(){
             var that = this, element = this.element, o = this.options;
 
-            this._fireEvent("counter-create", {
-                element: element
-            });
+            $.window().on("scroll", function(){
+                if (o.startOnViewport === true && Utils.inViewport(element[0]) && !that.started) {
+                    that.start();
+                }
+            }, {ns: this.id})
+        },
+
+        _run: function(){
+            var element = this.element, o = this.options;
+
+            this.started = false;
 
             if (o.startOnViewport !== true) {
                 this.start();
-            }
-
-            if (o.startOnViewport === true) {
-                if (Utils.inViewport(element[0]) && !this.started) {
+            } else {
+                if (Utils.inViewport(element[0])) {
                     this.start();
                 }
-
-                $.window().on("scroll", function(){
-                    if (Utils.inViewport(element[0]) && !that.started) {
-                        that.start();
-                    }
-                }, {ns: this.id})
             }
         },
 
-        start: function(){
-            var element = this.element, o = this.options;
+        startInViewport: function(val, from){
+            var o = this.options;
+
+            if (Utils.isValue(from)) {
+                o.from = +from;
+            }
+
+            if (Utils.isValue(val)) {
+                o.value = +val;
+            }
+            this._run();
+        },
+
+        start: function(val, from){
+            var that = this, element = this.element, o = this.options;
+
+            if (Utils.isValue(from)) {
+                o.from = +from;
+            }
+
+            if (Utils.isValue(val)) {
+                o.value = +val;
+            }
 
             this.started = true;
 
-            Utils.exec(o.onStart, null, element[0]);
-            element.fire("start");
+            this._fireEvent("start");
 
             element.animate({
                 draw: {
-                    innerHTML: [0, +o.value]
+                    innerHTML: [o.from, o.value]
                 },
                 defer: o.timeout,
                 dur: o.duration,
                 onFrame: function () {
-                    Utils.exec(o.onTick, [+this.innerHTML], element[0]);
-                    element.fire("tick", {
+                    that._fireEvent("tick", {
                         value: +this.innerHTML
                     });
-                    this.innerHTML = Number(this.innerHTML).format(0, 0, o.delimiter)
+                    this.innerHTML = o.prefix + Number(this.innerHTML).format(0, 0, o.delimiter) + o.suffix
                 },
                 onDone: function(){
-                    Utils.exec(o.onStop, null, element[0]);
-                    element.fire("stop");
+                    that._fireEvent("stop");
                 }
             })
         },
@@ -13974,20 +14069,19 @@ $.noConflict = function() {
             this.element.html(this.html);
         },
 
-        setValueAttribute: function(){
-            this.options.value = this.element.attr("data-value");
-        },
+        changeAttribute: function(attr, val){
+            var o = this.options;
 
-        changeAttribute: function(attributeName){
-            if (attributeName === "data-value") {
-                this.setValueAttribute();
+            if (attr === "data-value") {
+                o.value = +val;
+            }
+            if (attr === "data-from") {
+                o.from = +val;
             }
         },
 
         destroy: function(){
-            if (this.options.startOnViewport === true) {
-                $.window().off("scroll", {ns: this.id});
-            }
+            $.window().off("scroll", {ns: this.id});
             return this.element;
         }
     });
@@ -14298,16 +14392,17 @@ $.noConflict = function() {
         },
 
         _tick: function(index, speed){
-            var that = this, element = this.element, o = this.options;
+            var that = this, o = this.options;
             if (speed === undefined) {
                 speed = o.flashInterval * index;
             }
 
             var interval = setTimeout(function(){
-                Utils.exec(o.onTick, [index], element[0]);
-                element.fire("tick", {
+
+                that._fireEvent("tick", {
                     index: index
                 });
+
                 clearInterval(interval);
                 Utils.arrayDelete(that.intervals, interval);
             }, speed);
@@ -14750,14 +14845,15 @@ $.noConflict = function() {
 
             element.val(this.value.format(o.format, o.locale)).trigger("change");
 
-            Utils.exec(o.onSet, [this.value, element.val(), element, picker], element[0]);
-            element.fire("set", {
-                value: this.value
-            });
+            this._fireEvent("set", {
+                value: this.value,
+                elementValue: element.val(),
+                picker: picker
+            })
         },
 
         open: function(){
-            var element = this.element, o = this.options;
+            var o = this.options;
             var picker = this.picker;
             var m = this.value.getMonth(), d = this.value.getDate() - 1, y = this.value.getFullYear();
             var m_list, d_list, y_list;
@@ -14815,19 +14911,21 @@ $.noConflict = function() {
 
             this.isOpen = true;
 
-            Utils.exec(o.onOpen, [this.value, element, picker], element[0]);
-            element.fire("open", {
-                value: this.value
-            });
+            this._fireEvent("open", {
+                value: this.value,
+                picker: picker
+            })
+
         },
 
         close: function(){
-            var picker = this.picker, o = this.options, element = this.element;
+            var picker = this.picker;
             picker.find(".select-wrapper").hide(0);
             this.isOpen = false;
-            Utils.exec(o.onClose, [this.value, element, picker], element[0]);
-            element.fire("close", {
-                value: this.value
+
+            this._fireEvent("close", {
+                value: this.value,
+                picker: picker
             });
         },
 
@@ -15110,8 +15208,8 @@ $.noConflict = function() {
             var timeout = 0;
             if (o.onHide !== Metro.noop) {
                 timeout = 500;
-                Utils.exec(o.onHide, null, element[0]);
-                element.fire("hide");
+
+                this._fireEvent("hide");
             }
             setTimeout(function(){
                 Utils.exec(callback, null, element[0]);
@@ -15123,13 +15221,14 @@ $.noConflict = function() {
         },
 
         show: function(callback){
-            var that = this, element = this.element, o = this.options;
+            var element = this.element;
             this.setPosition();
             element.css({
                 visibility: "visible"
             });
-            Utils.exec(o.onShow, [that], element[0]);
-            element.fire("show");
+
+            this._fireEvent("show");
+
             Utils.exec(callback, null, element[0]);
         },
 
@@ -15189,7 +15288,7 @@ $.noConflict = function() {
         },
 
         close: function(){
-            var element = this.element, o = this.options;
+            var that = this, element = this.element, o = this.options;
 
             if (!Utils.bool(o.leaveOverlayOnClose)) {
                 $('body').find('.overlay').remove();
@@ -15197,8 +15296,9 @@ $.noConflict = function() {
 
             this.hide(function(){
                 element.data("open", false);
-                Utils.exec(o.onClose, [element], element[0]);
-                element.fire("close");
+
+                that._fireEvent("close")
+
                 if (o.removeOnClose === true) {
                     element.remove();
                 }
@@ -15218,8 +15318,9 @@ $.noConflict = function() {
             }
 
             this.show(function(){
-                Utils.exec(o.onOpen, [element], element[0]);
-                element.fire("open");
+
+                that._fireEvent("open");
+
                 element.data("open", true);
                 if (parseInt(o.autoHide) > 0) {
                     setTimeout(function(){
@@ -15432,7 +15533,7 @@ $.noConflict = function() {
         },
 
         val: function(v){
-            var element = this.element, o = this.options;
+            var o = this.options;
 
             if (v === undefined) {
                 return this.value
@@ -15446,8 +15547,7 @@ $.noConflict = function() {
 
             this.value = v;
 
-            Utils.exec(o.onChange, [this.value], element[0]);
-            element.fire("change", {
+            this._fireEvent("change", {
                 value: this.value
             });
         },
@@ -15706,7 +15806,8 @@ $.noConflict = function() {
         },
 
         _move: function(e){
-            var isMin = $(e.target).hasClass("marker-min");
+            var target = $(e.target).closest(".marker");
+            var isMin = target.hasClass("marker-min");
             var slider = this.slider;
             var offset = slider.offset(),
                 marker_size = slider.find(".marker").outerWidth(),
@@ -15986,8 +16087,7 @@ $.noConflict = function() {
                     return;
                 }
 
-                Utils.exec(o.onTarget, [target], element[0]);
-                element.fire("target", {
+                that._fireEvent("target", {
                     target: target
                 });
 
@@ -16053,8 +16153,7 @@ $.noConflict = function() {
                     height: height
                 }).appendTo(body);
 
-                Utils.exec(o.onDragStartItem, [dragItem[0], avatar[0]], element[0]);
-                element.fire("dragstartitem", {
+                that._fireEvent("drag-start-item", {
                     dragItem: dragItem[0],
                     avatar: avatar[0]
                 });
@@ -16063,8 +16162,7 @@ $.noConflict = function() {
 
                     move(e_move, avatar, dragItem);
 
-                    Utils.exec(o.onDragMoveItem, [dragItem[0], avatar[0]], element[0]);
-                    element.fire("dragmoveitem", {
+                    that._fireEvent("drag-move-item", {
                         dragItem: dragItem[0],
                         avatar: avatar[0]
                     });
@@ -16075,8 +16173,7 @@ $.noConflict = function() {
 
                 doc.on(Metro.events.stopAll, function(){
 
-                    Utils.exec(o.onDragDropItem, [dragItem[0], avatar[0]], element[0]);
-                    element.fire("dragdropitem", {
+                    that._fireEvent("drag-drop-item", {
                         dragItem: dragItem[0],
                         avatar: avatar[0]
                     });
@@ -16526,7 +16623,6 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
-    var Utils = Metro.utils;
     var FileDefaultConfig = {
         fileDeferred: 0,
         mode: "input",
@@ -16663,8 +16759,7 @@ $.noConflict = function() {
                     files.html(element[0].files.length + " " +o.filesTitle);
                 }
 
-                Utils.exec(o.onSelect, [fi.files], element[0]);
-                element.fire("select", {
+                that._fireEvent("select", {
                     files: fi.files
                 });
             });
@@ -16922,10 +17017,10 @@ $.noConflict = function() {
             this.setPosition();
 
             hint.appendTo($('body'));
-            Utils.exec(o.onHintShow, [hint[0]], element[0]);
-            element.fire("hintshow", {
+
+            this._fireEvent("hint-show", {
                 hint: hint[0]
-            });
+            })
         },
 
         setPosition: function(){
@@ -16961,14 +17056,12 @@ $.noConflict = function() {
         removeHint: function(){
             var that = this;
             var hint = this.hint;
-            var element = this.element;
             var options = this.options;
             var timeout = options.onHintHide === Metro.noop ? 0 : 300;
 
             if (hint !== null) {
 
-                Utils.exec(options.onHintHide, [hint[0]], element[0]);
-                element.fire("hinthide", {
+                this._fireEvent("hint-hide", {
                     hint: hint[0]
                 });
 
@@ -17276,7 +17369,6 @@ $.noConflict = function() {
         imagecompareDeferred: 0,
         width: "100%",
         height: "auto",
-        onResize: Metro.noop,
         onSliderMove: Metro.noop,
         onImageCompareCreate: Metro.noop
     };
@@ -17379,12 +17471,13 @@ $.noConflict = function() {
                     slider.css({
                         left: left_pos
                     });
-                    Utils.exec(o.onSliderMove, [x, left_pos], slider[0]);
-                    element.fire("slidermove", {
+
+                    that._fireEvent("slider-move", {
                         x: x,
                         l: left_pos
                     });
                 }, {ns: that.id});
+
                 $(document).on(Metro.events.stopAll, function(){
                     $(document).off(Metro.events.moveAll, {ns: that.id});
                     $(document).off(Metro.events.stopAll, {ns: that.id});
@@ -17426,11 +17519,6 @@ $.noConflict = function() {
                     left: element_width / 2 - slider.width() / 2
                 });
 
-                Utils.exec(o.onResize, [element_width, element_height], element[0]);
-                element.fire("comparerresize", {
-                    width: element_width,
-                    height: element_height
-                });
             }, {ns: this.id});
         },
 
@@ -17445,6 +17533,87 @@ $.noConflict = function() {
             $(window).off(Metro.events.resize, {ns: this.id});
 
             return element;
+        }
+    });
+}(Metro, m4q));
+
+/* eslint-disable */
+(function(Metro, $) {
+    'use strict';
+
+    var ImageGridDefaultConfig = {
+        clsImageGrid: "",
+        clsImageGridItem: "",
+        clsImageGridImage: "",
+
+        onDrawItem: Metro.noop,
+        onImageGridCreate: Metro.noop
+    };
+
+    Metro.imageGridSetup = function (options) {
+        ImageGridDefaultConfig = $.extend({}, ImageGridDefaultConfig, options);
+    };
+
+    if (typeof window["metroImageGridSetup"] !== undefined) {
+        Metro.imageGridSetup(window["metroImageGridSetup"]);
+    }
+
+    Metro.Component('image-grid', {
+        init: function( options, elem ) {
+            this._super(elem, options, ImageGridDefaultConfig, {
+                // define instance vars here
+                items: []
+            });
+            return this;
+        },
+
+        _create: function(){
+            this._createStructure();
+            this._createEvents();
+
+            this._fireEvent('image-grid-create');
+        },
+
+        _createStructure: function(){
+            var element = this.element, o = this.options;
+
+            element.addClass("image-grid").addClass(o.clsImageGrid);
+
+            this._createItems();
+        },
+
+        _createEvents: function(){
+            var that = this, element = this.element, o = this.options;
+
+        },
+
+        _createItems: function(){
+            var that = this, element = this.element, o = this.options;
+            var items = element.children("img");
+
+            items.each(function(){
+                var el = $(this);
+                var wrapper = $("<div>").addClass("image-grid__item").addClass(o.clsImageGridItem).appendTo(element);
+                var img = new Image();
+
+                img.src = this.src;
+                img.onload = function(){
+                    var port = this.height >= this.width;
+                    wrapper.addClass(port ? "image-grid__item-portrait" : "image-grid__item-landscape");
+                    el.addClass(o.clsImageGridImage).appendTo(wrapper);
+                    that._fireEvent("draw-item", {
+                        item: wrapper[0],
+                        image: el[0]
+                    });
+                }
+            });
+        },
+
+        changeAttribute: function(){
+        },
+
+        destroy: function(){
+            this.element.remove();
         }
     });
 }(Metro, m4q));
@@ -17583,7 +17752,7 @@ $.noConflict = function() {
         },
 
         _createEvents: function(){
-            var element = this.element, o = this.options;
+            var that = this, element = this.element, o = this.options;
             var glass = element.find(".image-magnifier-glass");
             var glass_size = glass[0].offsetWidth / 2;
             var image = element.find("img")[0];
@@ -17664,8 +17833,7 @@ $.noConflict = function() {
 
                 lens_move(pos);
 
-                Utils.exec(o.onMagnifierMove, [pos, glass[0], zoomElement ? zoomElement[0] : undefined], element[0]);
-                element.fire("magnifiermove", {
+                that._fireEvent("magnifier-move", {
                     pos: pos,
                     glass: glass[0],
                     zoomElement: zoomElement ? zoomElement[0] : undefined
@@ -17864,10 +18032,10 @@ $.noConflict = function() {
                 visibility: "visible"
             });
 
-            Utils.exec(o.onOpen, null, element[0]);
-            element.fire("open");
+            this._fireEvent("open");
 
             element.data("open", true);
+
             if (parseInt(o.autoHide) > 0) {
                 setTimeout(function(){
                     that.close();
@@ -17887,8 +18055,7 @@ $.noConflict = function() {
                 top: "100%"
             });
 
-            Utils.exec(o.onClose, null, element[0]);
-            element.fire("close");
+            this._fireEvent("close");
 
             element.data("open", false);
 
@@ -18277,6 +18444,12 @@ $.noConflict = function() {
                         .attr("type", "button")
                         .html(item.html);
 
+                    if (item.attr && typeof item.attr === 'object') {
+                        $.each(item.attr, function(k, v){
+                            customButton.attr($.dashedName(k), v);
+                        });
+                    }
+
                     customButton.data("action", item.onclick);
 
                     customButton.appendTo(buttons);
@@ -18312,7 +18485,7 @@ $.noConflict = function() {
                 var autocomplete_obj = Utils.isObject(o.autocomplete);
 
                 if (autocomplete_obj !== false) {
-                    that.autocomplete = autocomplete_obj;
+                    this.autocomplete = autocomplete_obj;
                 } else {
                     this.autocomplete = o.autocomplete.toArray(o.autocompleteDivider);
                 }
@@ -18342,11 +18515,12 @@ $.noConflict = function() {
                         display: "none"
                     })
                 }
-                Utils.exec(o.onClearClick, [curr, element.val()], element[0]);
-                element.fire("clearclick", {
+
+                that._fireEvent("clear-click", {
                     prev: curr,
                     val: element.val()
                 });
+
             });
 
             container.on(Metro.events.click, ".input-reveal-button", function(){
@@ -18356,19 +18530,20 @@ $.noConflict = function() {
                     element.attr('type', 'password');
                 }
 
-                Utils.exec(o.onRevealClick, [element.val()], element[0]);
-                element.fire("revealclick", {
+                that._fireEvent("reveal-click", {
                     val: element.val()
                 });
+
             });
 
             container.on(Metro.events.click, ".input-search-button", function(){
                 if (o.searchButtonClick !== 'submit') {
-                    Utils.exec(o.onSearchButtonClick, [element.val()], this);
-                    element.fire("searchbuttonclick", {
+
+                    that._fireEvent("search-button-click", {
                         val: element.val(),
                         button: this
                     });
+
                 } else {
                     this.form.submit();
                 }
@@ -18391,12 +18566,13 @@ $.noConflict = function() {
                     element.val("");
                     that.history.push(val);
                     that.historyIndex = that.history.length - 1;
-                    Utils.exec(o.onHistoryChange, [val, that.history, that.historyIndex], element[0]);
-                    element.fire("historychange", {
+
+                    that._fireEvent("history-change", {
                         val: val,
                         history: that.history,
                         historyIndex: that.historyIndex
-                    });
+                    })
+
                     if (o.preventSubmit === true) {
                         e.preventDefault();
                     }
@@ -18407,12 +18583,12 @@ $.noConflict = function() {
                     if (that.historyIndex >= 0) {
                         element.val("");
                         element.val(that.history[that.historyIndex]);
-                        Utils.exec(o.onHistoryDown, [element.val(), that.history, that.historyIndex], element[0]);
-                        element.fire("historydown", {
+
+                        that._fireEvent("history-down", {
                             val: element.val(),
                             history: that.history,
                             historyIndex: that.historyIndex
-                        });
+                        })
                     } else {
                         that.historyIndex = 0;
                     }
@@ -18424,12 +18600,12 @@ $.noConflict = function() {
                     if (that.historyIndex < that.history.length) {
                         element.val("");
                         element.val(that.history[that.historyIndex]);
-                        Utils.exec(o.onHistoryUp, [element.val(), that.history, that.historyIndex], element[0]);
-                        element.fire("historyup", {
+
+                        that._fireEvent("history-up", {
                             val: element.val(),
                             history: that.history,
                             historyIndex: that.historyIndex
-                        });
+                        })
                     } else {
                         that.historyIndex = that.history.length - 1;
                     }
@@ -18439,8 +18615,7 @@ $.noConflict = function() {
 
             element.on(Metro.events.keydown, function(e){
                 if (e.keyCode === Metro.keyCode.ENTER) {
-                    Utils.exec(o.onEnterClick, [element.val()], element[0]);
-                    element.fire("enterclick", {
+                    that._fireEvent("enter-click", {
                         val: element.val()
                     });
                 }
@@ -18546,6 +18721,15 @@ $.noConflict = function() {
                 this.disable();
             } else {
                 this.enable();
+            }
+        },
+
+        setAutocompleteList: function(l){
+            var autocomplete_list = Utils.isObject(l);
+            if (autocomplete_list !== false) {
+                this.autocomplete = autocomplete_list;
+            } else if (typeof l === "string") {
+                this.autocomplete = l.toArray(this.options.autocompleteDivider);
             }
         },
 
@@ -18799,21 +18983,24 @@ $.noConflict = function() {
                         that._setKeysPosition();
                     }
 
-                    Utils.exec(o.onKey, [key.data('key'), that.value], element[0]);
-                    element.fire("key", {
+                    that._fireEvent("key", {
                         key: key.data("key"),
                         val: that.value
                     });
+
                 } else {
                     if (key.data('key') === '&times;') {
                         that.value = "";
-                        Utils.exec(o.onClear, null, element[0]);
-                        element.fire("clear");
+
+                        that._fireEvent("clear");
+
                     }
                     if (key.data('key') === '&larr;') {
                         that.value = (that.value.substring(0, that.value.length - 1));
-                        Utils.exec(o.onBackspace, [that.value], element[0]);
-                        element.fire("backspace");
+
+                        that._fireEvent("backspace", {
+                            val: that.value
+                        });
                     }
                 }
 
@@ -18863,14 +19050,14 @@ $.noConflict = function() {
         },
 
         shuffle: function(){
-            var element = this.element, o = this.options;
+            var o = this.options;
             for (var i = 0; i < o.shuffleCount; i++) {
                 this.keys_to_work = this.keys_to_work.shuffle();
             }
-            Utils.exec(o.onShuffle, [this.keys_to_work, this.keys], element[0]);
-            element.fire("shuffle", {
-                keys: this.keys,
-                keysToWork: this.keys_to_work
+
+            this._fireEvent("shuffle", {
+                keysToWork: this.keys_to_work,
+                keys: this.keys
             });
         },
 
@@ -18963,6 +19150,224 @@ $.noConflict = function() {
                 $(this).removeClass("open");
             }
         });
+    });
+}(Metro, m4q));
+
+(function(Metro, $) {
+    'use strict';
+
+    var LightboxDefaultConfig = {
+        loop: true,
+        source: "img",
+
+        iconClose: "<span class='default-icon-cross'>",
+        iconPrev: "<span class='default-icon-chevron-left'>",
+        iconNext: "<span class='default-icon-chevron-right'>",
+
+        clsNext: "",
+        clsPrev: "",
+        clsClose: "",
+        clsImage: "",
+        clsImageContainer: "",
+        clsImageWrapper: "",
+        clsLightbox: "",
+
+        onLightboxCreate: Metro.noop
+    };
+
+    Metro.lightboxSetup = function (options) {
+        LightboxDefaultConfig = $.extend({}, LightboxDefaultConfig, options);
+    };
+
+    if (typeof window["metroLightboxSetup"] !== undefined) {
+        Metro.lightboxSetup(window["metroLightboxSetup"]);
+    }
+
+    Metro.Component('lightbox', {
+        init: function( options, elem ) {
+            this._super(elem, options, LightboxDefaultConfig, {
+                // define instance vars here
+                overlay: null,
+                lightbox: null,
+                current: null,
+                items: []
+            });
+            return this;
+        },
+
+        _create: function(){
+            var o = this.options;
+
+            if (!o.source) {
+                o.source = "img";
+            }
+
+            this._createStructure();
+            this._createEvents();
+
+            this._fireEvent('lightbox-create');
+        },
+
+        _createStructure: function(){
+            var o = this.options;
+            var lightbox, overlay;
+
+            overlay = $(".lightbox-overlay");
+
+            if (overlay.length === 0) {
+                overlay = $("<div>").addClass("lightbox-overlay").appendTo("body").hide();
+            }
+
+            lightbox = $("<div>").addClass("lightbox").addClass(o.clsLightbox).appendTo("body").hide();
+
+            $("<span>").addClass("lightbox__prev").addClass(o.clsPrev).html(o.iconPrev).appendTo(lightbox);
+            $("<span>").addClass("lightbox__next").addClass(o.clsNext).html(o.iconNext).appendTo(lightbox);
+            $("<span>").addClass("lightbox__closer").addClass(o.clsClose).html(o.iconClose).appendTo(lightbox);
+            $("<div>").addClass("lightbox__image").addClass(o.clsImageContainer).appendTo(lightbox);
+
+            this.component = lightbox[0];
+            this.lightbox = lightbox;
+            this.overlay = overlay;
+        },
+
+        _createEvents: function(){
+            var that = this, element = this.element, o = this.options;
+            var lightbox = $(this.component);
+
+            element.on(Metro.events.click, o.source, function(){
+                that.open(this);
+            });
+
+            lightbox.on(Metro.events.click, ".lightbox__closer", function(){
+                that.close();
+            });
+
+            lightbox.on(Metro.events.click, ".lightbox__prev", function(){
+                that.prev();
+            });
+
+            lightbox.on(Metro.events.click, ".lightbox__next", function(){
+                that.next();
+            });
+        },
+
+        _setupItems: function(){
+            var element = this.element, o = this.options;
+            var items = element.find(o.source);
+
+            if (items.length === 0) {
+                return ;
+            }
+
+            this.items = items;
+        },
+
+        _goto: function(el){
+            var o = this.options;
+            var $el = $(el);
+            var isImage = el.tagName === "IMG";
+            var img = $("<img>"), src;
+            var imageContainer = this.lightbox.find(".lightbox__image").html("");
+            var imageWrapper = $("<div>")
+                .addClass("lightbox__image-wrapper")
+                .addClass(o.clsImageWrapper)
+                .attr("data-title", $el.attr("alt"))
+                .appendTo(imageContainer);
+
+            var activity = $("<div>").appendTo(imageWrapper);
+
+            Metro.makePlugin(activity, "activity", {
+                type: "cycle",
+                style: "color"
+            });
+
+            this.current = el;
+
+            if (isImage) {
+                src = $el.attr("data-original") || $el.attr("src");
+                img.attr("src", src);
+                img[0].onload = function(){
+                    var port = this.height > this.width;
+                    img.addClass(port ? "lightbox__image-portrait" : "lightbox__image-landscape").addClass(o.clsImage);
+                    img.attr("alt", $el.attr("alt"));
+                    img.appendTo(imageWrapper);
+                    activity.remove();
+                    // setTimeout(function(){
+                    //     img.addClass("showing");
+                    // }, 100);
+                }
+            }
+        },
+
+        _index: function(el){
+            var index = -1;
+
+            this.items.each(function(i){
+                if (this === el) {
+                    index = i;
+                }
+            });
+
+            return index;
+        },
+
+        next: function(){
+            var index, current = this.current;
+
+            index = this._index(current);
+
+            if (index + 1 >= this.items.length) {
+                if (this.options.loop) {
+                    index = -1;
+                } else {
+                    return;
+                }
+            }
+
+            this._goto(this.items[index + 1]);
+        },
+
+        prev: function(){
+            var index, current = this.current;
+
+            index = this._index(current);
+
+            if (index - 1 < 0) {
+                if (this.options.loop) {
+                    index = this.items.length;
+                } else {
+                    return;
+                }
+            }
+
+            this._goto(this.items[index - 1]);
+        },
+
+        open: function(el){
+            var lightbox = $(this.component), overlay = $(this.overlay);
+
+
+            this._setupItems();
+
+            this._goto(el);
+
+            overlay.show();
+            lightbox.show();
+
+            return this;
+        },
+
+        close: function(){
+            this.overlay.hide();
+            this.lightbox.hide();
+        },
+
+        changeAttribute: function(){
+        },
+
+        destroy: function(){
+            this.element.remove();
+        }
     });
 }(Metro, m4q));
 
@@ -19096,8 +19501,6 @@ $.noConflict = function() {
         },
 
         _build: function(data){
-            var element = this.element, o = this.options;
-
             if (Utils.isValue(data)) {
                 this._createItemsFromJSON(data);
             } else {
@@ -19107,8 +19510,7 @@ $.noConflict = function() {
             this._createStructure();
             this._createEvents();
 
-            Utils.exec(o.onListCreate, [element], element[0]);
-            element.fire("listcreate");
+            this._fireEvent("list-create");
         },
 
         _createItemsFromHTML: function(){
@@ -19189,8 +19591,8 @@ $.noConflict = function() {
                     o.items = parseInt(val);
                     that.currentPage = 1;
                     that._draw();
-                    Utils.exec(o.onRowsCountChange, [val], element[0]);
-                    element.fire("rowscountchange", {
+
+                    that._fireEvent("rows-count-change", {
                         val: val
                     });
                 }
@@ -19402,7 +19804,6 @@ $.noConflict = function() {
 
         _filter: function(){
             var that = this,
-                element = this.element,
                 o = this.options,
                 items, i, data, inset, c1, result;
 
@@ -19433,25 +19834,27 @@ $.noConflict = function() {
                     }
 
                     if (result) {
-                        Utils.exec(o.onFilterItemAccepted, [item], element[0]);
-                        element.fire("filteritemaccepted", {
+
+                        that._fireEvent("filter-item-accepted", {
                             item: item
                         });
+
                     } else {
-                        Utils.exec(o.onFilterItemDeclined, [item], element[0]);
-                        element.fire("filteritemdeclined", {
+
+                        that._fireEvent("filter-item-declined", {
                             item: item
                         });
+
                     }
 
                     return result;
                 });
 
-                Utils.exec(o.onSearch, [that.filterString, items], element[0]);
-                element.fire("search", {
+                that._fireEvent("search", {
                     search: that.filterString,
                     items: items
                 });
+
             } else {
                 items = this.items;
             }
@@ -19474,10 +19877,11 @@ $.noConflict = function() {
                 if (Utils.isValue(items[i])) {
                     $(items[i]).addClass(o.clsListItem).appendTo(element);
                 }
-                Utils.exec(o.onDrawItem, [items[i]], element[0]);
-                element.fire("drawitem", {
+
+                this._fireEvent("draw-item", {
                     item: items[i]
                 });
+
             }
 
             this._info(start + 1, stop + 1, items.length);
@@ -19485,8 +19889,7 @@ $.noConflict = function() {
 
             this.activity.hide();
 
-            Utils.exec(o.onDraw, null, element[0]);
-            element.fire("draw");
+            this._fireEvent("draw");
 
             if (cb !== undefined) {
                 Utils.exec(cb, [element], element[0])
@@ -19562,7 +19965,7 @@ $.noConflict = function() {
         },
 
         sorting: function(source, dir, redraw){
-            var that = this, element = this.element, o = this.options;
+            var that = this, o = this.options;
 
             if (Utils.isValue(source)) {
                 o.sortClass = source;
@@ -19571,8 +19974,7 @@ $.noConflict = function() {
                 o.sortDir= dir;
             }
 
-            Utils.exec(o.onSortStart, [this.items], element[0]);
-            element.fire("sortstart", {
+            this._fireEvent("sort-start", {
                 items: this.items
             });
 
@@ -19589,8 +19991,8 @@ $.noConflict = function() {
                 }
 
                 if (result !== 0) {
-                    Utils.exec(o.onSortItemSwitch, [a, b, result], element[0]);
-                    element.fire("sortitemswitch", {
+
+                    that._fireEvent("sort-item-switch", {
                         a: a,
                         b: b,
                         result: result
@@ -19600,10 +20002,9 @@ $.noConflict = function() {
                 return result;
             });
 
-            Utils.exec(o.onSortStop, [this.items], element[0]);
-            element.fire("sortstop", {
+            this._fireEvent("sort-stop", {
                 items: this.items
-            });
+            })
 
             if (redraw === true) {
                 this._draw();
@@ -19627,14 +20028,13 @@ $.noConflict = function() {
 
             o.source = source;
 
-            Utils.exec(o.onDataLoad, [o.source], element[0]);
-            element.fire("dataload", {
+            this._fireEvent("data-load", {
                 source: o.source
             });
 
             $.json(o.source).then(function(data){
-                Utils.exec(o.onDataLoaded, [o.source, data], element[0]);
-                element.fire("dataloaded", {
+
+                that._fireEvent("data-loaded", {
                     source: o.source,
                     data: data
                 });
@@ -19670,11 +20070,12 @@ $.noConflict = function() {
 
                 that.sorting(o.sortClass, o.sortDir, true);
             }, function(xhr){
-                Utils.exec(o.onDataLoadError, [o.source, xhr], element[0]);
-                element.fire("dataloaderror", {
+
+                that._fireEvent("data-load-error", {
                     source: o.source,
                     xhr: xhr
                 });
+
             });
         },
 
@@ -20005,17 +20406,18 @@ $.noConflict = function() {
                 var node = $(this).closest("li");
                 element.find(".node-group").removeClass("current-group");
                 node.addClass("current-group");
-                Utils.exec(o.onGroupNodeClick, [node], element[0]);
-                element.fire("groupnodeclick", {
+
+                that._fireEvent("group-node-click", {
                     node: node
                 });
+
             });
 
             element.on(Metro.events.dblclick, ".node-group > .data > .caption", function(){
                 var node = $(this).closest("li");
                 that.toggleNode(node);
-                Utils.exec(o.onNodeDblClick, [node], element[0]);
-                element.fire("nodedblclick", {
+
+                that._fireEvent("node-dbl-click", {
                     node: node
                 });
             });
@@ -20040,7 +20442,7 @@ $.noConflict = function() {
         },
 
         toggleNode: function(node){
-            var element = this.element, o = this.options;
+            var o = this.options;
             var func;
 
             node=$(node);
@@ -20052,8 +20454,8 @@ $.noConflict = function() {
             node.toggleClass("expanded");
 
             func = node.hasClass("expanded") !== true ? "slideUp" : "slideDown";
-            Utils.exec(o.onCollapseNode, [node], element[0]);
-            element.fire("collapsenode", {
+
+            this._fireEvent("collapse-node", {
                 node: node
             });
 
@@ -20101,8 +20503,7 @@ $.noConflict = function() {
             new_node.prepend(cb);
             Metro.makePlugin(cb, "checkbox", {});
 
-            Utils.exec(o.onNodeInsert, [new_node, node, target], element[0]);
-            element.fire("nodeinsert", {
+            this._fireEvent("node-insert", {
                 newNode: new_node,
                 parentNode: node,
                 list: target
@@ -20123,18 +20524,16 @@ $.noConflict = function() {
             node.addClass("expanded");
             node.append($("<ul>").addClass("listview").addClass("view-"+o.view));
 
-            Utils.exec(o.onNodeInsert, [node, null, element], element[0]);
-            element.fire("nodeinsert", {
+            this._fireEvent("node-insert", {
                 newNode: node,
                 parentNode: null,
                 list: element
-            });
+            })
 
             return node;
         },
 
         insertBefore: function(node, data){
-            var element = this.element, o = this.options;
             var new_node, parent_node, list;
 
             node=$(node);
@@ -20146,8 +20545,7 @@ $.noConflict = function() {
             parent_node = new_node.closest(".node");
             list = new_node.closest("ul");
 
-            Utils.exec(o.onNodeInsert, [new_node, parent_node, list], element[0]);
-            element.fire("nodeinsert", {
+            this._fireEvent("node-insert", {
                 newNode: new_node,
                 parentNode: parent_node,
                 list: list
@@ -20157,7 +20555,6 @@ $.noConflict = function() {
         },
 
         insertAfter: function(node, data){
-            var element = this.element, o = this.options;
             var new_node, parent_node, list;
 
             node=$(node);
@@ -20169,8 +20566,7 @@ $.noConflict = function() {
             parent_node = new_node.closest(".node");
             list = new_node.closest("ul");
 
-            Utils.exec(o.onNodeInsert, [new_node, parent_node, list], element[0]);
-            element.fire("nodeinsert", {
+            this._fireEvent("node-insert", {
                 newNode: new_node,
                 parentNode: parent_node,
                 list: list
@@ -20180,7 +20576,7 @@ $.noConflict = function() {
         },
 
         del: function(node){
-            var element = this.element, o = this.options;
+            var element = this.element;
 
             node=$(node);
 
@@ -20194,15 +20590,13 @@ $.noConflict = function() {
                 parent_node.removeClass("expanded");
                 parent_node.children(".node-toggle").remove();
             }
-            Utils.exec(o.onNodeDelete, [node], element[0]);
-            element.fire("nodedelete", {
+
+            this._fireEvent("node-delete", {
                 node: node
             });
         },
 
         clean: function(node){
-            var element = this.element, o = this.options;
-
             node=$(node);
 
             if (!node.length) {return;}
@@ -20210,8 +20604,8 @@ $.noConflict = function() {
             node.children("ul").remove();
             node.removeClass("expanded");
             node.children(".node-toggle").remove();
-            Utils.exec(o.onNodeClean, [node], element[0]);
-            element.fire("nodeclean", {
+
+            this._fireEvent("node-clean", {
                 node: node
             });
         },
@@ -20484,7 +20878,6 @@ $.noConflict = function() {
         },
 
         _slideTo: function(to){
-            var element = this.element, o = this.options;
             var current, next, forward = to.toLowerCase() === 'next';
 
             current = this.pages[this.currentIndex];
@@ -20503,8 +20896,7 @@ $.noConflict = function() {
 
             next = this.pages[this.currentIndex];
 
-            Utils.exec(forward ? o.onNextPage : o.onPrevPage, [current, next], element[0]);
-            element.fire(forward ? "nextpage" : "prevpage", {
+            this._fireEvent(forward ? "next-page" : "prev-page", {
                 current: current,
                 next: next,
                 forward: forward
@@ -20701,18 +21093,14 @@ $.noConflict = function() {
         },
 
         _create: function(){
-            var element = this.element;
-
             this._createStructure();
             this._createEvents();
 
-            this._fireEvent("navview-create", {
-                element: element
-            });
+            this._fireEvent("navview-create");
         },
 
         _calcMenuHeight: function(){
-            var element = this.element, pane, menu;
+            var element = this.element, pane, menu_container;
             var elements_height = 0;
 
             pane = element.children(".navview-pane");
@@ -20720,27 +21108,43 @@ $.noConflict = function() {
                 return;
             }
 
-            menu = pane.children(".navview-menu-container");
+            menu_container = pane.children(".navview-menu-container");
 
-            if (menu.length === 0) {
+            if (menu_container.length === 0) {
                 return ;
             }
 
-            $.each(menu.prevAll(), function(){
+            $.each(menu_container.prevAll(), function(){
                 elements_height += $(this).outerHeight(true);
             });
-            $.each(menu.nextAll(), function(){
+
+            $.each(menu_container.nextAll(), function(){
                 elements_height += $(this).outerHeight(true);
             });
-            menu.css({
+
+            menu_container.css({
                 height: "calc(100% - "+(elements_height)+"px)"
             });
+
+            this.menuScrollStep = 48;
+            this.menuScrollDistance = Utils.nearest(menu_container[0].scrollHeight - menu_container.height(), 48);
+        },
+
+        _recalc: function(){
+            var that = this, element = this.element;
+            setTimeout(function(){
+                if (that.pane.width() === 48) {
+                    element.addClass("js-compact");
+                } else {
+                    element.removeClass("js-compact");
+                }
+                that._calcMenuHeight();
+            }, 200);
         },
 
         _createStructure: function(){
-            var that = this, element = this.element, o = this.options;
-            var pane, content, toggle, menu, menu_container, menu_h, menu_container_h;
-            var other_pane_container, prev;
+            var element = this.element, o = this.options;
+            var pane, content, toggle, menu/*, menu_container, menu_h, menu_container_h*/;
 
             element
                 .addClass("navview")
@@ -20753,37 +21157,15 @@ $.noConflict = function() {
             menu = pane.children(".navview-menu");
 
             if (menu.length) {
-                prev = menu.prevAll();
-                other_pane_container = $("<div>").addClass("navview-container");
-                other_pane_container.append(prev.reverse());
-                pane.prepend(other_pane_container);
-
-                menu_container = $("<div>").addClass("navview-menu-container").insertBefore(menu);
-                menu.appendTo(menu_container);
-            }
-
-            this._calcMenuHeight();
-
-            if (menu.length) {
-                setTimeout(function(){
-                    menu_h = menu.height();
-                    menu_container_h = menu_container.height();
-                    that.menuScrollStep = menu.children(":not(.item-separator), :not(.item-header)")[0].clientHeight;
-                    that.menuScrollDistance = menu_h > menu_container_h ? Utils.nearest(menu_h - menu_container_h, that.menuScrollStep) : 0;
-                }, 0)
+                menu.prevAll().reverse().wrapAll($("<div>").addClass("navview-container"));
+                menu.wrap($("<div>").addClass("navview-menu-container"));
             }
 
             this.pane = pane.length > 0 ? pane : null;
             this.content = content.length > 0 ? content : null;
             this.paneToggle = toggle.length > 0 ? toggle : null;
 
-            setTimeout(function(){
-                if (that.pane.width() === 48) {
-                    element.addClass("js-compact");
-                } else {
-                    element.removeClass("js-compact");
-                }
-            }, 200);
+            this._recalc();
         },
 
         _createEvents: function(){
@@ -20791,25 +21173,25 @@ $.noConflict = function() {
             var menu_container = element.find(".navview-menu-container");
             var menu = menu_container.children(".navview-menu");
 
-            if (menu_container.length) {
-                menu_container.on("mousewheel", function(e){
-                    var dir = e.deltaY > 0 ? -1 : 1;
-                    var step = that.menuScrollStep;
-                    var top = parseInt(menu.css('top'));
+            menu_container.on("mousewheel", function(e){
+                var pane_width = element.find(".navview-pane").width();
+                var dir = e.deltaY > 0 ? -1 : 1;
+                var step = that.menuScrollStep;
+                var distance = that.menuScrollDistance;
+                var top = parseInt(menu.css('top'));
 
-                    if (!element.hasClass("compacted")) {
-                        return false;
-                    }
+                if (pane_width > 48 /*|| !element.hasClass("compacted") */) {
+                    return false;
+                }
 
-                    if(dir === -1 && Math.abs(top) <= that.menuScrollDistance) {
-                        menu.css('top', parseInt(menu.css('top')) + step * dir);
-                    }
+                if(dir === -1 && Math.abs(top) <= distance) {
+                    menu.css('top', parseInt(menu.css('top')) + step * dir);
+                }
 
-                    if(dir === 1 && top <= -step) {
-                        menu.css('top', parseInt(menu.css('top')) + step * dir);
-                    }
-                });
-            }
+                if(dir === 1 && top <= -step) {
+                    menu.css('top', parseInt(menu.css('top')) + step * dir);
+                }
+            });
 
             element.on(Metro.events.click, ".pull-button, .holder", function(){
                 that.pullClick(this);
@@ -20823,10 +21205,11 @@ $.noConflict = function() {
             });
 
             element.on(Metro.events.click, ".navview-menu li > a", function(){
-                Utils.exec(o.onMenuItemClick, null, this);
-                element.fire("menuitemclick", {
+
+                that._fireEvent("menu-item-click", {
                     item: this
                 });
+
             });
 
             if (this.paneToggle !== null) {
@@ -20836,21 +21219,24 @@ $.noConflict = function() {
             }
 
             $(window).on(Metro.events.resize, function(){
-                var menu_h, menu_container_h, menu_container = element.children(".navview-menu-container"), menu;
+                var menu_h, menu_container_h,
+                    menu_container = element.children(".navview-menu-container"),
+                    menu;
+
+                if (that.pane.hasClass("open")) {
+                    that._recalc();
+                    return ;
+                }
 
                 element.removeClass("expanded");
                 that.pane.removeClass("open");
 
-                if ($(this).width() <= Metro.media_sizes[String(o.compact).toUpperCase()]) {
+                if ($(this).width() <= Metro.media_sizes[(""+o.compact).toUpperCase()]) {
                     element.removeClass("compacted");
                 }
 
                 if (menu_container.length) {
-
-                    that._calcMenuHeight();
-
                     menu = menu_container.children(".navview-menu");
-
                     setTimeout(function () {
                         menu_h = menu.height();
                         menu_container_h = menu_container.height();
@@ -20859,21 +21245,28 @@ $.noConflict = function() {
                     }, 0);
                 }
 
-                element.removeClass("js-compact");
-
-                setTimeout(function(){
-                    if (that.pane.width() === 48) {
-                        element.addClass("js-compact");
-                    }
-                }, 200);
+                that._recalc();
 
             }, {ns: this.id})
         },
 
-        pullClick: function(el){
-            var that = this, element = this.element;
+        _togglePaneMode: function(){
+            var element = this.element;
             var pane = this.pane;
             var pane_compact = pane.width() < 280;
+
+            if ((pane_compact || element.hasClass("expanded")) && !element.hasClass("compacted")) {
+                element.toggleClass("expanded");
+            } else
+
+            if (element.hasClass("compacted") || !pane_compact) {
+                element.toggleClass("compacted");
+            }
+
+        },
+
+        pullClick: function(el){
+            var that = this;
             var input;
 
             var target = $(el);
@@ -20887,23 +21280,11 @@ $.noConflict = function() {
 
             if (that.pane.hasClass("open")) {
                 that.close();
-            } else
-
-            if ((pane_compact || element.hasClass("expanded")) && !element.hasClass("compacted")) {
-                element.toggleClass("expanded");
-            } else
-
-            if (element.hasClass("compacted") || !pane_compact) {
-                element.toggleClass("compacted");
+            } else {
+                this._togglePaneMode();
             }
 
-            setTimeout(function(){
-                if (that.pane.width() === 48) {
-                    element.addClass("js-compact");
-                } else {
-                    element.removeClass("js-compact");
-                }
-            }, 200);
+            this._recalc();
 
             return true;
         },
@@ -20919,6 +21300,10 @@ $.noConflict = function() {
         toggle: function(){
             var pane = this.pane;
             pane.hasClass("open") ? pane.removeClass("open") : pane.addClass("open");
+        },
+
+        toggleMode: function(){
+            this._togglePaneMode();
         },
 
         /* eslint-disable-next-line */
@@ -21308,6 +21693,12 @@ $.noConflict = function() {
                     .attr("tabindex", -1)
                     .html(item.html);
 
+                if (item.attr && typeof item.attr === 'object') {
+                    $.each(item.attr, function(k, v){
+                        customButton.attr($.dashedName(k), v);
+                    });
+                }
+
                 customButton.data("action", item.onclick);
 
                 buttonsContainer.prepend(customButton);
@@ -21519,8 +21910,7 @@ $.noConflict = function() {
                 setTimeout(function(){
                     that.createPopover();
 
-                    Utils.exec(o.onPopoverShow, [that.popover], element[0]);
-                    element.fire("popovershow", {
+                    that._fireEvent("popover-show", {
                         popover: that.popover
                     });
 
@@ -21626,14 +22016,13 @@ $.noConflict = function() {
 
             this.popovered = true;
 
-            Utils.exec(o.onPopoverCreate, [element, popover], element[0]);
-            element.fire("popovercreate", {
+            this._fireEvent("popover-create", {
                 popover: popover
             });
         },
 
         removePopover: function(){
-            var that = this, element = this.element;
+            var that = this;
             var timeout = this.options.onPopoverHide === Metro.noop ? 0 : 300;
             var popover = this.popover;
 
@@ -21641,8 +22030,7 @@ $.noConflict = function() {
                 return ;
             }
 
-            Utils.exec(this.options.onPopoverHide, [popover], this.elem);
-            element.fire("popoverhide", {
+            this._fireEvent("popover-hide", {
                 popover: popover
             });
 
@@ -21656,7 +22044,7 @@ $.noConflict = function() {
         },
 
         show: function(){
-            var that = this, element = this.element, o = this.options;
+            var that = this, o = this.options;
 
             if (this.popovered === true) {
                 return ;
@@ -21665,8 +22053,7 @@ $.noConflict = function() {
             setTimeout(function(){
                 that.createPopover();
 
-                Utils.exec(o.onPopoverShow, [that.popover], element[0]);
-                element.fire("popovershow", {
+                that._fireEvent("popover-show", {
                     popover: that.popover
                 });
 
@@ -21729,7 +22116,6 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
-    var Utils = Metro.utils;
     var ProgressDefaultConfig = {
         progressDeferred: 0,
         showValue: false,
@@ -21868,21 +22254,21 @@ $.noConflict = function() {
                 }
             }
 
-            Utils.exec(o.onValueChange, [this.value], element[0]);
-            element.fire("valuechange", {
-                vsl: this.value
+            this._fireEvent("value-change", {
+                val: this.value
             });
 
             if (this.value === 100) {
-                Utils.exec(o.onComplete, [this.value], element[0]);
-                element.fire("complete", {
+
+                this._fireEvent("complete", {
                     val: this.value
                 });
+
             }
         },
 
         buff: function(v){
-            var that = this, element = this.element, o = this.options;
+            var that = this, element = this.element;
 
             if (v === undefined) {
                 return that.buffer;
@@ -21898,14 +22284,12 @@ $.noConflict = function() {
 
             bar.css("width", this.buffer + "%");
 
-            Utils.exec(o.onBufferChange, [this.buffer], element[0]);
-            element.fire("bufferchange", {
+            this._fireEvent("buffer-change", {
                 val: this.buffer
             });
 
             if (this.buffer === 100) {
-                Utils.exec(o.onBuffered, [this.buffer], element[0]);
-                element.fire("buffered", {
+                this._fireEvent("buffered", {
                     val: this.buffer
                 });
             }
@@ -22226,7 +22610,7 @@ $.noConflict = function() {
         },
 
         _createEvents: function(){
-            var element = this.element, o = this.options;
+            var that = this, element = this.element, o = this.options;
             var rating = this.rating;
 
             rating.on(Metro.events.click, ".stars li", function(){
@@ -22246,11 +22630,11 @@ $.noConflict = function() {
                 star.prevAll().addClass("on");
                 star.nextAll().removeClass("on");
 
-                Utils.exec(o.onStarClick, [value, star[0]], element[0]);
-                element.fire("starclick", {
+                that._fireEvent("star-click", {
                     value: value,
                     star: star[0]
                 });
+
             });
         },
 
@@ -22360,7 +22744,7 @@ $.noConflict = function() {
     'use strict';
     var Utils = Metro.utils;
     var ResizableDefaultConfig = {
-        resizeableDeferred: 0,
+        resizableDeferred: 0,
         canResize: true,
         resizeElement: ".resize-element",
         minWidth: 0,
@@ -22374,40 +22758,36 @@ $.noConflict = function() {
         onResizableCreate: Metro.noop
     };
 
-    Metro.resizeableSetup = function (options) {
+    Metro.resizableSetup = function (options) {
         ResizableDefaultConfig = $.extend({}, ResizableDefaultConfig, options);
     };
 
-    if (typeof window["metroResizeableSetup"] !== undefined) {
-        Metro.resizeableSetup(window["metroResizeableSetup"]);
+    if (typeof window["metroResizableSetup"] !== undefined) {
+        Metro.resizableSetup(window["metroResizableSetup"]);
     }
 
-    Metro.Component('resizeable', {
+    Metro.Component('resizable', {
         init: function( options, elem ) {
             this._super(elem, options, ResizableDefaultConfig, {
                 resizer: null,
-                id: Utils.elementId("resizeable")
+                id: Utils.elementId("resizable")
             });
 
             return this;
         },
 
         _create: function(){
-            var element = this.element;
-
             this._createStructure();
             this._createEvents();
 
-            this._fireEvent("resizeable-create", {
-                element: element
-            });
+            this._fireEvent("resizable-create");
         },
 
         _createStructure: function(){
             var element = this.element, o = this.options;
 
             element.data("canResize", true);
-            element.addClass("resizeable-element");
+            element.addClass("resizable-element");
 
             if (Utils.isValue(o.resizeElement) && element.find(o.resizeElement).length > 0) {
                 this.resizer = element.find(o.resizeElement);
@@ -22434,8 +22814,7 @@ $.noConflict = function() {
 
                 element.addClass("stop-pointer");
 
-                Utils.exec(o.onResizeStart, [size], element[0]);
-                element.fire("resizestart", {
+                that._fireEvent("resize-start", {
                     size: size
                 });
 
@@ -22454,10 +22833,10 @@ $.noConflict = function() {
 
                     element.css(size);
 
-                    Utils.exec(o.onResize, [size], element[0]);
-                    element.fire("resize", {
+                    that._fireEvent("resize", {
                         size: size
-                    });
+                    })
+
                 }, {ns: that.id});
 
                 $(document).on(Metro.events.stop, function(){
@@ -22471,10 +22850,10 @@ $.noConflict = function() {
                         height: parseInt(element.outerHeight())
                     };
 
-                    Utils.exec(o.onResizeStop, [size], element[0]);
-                    element.fire("resizestop", {
+                    that._fireEvent("resize-stop", {
                         size: size
                     });
+
                 }, {ns: that.id});
 
                 e.preventDefault();
@@ -22562,7 +22941,7 @@ $.noConflict = function() {
         },
 
         _createEvents: function(){
-            var that = this, element = this.element, o = this.options;
+            var that = this, element = this.element;
             var win = $.window();
 
             win.on("resize", function(){
@@ -22571,8 +22950,7 @@ $.noConflict = function() {
                 var oldSize = that.size;
                 var point;
 
-                Utils.exec(o.onWindowResize, [windowWidth, windowHeight, window.METRO_MEDIA], element[0]);
-                element.fire("windowresize", {
+                that._fireEvent("window-resize", {
                     width: windowWidth,
                     height: windowHeight,
                     media: window.METRO_MEDIA
@@ -22583,13 +22961,14 @@ $.noConflict = function() {
                         width: elementWidth,
                         height: elementHeight
                     };
-                    Utils.exec(o.onElementResize, [elementWidth, elementHeight, oldSize, window.METRO_MEDIA], element[0]);
-                    element.fire("windowresize", {
+
+                    that._fireEvent("element-resize", {
                         width: elementWidth,
                         height: elementHeight,
                         oldSize: oldSize,
                         media: window.METRO_MEDIA
                     });
+
                 }
 
                 if (that.media.length !== window.METRO_MEDIA.length) {
@@ -22597,24 +22976,26 @@ $.noConflict = function() {
                         point = that.media.filter(function(x){
                             return !window.METRO_MEDIA.contains(x);
                         });
-                        Utils.exec(o.onMediaPointLeave, [point, window.METRO_MEDIA], element[0]);
-                        element.fire("mediapointleave", {
+
+                        that._fireEvent("media-point-leave", {
                             point: point,
                             media: window.METRO_MEDIA
                         });
+
                     } else {
                         point = window.METRO_MEDIA.filter(function(x){
                             return !that.media.contains(x);
                         });
-                        Utils.exec(o.onMediaPointEnter, [point, window.METRO_MEDIA], element[0]);
-                        element.fire("mediapointenter", {
+
+                        that._fireEvent("media-point-enter", {
                             point: point,
                             media: window.METRO_MEDIA
                         });
                     }
+
                     that.media = window.METRO_MEDIA;
-                    Utils.exec(o.onMediaPoint, [point, window.METRO_MEDIA], element[0]);
-                    element.fire("mediapoint", {
+
+                    that._fireEvent("media-point", {
                         point: point,
                         media: window.METRO_MEDIA
                     });
@@ -22713,8 +23094,7 @@ $.noConflict = function() {
                     if (o.onStatic === Metro.noop && link.attr("href") !== undefined) {
                         document.location.href = link.attr("href");
                     } else {
-                        Utils.exec(o.onStatic, [tab[0]], element[0]);
-                        element.fire("static", {
+                        that._fireEvent("static", {
                             tab: tab[0]
                         });
                     }
@@ -22728,7 +23108,7 @@ $.noConflict = function() {
         },
 
         open: function(tab){
-            var element = this.element, o = this.options;
+            var element = this.element;
             var $tab = $(tab);
             var tabs = element.find(".tabs-holder li");
             var sections = element.find(".content-holder .section");
@@ -22741,8 +23121,7 @@ $.noConflict = function() {
             sections.removeClass("active");
             if (target_section) target_section.addClass("active");
 
-            Utils.exec(o.onTab, [$tab[0]], element[0]);
-            element.fire("tab", {
+            this._fireEvent("tab", {
                 tab: $tab[0]
             });
         },
@@ -23051,7 +23430,7 @@ $.noConflict = function() {
         },
 
         _createSelect: function(){
-            var element = this.element, o = this.options;
+            var that = this, element = this.element, o = this.options;
 
             var container = $("<label>").addClass("select " + element[0].className).addClass(o.clsSelect);
             var multiple = element[0].multiple;
@@ -23127,15 +23506,15 @@ $.noConflict = function() {
                         list[0].scrollTop = target.position().top - ( (list.height() - target.height() )/ 2);
                     }
 
-                    Utils.exec(o.onDrop, [list[0]], element[0]);
-                    element.fire("drop", {
+                    that._fireEvent("drop", {
                         list: list[0]
                     });
+
                 },
                 onUp: function(){
                     dropdown_toggle.removeClass("active-toggle");
-                    Utils.exec(o.onUp, [list[0]], element[0]);
-                    element.fire("up", {
+
+                    that._fireEvent("up", {
                         list: list[0]
                     });
                 }
@@ -23249,8 +23628,7 @@ $.noConflict = function() {
                     }
                 });
 
-                Utils.exec(o.onItemSelect, [val, option, leaf[0]], element[0]);
-                element.fire("itemselect", {
+                that._fireEvent("item-select", {
                     val: val,
                     option: option,
                     leaf: leaf[0]
@@ -23258,8 +23636,7 @@ $.noConflict = function() {
 
                 selected = that.getSelected();
 
-                Utils.exec(o.onChange, [selected], element[0]);
-                element.fire("change", {
+                that._fireEvent("change", {
                     selected: selected
                 });
             });
@@ -23278,14 +23655,13 @@ $.noConflict = function() {
                 });
                 item.remove();
 
-                Utils.exec(o.onItemDeselect, [option], element[0]);
-                element.fire("itemdeselect", {
+                that._fireEvent("item-deselect", {
                     option: option
                 });
 
                 selected = that.getSelected();
-                Utils.exec(o.onChange, [selected], element[0]);
-                element.fire("change", {
+
+                that._fireEvent("change", {
                     selected: selected
                 });
 
@@ -23338,7 +23714,7 @@ $.noConflict = function() {
         },
 
         reset: function(to_default){
-            var element = this.element, o = this.options;
+            var element = this.element;
             var options = element.find("option");
             var select = element.closest('.select');
             var selected;
@@ -23353,8 +23729,8 @@ $.noConflict = function() {
             this._createOptions();
 
             selected = this.getSelected();
-            Utils.exec(o.onChange, [selected], element[0]);
-            element.fire("change", {
+
+            this._fireEvent("change", {
                 selected: selected
             });
         },
@@ -23426,15 +23802,29 @@ $.noConflict = function() {
             });
 
             selected = this.getSelected();
-            Utils.exec(o.onChange, [selected], element[0]);
-            element.fire("change", {
+
+            this._fireEvent("change", {
                 selected: selected
             });
         },
 
-        data: function(op){
+        data: function(op, selected, delimiter){
             var element = this.element;
-            var option_group;
+            var option_group, _selected;
+            var _delimiter = delimiter || ",";
+
+
+            if (typeof selected === "string") {
+                _selected = selected.toArray(_delimiter).map(function(v){
+                    return +v;
+                });
+            } else if (Array.isArray(selected)) {
+                _selected = selected.slice().map(function(v){
+                    return +v;
+                });
+            } else {
+                _selected = [];
+            }
 
             element.empty();
 
@@ -23445,10 +23835,16 @@ $.noConflict = function() {
                     if (Utils.isObject(val)) {
                         option_group = $("<optgroup label=''>").attr("label", key).appendTo(element);
                         $.each(val, function(key2, val2){
-                            $("<option>").attr("value", key2).text(val2).appendTo(option_group);
+                            var op = $("<option>").attr("value", key2).text(val2).appendTo(option_group);
+                            if (_selected.indexOf(+key2) > -1) {
+                                op.prop("selected", true);
+                            }
                         });
                     } else {
-                        $("<option>").attr("value", key).text(val).appendTo(element);
+                        var op = $("<option>").attr("value", key).text(val).appendTo(element);
+                        if (_selected.indexOf(+key) > -1) {
+                            op.prop("selected", true);
+                        }
                     }
                 });
             }
@@ -23650,13 +24046,12 @@ $.noConflict = function() {
                             })
                     });
                 }
-                Utils.exec(o.onStaticSet, null, element[0]);
-                element.fire("staticset");
+
+                this._fireEvent("static-set");
             }
             if (!Utils.mediaExist(o.static)) {
                 element.removeClass("static");
-                Utils.exec(o.onStaticLoss, null, element[0]);
-                element.fire("staticloss");
+                this._fireEvent("static-loss");
             }
         },
 
@@ -23683,8 +24078,7 @@ $.noConflict = function() {
                     });
             }
 
-            Utils.exec(o.onOpen, null, element[0]);
-            element.fire("open");
+            this._fireEvent("open");
         },
 
         close: function(){
@@ -23706,8 +24100,7 @@ $.noConflict = function() {
                     });
             }
 
-            Utils.exec(o.onClose, null, element[0]);
-            element.fire("close");
+            this._fireEvent("close");
         },
 
         toggle: function(){
@@ -23716,8 +24109,8 @@ $.noConflict = function() {
             } else {
                 this.open();
             }
-            Utils.exec(this.options.onToggle, null, this.element[0]);
-            this.element.fire("toggle");
+
+            this._fireEvent("toggle");
         },
 
         changeAttribute: function(){
@@ -24695,34 +25088,30 @@ $.noConflict = function() {
 
                 that._setValue(val.toFixed(o.fixed), true);
 
-                Utils.exec(plus ? o.onPlusClick : o.onMinusClick, [curr, val, element.val()], element[0]);
-                element.fire(plus ? "plusclick" : "minusclick", {
+                that._fireEvent(plus ? "plus-click" : "minus-click", {
                     curr: curr,
                     val: val,
                     elementVal: element.val()
                 });
 
-                Utils.exec(plus ? o.onArrowUp : o.onArrowDown, [curr, val, element.val()], element[0]);
-                element.fire(plus ? "arrowup" : "arrowdown", {
+                that._fireEvent(plus ? "arrow-up" : "arrow-down", {
                     curr: curr,
                     val: val,
                     elementVal: element.val()
                 });
 
-                Utils.exec(o.onButtonClick, [curr, val, element.val(), plus ? 'plus' : 'minus'], element[0]);
-                element.fire("buttonclick", {
-                    button: plus ? "plus" : "minus",
+                that._fireEvent("button-click", {
                     curr: curr,
                     val: val,
-                    elementVal: element.val()
+                    elementVal: element.val(),
+                    button: plus ? "plus" : "minus"
                 });
 
-                Utils.exec(o.onArrowClick, [curr, val, element.val(), plus ? 'plus' : 'minus'], element[0]);
-                element.fire("arrowclick", {
-                    button: plus ? "plus" : "minus",
+                that._fireEvent("arrow-click", {
                     curr: curr,
                     val: val,
-                    elementVal: element.val()
+                    elementVal: element.val(),
+                    button: plus ? "plus" : "minus"
                 });
 
                 setTimeout(function(){
@@ -24779,7 +25168,7 @@ $.noConflict = function() {
 
             element.val(val);
 
-            Utils.exec(o.onChange, [val], element[0]);
+            this._fireEvent("change", {val: val}, false, true);
 
             if (trigger_change === true) {
                 element.fire("change", {
@@ -24798,11 +25187,11 @@ $.noConflict = function() {
         },
 
         toDefault: function(){
-            var element = this.element, o = this.options;
+            var o = this.options;
             var val = Utils.isValue(o.defaultValue) ? Number(o.defaultValue) : 0;
             this._setValue(val.toFixed(o.fixed), true);
-            Utils.exec(o.onChange, [val], element[0]);
-            element.fire("change", {
+
+            this._fireEvent("change", {
                 val: val
             });
         },
@@ -24986,8 +25375,7 @@ $.noConflict = function() {
                 prev_block.addClass("stop-pointer");
                 next_block.addClass("stop-pointer");
 
-                Utils.exec(o.onResizeStart, [start_pos, gutter[0], prev_block[0], next_block[0]], element[0]);
-                element.fire("resizestart", {
+                that._fireEvent("resize-start", {
                     pos: start_pos,
                     gutter: gutter[0],
                     prevBlock: prev_block[0],
@@ -25008,18 +25396,17 @@ $.noConflict = function() {
                     prev_block.css("flex-basis", "calc(" + (prev_block_size + new_pos) + "% - "+(gutters.length * o.gutterSize)+"px)");
                     next_block.css("flex-basis", "calc(" + (next_block_size - new_pos) + "% - "+(gutters.length * o.gutterSize)+"px)");
 
-                    Utils.exec(o.onResizeSplit, [pos, gutter[0], prev_block[0], next_block[0]], element[0]);
-                    element.fire("resizesplit", {
+                    that._fireEvent("resize-split", {
                         pos: pos,
                         gutter: gutter[0],
                         prevBlock: prev_block[0],
                         nextBlock: next_block[0]
                     });
+
                 }, {ns: that.id});
 
                 $(window).on(Metro.events.stopAll, function(e){
                     var cur_pos;
-
 
                     prev_block.removeClass("stop-pointer");
                     next_block.removeClass("stop-pointer");
@@ -25033,13 +25420,13 @@ $.noConflict = function() {
 
                     cur_pos = Utils.getCursorPosition(element[0], e);
 
-                    Utils.exec(o.onResizeStop, [cur_pos, gutter[0], prev_block[0], next_block[0]], element[0]);
-                    element.fire("resizestop", {
+                    that._fireEvent("resize-stop", {
                         pos: cur_pos,
                         gutter: gutter[0],
                         prevBlock: prev_block[0],
                         nextBlock: next_block[0]
                     });
+
                 }, {ns: that.id})
             });
 
@@ -25048,11 +25435,11 @@ $.noConflict = function() {
                 var prev_block = gutter.prev(".split-block");
                 var next_block = gutter.next(".split-block");
 
-                Utils.exec(o.onResizeWindow, [prev_block[0], next_block[0]], element[0]);
-                element.fire("resizewindow", {
+                that._fireEvent("resize-window", {
                     prevBlock: prev_block[0],
                     nextBlock: next_block[0]
                 });
+
             }, {ns: that.id});
         },
 
@@ -25123,7 +25510,6 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
-    var Utils = Metro.utils;
     var StepperDefaultConfig = {
         stepperDeferred: 0,
         view: Metro.stepperView.SQUARE, // square, cycle, diamond
@@ -25192,8 +25578,8 @@ $.noConflict = function() {
                 var step = $(this).data("step");
                 if (o.stepClick === true) {
                     that.toStep(step);
-                    Utils.exec(o.onStepClick, [step], element[0]);
-                    element.fire("stepclick", {
+
+                    that._fireEvent("step-click", {
                         step: step
                     });
                 }
@@ -25236,6 +25622,7 @@ $.noConflict = function() {
         toStep: function(step){
             var element = this.element, o = this.options;
             var target = $(element.find(".step").get(step - 1));
+            var prevStep = this.current;
 
             if (target.length === 0) {
                 return ;
@@ -25251,10 +25638,11 @@ $.noConflict = function() {
             target.addClass("current").addClass(o.clsCurrent);
             target.prevAll().addClass("complete").addClass(o.clsComplete);
 
-            Utils.exec(o.onStep, [this.current], element[0]);
-            element.fire("step", {
-                step: this.current
+            this._fireEvent("step", {
+                step: this.current,
+                prev: prevStep
             });
+
         },
 
         changeAttribute: function(){
@@ -25433,25 +25821,26 @@ $.noConflict = function() {
 
             if (o.source !== null) {
 
-                Utils.exec(o.onDataLoad, [o.source], element[0]);
-                element.fire("dataload", {
+                this._fireEvent("data-load", {
                     source: o.source
                 });
 
                 $.json(o.source).then(function(data){
-                    Utils.exec(o.onDataLoaded, [o.source, data], element[0]);
-                    element.fire("dataloaded", {
+
+                    that._fireEvent("data-loaded", {
                         source: o.source,
                         data: data
                     });
+
                     that.data = data;
                     that.build();
                 }, function(xhr){
-                    Utils.exec(o.onDataLoadError, [o.source, xhr], element[0]);
-                    element.fire("dataloaderror", {
+
+                    that._fireEvent("data-load-error", {
                         source: o.source,
                         xhr: xhr
                     });
+
                 });
             } else {
                 this.data = o.data;
@@ -25652,8 +26041,7 @@ $.noConflict = function() {
                                 event.html(event_item.html);
                             }
 
-                            Utils.exec(o.onDrawEvent, [event[0]], element[0]);
-                            element.fire("drawevent", {
+                            that._fireEvent("draw-event", {
                                 event: event[0]
                             });
 
@@ -25671,8 +26059,7 @@ $.noConflict = function() {
                         height: stream_height * rows
                     });
 
-                    Utils.exec(o.onDrawStream, [stream[0]], element[0]);
-                    element.fire("drawstream", {
+                    that._fireEvent("draw-stream", {
                         stream: stream[0]
                     });
 
@@ -25712,8 +26099,7 @@ $.noConflict = function() {
                                 height: "100%"
                             }).appendTo(streamer_events);
 
-                            Utils.exec(o.onDrawGlobalEvent, [event[0]], element[0]);
-                            element.fire("dataloaded", {
+                            that._fireEvent("draw-global-event", {
                                 event: event[0]
                             });
 
@@ -25735,15 +26121,13 @@ $.noConflict = function() {
                 }, o.startSlideSleep);
             }
 
-            this._fireEvent("streamer-create", {
-                element: element
-            });
+            this._fireEvent("streamer-create");
 
             this._fireScroll();
         },
 
         _fireScroll: function(){
-            var that = this, element = this.element, o = this.options;
+            var that = this, element = this.element;
             var scrollable = element.find(".events-area");
             var oldScroll = this.scroll;
 
@@ -25754,9 +26138,7 @@ $.noConflict = function() {
             this.scrollDir = this.scroll < scrollable[0].scrollLeft ? "left" : "right";
             this.scroll = scrollable[0].scrollLeft;
 
-            Utils.exec(o.onEventsScroll, [scrollable[0].scrollLeft, oldScroll, this.scrollDir, $.toArray(this.events)], element[0]);
-
-            element.fire("eventsscroll", {
+            this._fireEvent("events-scroll", {
                 scrollLeft: scrollable[0].scrollLeft,
                 oldScroll: oldScroll,
                 scrollDir: that.scrollDir,
@@ -25810,8 +26192,8 @@ $.noConflict = function() {
                             if (o.changeUri === true) {
                                 that._changeURI();
                             }
-                            Utils.exec(o.onEventSelect, [event[0], event.hasClass("selected")], element[0]);
-                            element.fire("eventselect", {
+
+                            that._fireEvent("event-select", {
                                 event: event[0],
                                 selected: event.hasClass("selected")
                             });
@@ -25828,8 +26210,7 @@ $.noConflict = function() {
 
                         } else {
 
-                            Utils.exec(o.onEventClick, [event[0]], element[0]);
-                            element.fire("eventclick", {
+                            that._fireEvent("event-click", {
                                 event: event[0]
                             });
 
@@ -25860,14 +26241,12 @@ $.noConflict = function() {
                     element.data("stream", index);
                     element.find(".stream-event").addClass("disabled");
                     that.enableStream(stream);
-                    Utils.exec(o.onStreamSelect, [stream], element[0]);
-                    element.fire("streamselect", {
+                    that._fireEvent("stream-select", {
                         stream: stream
                     });
                 }
 
-                Utils.exec(o.onStreamClick, [stream], element[0]);
-                element.fire("streamclick", {
+                that._fireEvent("stream-click", {
                     stream: stream
                 });
             });
@@ -26063,7 +26442,7 @@ $.noConflict = function() {
         },
 
         selectEvent: function(event, state){
-            var that = this, element = this.element, o = this.options;
+            var that = this, o = this.options;
             if (state === undefined) {
                 state = true;
             }
@@ -26078,8 +26457,8 @@ $.noConflict = function() {
             if (o.changeUri === true) {
                 that._changeURI();
             }
-            Utils.exec(o.onEventSelect, [event[0], state], element[0]);
-            element.fire("eventselect", {
+
+            this._fireEvent("event-select", {
                 event: event[0],
                 selected: state
             });
@@ -26095,28 +26474,28 @@ $.noConflict = function() {
 
             o.source = new_source;
 
-            Utils.exec(o.onDataLoad, [o.source], element[0]);
-            element.fire("dataload", {
+            this._fireEvent("data-load", {
                 source: o.source
             });
 
             $.json(o.source).then(function(data){
-                Utils.exec(o.onDataLoaded, [o.source, data], element[0]);
-                element.fire("dataloaded", {
+
+                that._fireEvent("data-loaded", {
                     source: o.source,
                     data: data
                 });
+
                 that.data = data;
                 that.build();
             }, function(xhr){
-                Utils.exec(o.onDataLoadError, [o.source, xhr], element[0]);
-                element.fire("dataloaderror", {
+
+                that._fireEvent("data-load-error", {
                     source: o.source,
                     xhr: xhr
                 });
             });
 
-            element.fire("sourcechange");
+            this._fireEvent("source-change");
         },
 
         changeData: function(data){
@@ -26129,7 +26508,7 @@ $.noConflict = function() {
 
             this.build();
 
-            element.fire("datachange", {
+            this._fireEvent("data-change", {
                 oldData: old_data,
                 newData: o.data
             });
@@ -26165,6 +26544,7 @@ $.noConflict = function() {
 
 (function(Metro, $) {
     'use strict';
+    var Utils = Metro.utils;
     var SwitchDefaultConfig = {
         switchDeferred: 0,
         material: false,
@@ -26194,7 +26574,7 @@ $.noConflict = function() {
 
         _create: function(){
             var element = this.element, o = this.options;
-            var container = $("<label>").addClass((o.material === true ? " switch-material " : " switch ") + element[0].className);
+            var container ;
             var check = $("<span>").addClass("check");
             var caption = $("<span>").addClass("caption").html(o.caption);
 
@@ -26206,10 +26586,15 @@ $.noConflict = function() {
                 })
             }
 
-            container.insertBefore(element);
-            element.appendTo(container);
+            container = element.wrap(
+                $("<label>").addClass((o.material === true ? " switch-material " : " switch ") + element[0].className)
+            );
+
             check.appendTo(container);
             caption.appendTo(container);
+
+            if (element.attr("data-on")) check.attr("data-on", element.attr("data-on"));
+            if (element.attr("data-off")) check.attr("data-off", element.attr("data-off"));
 
             if (o.transition === true) {
                 container.addClass("transition-on");
@@ -26231,9 +26616,7 @@ $.noConflict = function() {
                 this.enable();
             }
 
-            this._fireEvent("switch-create", {
-                element: element
-            });
+            this._fireEvent("switch-create");
         },
 
         disable: function(){
@@ -26252,6 +26635,18 @@ $.noConflict = function() {
             } else {
                 this.enable();
             }
+        },
+
+        toggle: function(v){
+            var element = this.element;
+
+            if (!Utils.isValue(v)) {
+                element.prop("checked", !Utils.bool(element.prop("checked")));
+            } else {
+                element.prop("checked", v === 1);
+            }
+
+            return this;
         },
 
         changeAttribute: function(attributeName){
@@ -26527,11 +26922,11 @@ $.noConflict = function() {
                 })
             }
 
-            this.component = table_component;
+            this.component = table_component[0];
 
             if (o.source !== null) {
-                Utils.exec(o.onDataLoad, [o.source], element[0]);
-                element.fire("dataload", {
+
+                this._fireEvent("data-load", {
                     source: o.source
                 });
 
@@ -26539,28 +26934,30 @@ $.noConflict = function() {
 
                 if (objSource !== false && $.isPlainObject(objSource)) {
                     that._build(objSource);
-                } else
-                this.activity.show(function(){
-                    $.json(o.source).then(function(data){
-                        that.activity.hide();
-                        if (typeof data !== "object") {
-                            throw new Error("Data for table is not a object");
-                        }
-                        Utils.exec(o.onDataLoaded, [o.source, data], element[0]);
-                        element.fire("dataloaded", {
-                            source: o.source,
-                            data: data
+                } else {
+                    this.activity.show(function () {
+                        $.json(o.source).then(function (data) {
+                            that.activity.hide();
+                            if (typeof data !== "object") {
+                                throw new Error("Data for table is not a object");
+                            }
+
+                            that._fireEvent("data-loaded", {
+                                source: o.source,
+                                data: data
+                            });
+
+                            that._build(data);
+                        }, function (xhr) {
+                            that.activity.hide();
+
+                            that._fireEvent("data-load-error", {
+                                source: o.source,
+                                xhr: xhr
+                            });
                         });
-                        that._build(data);
-                    }, function(xhr){
-                        that.activity.hide();
-                        Utils.exec(o.onDataLoadError, [o.source, xhr], element[0]);
-                        element.fire("dataloaderror", {
-                            source: o.source,
-                            xhr: xhr
-                        })
                     });
-                });
+                }
             } else {
                 that._build();
             }
@@ -26612,8 +27009,8 @@ $.noConflict = function() {
                 view = Metro.storage.getItem(viewPath);
                 if (Utils.isValue(view) && Utils.objectLength(view) === Utils.objectLength(this.view)) {
                     this.view = view;
-                    Utils.exec(o.onViewGet, [view], element[0]);
-                    element.fire("viewget", {
+
+                    this._fireEvent("view-get", {
                         source: "client",
                         view: view
                     });
@@ -26626,8 +27023,7 @@ $.noConflict = function() {
                 .then(function(view){
                     if (Utils.isValue(view) && Utils.objectLength(view) === Utils.objectLength(that.view)) {
                         that.view = view;
-                        Utils.exec(o.onViewGet, [view], element[0]);
-                        element.fire("viewget", {
+                        that._fireEvent("view-get", {
                             source: "server",
                             view: view
                         });
@@ -26689,7 +27085,7 @@ $.noConflict = function() {
         },
 
         _createView: function(){
-            var view, element = this.element, o = this.options;
+            var view;
 
             view = {};
 
@@ -26706,10 +27102,10 @@ $.noConflict = function() {
                 }
             });
 
-            Utils.exec(o.onViewCreated, [view], view);
-            element.fire("viewcreated", {
+            this._fireEvent("view-created", {
                 view: view
             });
+
             return view;
         },
 
@@ -27066,8 +27462,8 @@ $.noConflict = function() {
                     o.rows = val;
                     that.currentPage = 1;
                     that._draw();
-                    Utils.exec(o.onRowsCountChange, [val], element[0]);
-                    element.fire("rowscountchange", {
+
+                    that._fireEvent("rows-count-change", {
                         val: val
                     });
                 }
@@ -27190,11 +27586,12 @@ $.noConflict = function() {
                 }
 
                 skip_input.val('');
-                Utils.exec(o.onSkip, [skipTo, that.currentPage], element[0]);
-                element.fire("skip", {
+
+                that._fireEvent("skip", {
                     skipTo: skipTo,
                     skipFrom: that.currentPage
                 });
+
                 that.page(skipTo);
             });
 
@@ -27274,10 +27671,10 @@ $.noConflict = function() {
 
                 storage.setItem(store_key, data);
 
-                Utils.exec(o.onCheckClick, [status], this);
-                element.fire("checkclick", {
+                that._fireEvent("check-click", {
                     check: this,
-                    status: status
+                    status: status,
+                    data: data
                 });
             });
 
@@ -27285,6 +27682,7 @@ $.noConflict = function() {
                 var status = $(this).is(":checked");
                 var store_key = o.checkStoreKey.replace("$1", id);
                 var data = [];
+                var storage = Metro.storage;
 
                 if (status) {
                     $.each(that.filteredItems, function(){
@@ -27295,14 +27693,14 @@ $.noConflict = function() {
                     data = [];
                 }
 
-                Metro.storage.setItem(store_key, data);
+                storage.setItem(store_key, data);
 
                 that._draw();
 
-                Utils.exec(o.onCheckClickAll, [status], this);
-                element.fire("checkclickall", {
+                that._fireEvent("check-click-all", {
                     check: this,
-                    status: status
+                    status: status,
+                    data: data
                 });
             });
 
@@ -27504,15 +27902,16 @@ $.noConflict = function() {
         },
 
         _saveTableView: function(){
-            var element = this.element, o = this.options;
+            var that = this, element = this.element, o = this.options;
             var view = this.view;
             var id = element.attr("id");
             var viewPath = o.viewSavePath.replace("$1", id);
+            var storage = Metro.storage;
 
             if (o.viewSaveMode.toLowerCase() === "client") {
-                Metro.storage.setItem(viewPath, view);
-                Utils.exec(o.onViewSave, [o.viewSavePath, view], element[0]);
-                element.fire("viewsave", {
+                storage.setItem(viewPath, view);
+
+                this._fireEvent("view-save", {
                     target: "client",
                     path: o.viewSavePath,
                     view: view
@@ -27524,20 +27923,23 @@ $.noConflict = function() {
                 };
                 $.post(viewPath, post_data)
                     .then(function(data){
-                        Utils.exec(o.onViewSave, [o.viewSavePath, view, post_data, data], element[0]);
-                        element.fire("viewsave", {
+
+                        that._fireEvent("view-save", {
                             target: "server",
                             path: o.viewSavePath,
                             view: view,
-                            post_data: post_data
+                            post_data: post_data,
+                            response: data
                         });
+
                     }, function(xhr){
-                        Utils.exec(o.onDataSaveError, [o.viewSavePath, post_data, xhr], element[0]);
-                        element.fire("datasaveerror", {
+
+                        that._fireEvent("data-save-error", {
                             source: o.viewSavePath,
                             xhr: xhr,
                             post_data: post_data
                         });
+
                     });
             }
         },
@@ -27584,7 +27986,7 @@ $.noConflict = function() {
         },
 
         _filter: function(){
-            var that = this, o = this.options, element = this.element;
+            var that = this, o = this.options;
             var items;
             if ((Utils.isValue(this.searchString) && that.searchString.length >= o.searchMinLength) || this.filters.length > 0) {
                 items = this.items.filter(function(row){
@@ -27624,13 +28026,11 @@ $.noConflict = function() {
                     result = result && search_result;
 
                     if (result) {
-                        Utils.exec(o.onFilterRowAccepted, [row], element[0]);
-                        element.fire("filterrowaccepted", {
+                        that._fireEvent("filter-row-accepted", {
                             row: row
                         });
                     } else {
-                        Utils.exec(o.onFilterRowDeclined, [row], element[0]);
-                        element.fire("filterrowdeclined", {
+                        that._fireEvent("filter-row-declined", {
                             row: row
                         });
                     }
@@ -27642,8 +28042,7 @@ $.noConflict = function() {
                 items = this.items;
             }
 
-            Utils.exec(o.onSearch, [that.searchString, items], element[0]);
-            element.fire("search", {
+            this._fireEvent("search", {
                 search: that.searchString,
                 items: items
             });
@@ -27704,10 +28103,11 @@ $.noConflict = function() {
                     }
 
                     check.addClass("table-service-check");
-                    Utils.exec(o.onCheckDraw, [check], check[0]);
-                    element.fire("checkdraw", {
+
+                    this._fireEvent("check-draw", {
                         check: check
                     });
+
                     check.appendTo(td);
                     if (that.service[1].clsColumn !== undefined) {
                         td.addClass(that.service[1].clsColumn);
@@ -27744,8 +28144,8 @@ $.noConflict = function() {
                         td.data('original',this);
 
                         tds[view[cell_index]['index-view']] = td;
-                        Utils.exec(o.onDrawCell, [td, val, cell_index, that.heads[cell_index], cells], td[0]);
-                        element.fire("drawcell", {
+
+                        that._fireEvent("draw-cell", {
                             td: td,
                             val: val,
                             cellIndex: cell_index,
@@ -27761,16 +28161,15 @@ $.noConflict = function() {
 
                     for (j = 0; j < cells.length; j++){
                         tds[j].appendTo(tr);
-                        Utils.exec(o.onAppendCell, [tds[j], tr, j, element], tds[j][0]);
-                        element.fire("appendcell", {
+
+                        that._fireEvent("append-cell", {
                             td: tds[j],
                             tr: tr,
                             index: j
-                        })
+                        });
                     }
 
-                    Utils.exec(o.onDrawRow, [tr, that.view, that.heads, cells], tr[0]);
-                    element.fire("drawrow", {
+                    that._fireEvent("draw-row", {
                         tr: tr,
                         view: that.view,
                         heads: that.heads,
@@ -27779,8 +28178,7 @@ $.noConflict = function() {
 
                     tr.addClass(o.clsRow).addClass(is_even_row ? o.clsEvenRow : o.clsOddRow).appendTo(body);
 
-                    Utils.exec(o.onAppendRow, [tr, element], tr[0]);
-                    element.fire("appendrow", {
+                    that._fireEvent("append-row", {
                         tr: tr
                     });
                 }
@@ -27806,12 +28204,10 @@ $.noConflict = function() {
 
             if (this.activity) this.activity.hide();
 
-            Utils.exec(o.onDraw, [element], element[0]);
-
-            element.fire("draw", element[0]);
+            this._fireEvent("draw");
 
             if (cb !== undefined) {
-                Utils.exec(cb, [element], element[0])
+                Utils.exec(cb, null, element[0])
             }
         },
 
@@ -27949,14 +28345,15 @@ $.noConflict = function() {
         },
 
         sorting: function(dir){
-            var that = this, element = this.element, o = this.options;
+            var that = this;
 
             if (Utils.isValue(dir)) {
                 this.sort.dir = dir;
             }
 
-            Utils.exec(o.onSortStart, [this.items], element[0]);
-            element.fire("sortstart", this.items);
+            this._fireEvent("sort-start", {
+                items: this.items
+            });
 
             this.items.sort(function(a, b){
                 var c1 = that._getItemContent(a);
@@ -27971,19 +28368,20 @@ $.noConflict = function() {
                 }
 
                 if (result !== 0) {
-                    Utils.exec(o.onSortItemSwitch, [a, b, result], element[0]);
-                    element.fire("sortitemswitch", {
+
+                    that._fireEvent("sort-item-switch", {
                         a: a,
                         b: b,
                         result: result
-                    })
+                    });
                 }
 
                 return result;
             });
 
-            Utils.exec(o.onSortStop, [this.items], element[0]);
-            element.fire("sortstop", this.items);
+            this._fireEvent("sort-stop", {
+                items: this.items
+            });
 
             return this;
         },
@@ -28090,8 +28488,7 @@ $.noConflict = function() {
             } else {
                 o.source = source;
 
-                Utils.exec(o.onDataLoad, [o.source], element[0]);
-                element.fire("dataload", {
+                this._fireEvent("data-load", {
                     source: o.source
                 });
 
@@ -28102,8 +28499,7 @@ $.noConflict = function() {
                         that.heads = [];
                         that.foots = [];
 
-                        Utils.exec(o.onDataLoaded, [o.source, data], element[0]);
-                        element.fire("dataloaded", {
+                        that._fireEvent("data-loaded", {
                             source: o.source,
                             data: data
                         });
@@ -28120,11 +28516,10 @@ $.noConflict = function() {
                         that._rebuild(review);
                     }, function(xhr){
                         that.activity.hide();
-                        Utils.exec(o.onDataLoadError, [o.source, xhr], element[0]);
-                        element.fire("dataloaderror", {
+                        that._fireEvent("data-load-error", {
                             source: o.source,
                             xhr: xhr
-                        })
+                        });
                     });
                 });
 
@@ -28598,14 +28993,12 @@ $.noConflict = function() {
             });
 
             element.on(Metro.events.scroll, function(){
-                var oldScroll = this.scroll;
+                var oldScroll = that.scroll;
 
-                this.scrollDir = this.scroll < element[0].scrollLeft ? "left" : "right";
-                this.scroll = element[0].scrollLeft;
+                that.scrollDir = that.scroll < element[0].scrollLeft ? "left" : "right";
+                that.scroll = element[0].scrollLeft;
 
-                Utils.exec(o.onTabsScroll, [element[0].scrollLeft, oldScroll, this.scrollDir], element[0]);
-
-                element.fire("tabsscroll", {
+                that._fireEvent("tabs-scroll", {
                     scrollLeft: element[0].scrollLeft,
                     oldScroll: oldScroll,
                     scrollDir: that.scrollDir
@@ -28896,7 +29289,7 @@ $.noConflict = function() {
                 return;
             }
 
-            tabs.removeClass("active");
+            tabs.removeClass("active").removeClass(o.clsTabsListItemActive);
             if (tab.parent().hasClass("d-menu")) {
                 tab.parent().parent().addClass("active");
             } else {
@@ -28916,10 +29309,9 @@ $.noConflict = function() {
 
             tab.addClass(o.clsTabsListItemActive);
 
-            Utils.exec(o.onTab, [tab[0]], element[0]);
-            element.fire("tab", {
+            this._fireEvent("tab", {
                 tab: tab[0]
-            })
+            });
         },
 
         next: function(){
@@ -29123,8 +29515,7 @@ $.noConflict = function() {
                     return ;
                 }
 
-                Utils.exec(o.onTagTrigger, [key], element[0]);
-                element.fire("tagtrigger", {
+                that._fireEvent("tag-trigger", {
                     key: key
                 });
 
@@ -29154,8 +29545,8 @@ $.noConflict = function() {
             container.on(Metro.events.click, ".input-clear-button", function(){
                 var val = element.val();
                 that.clear();
-                Utils.exec(o.onClear, [val], element[0]);
-                element.fire("clear", {
+
+                that._fireEvent("clear", {
                     val: val
                 });
             });
@@ -29225,15 +29616,13 @@ $.noConflict = function() {
             this.values.push(val);
             element.val(this.values.join(o.tagSeparator));
 
-            Utils.exec(o.onTagAdd, [tag[0], val, this.values], element[0]);
-            element.fire("tagadd", {
+            this._fireEvent("tag-add", {
                 tag: tag[0],
                 val: val,
                 values: this.values
             });
 
-            Utils.exec(o.onTag, [tag[0], val, this.values], element[0]);
-            element.fire("tag", {
+            this._fireEvent("tag", {
                 tag: tag[0],
                 val: val,
                 values: this.values
@@ -29251,15 +29640,13 @@ $.noConflict = function() {
             Utils.arrayDelete(this.values, val);
             element.val(this.values.join(o.tagSeparator));
 
-            Utils.exec(o.onTagRemove, [tag[0], val, this.values], element[0]);
-            element.fire("tagremove", {
+            this._fireEvent("tag-remove", {
                 tag: tag[0],
                 val: val,
                 values: this.values
             });
 
-            Utils.exec(o.onTag, [tag[0], val, this.values], element[0]);
-            element.fire("tag", {
+            this._fireEvent("tag", {
                 tag: tag[0],
                 val: val,
                 values: this.values
@@ -29632,11 +30019,12 @@ $.noConflict = function() {
                         chars_counter.html(o.charsCounterTemplate.replace("$1", that.length()));
                     }
                 }
-                Utils.exec(o.onChange, [element.val(), that.length()], element[0]);
-                element.fire("change", {
+
+                that._fireEvent("change", {
                     val: element.val(),
                     length: that.length()
                 });
+
             })
         },
 
@@ -29900,7 +30288,7 @@ $.noConflict = function() {
         },
 
         _createEvents: function(){
-            var element = this.element, o = this.options;
+            var that = this, element = this.element, o = this.options;
 
             element.on(Metro.events.startAll, function(e){
                 var tile = $(this);
@@ -29929,8 +30317,7 @@ $.noConflict = function() {
                         }, 100);
                     }
 
-                    Utils.exec(o.onClick, [side], element[0]);
-                    element.fire("click", {
+                    that._fireEvent("click", {
                         side: side
                     });
                 }
@@ -30276,15 +30663,15 @@ $.noConflict = function() {
 
             element.val([h, m, s].join(":")).trigger("change");
 
-            Utils.exec(o.onSet, [this.value, element.val()], element[0]);
-            element.fire("set", {
+            this._fireEvent("set", {
                 val: this.value,
                 elementVal: element.val()
             });
+
         },
 
         open: function(){
-            var element = this.element, o = this.options;
+            var o = this.options;
             var picker = this.picker;
             var h, m, s;
             var h_list, m_list, s_list;
@@ -30340,18 +30727,18 @@ $.noConflict = function() {
 
             this.isOpen = true;
 
-            Utils.exec(o.onOpen, [this.value], element[0]);
-            element.fire("open", {
+            this._fireEvent("open", {
                 val: this.value
             });
+
         },
 
         close: function(){
-            var picker = this.picker, o = this.options, element = this.element;
+            var picker = this.picker;
             picker.find(".select-wrapper").hide(0);
             this.isOpen = false;
-            Utils.exec(o.onClose, [this.value], element[0]);
-            element.fire("close", {
+
+            this._fireEvent("close", {
                 val: this.value
             });
         },
@@ -31819,7 +32206,7 @@ $.noConflict = function() {
         },
 
         _createEvents: function(){
-            var that = this, element = this.element, o = this.options;
+            var that = this, element = this.element;
 
             element.on(Metro.events.click, ".node-toggle", function(e){
                 var toggle = $(this);
@@ -31835,8 +32222,7 @@ $.noConflict = function() {
 
                 that.current(node);
 
-                Utils.exec(o.onNodeClick, [node[0]], element[0]);
-                element.fire("nodeclick", {
+                that._fireEvent("node-click", {
                     node: node[0]
                 });
 
@@ -31852,10 +32238,9 @@ $.noConflict = function() {
                     that.toggleNode(node);
                 }
 
-                Utils.exec(o.onNodeDblClick, [node[0]], element[0]);
-                element.fire("nodedblclick", {
+                that._fireEvent("node-dbl-click", {
                     node: node[0]
-                });
+                })
 
                 e.preventDefault();
             });
@@ -31867,8 +32252,7 @@ $.noConflict = function() {
 
                 that.current(node);
 
-                Utils.exec(o.onRadioClick, [checked, check[0], node[0]], element[0]);
-                element.fire("radioclick", {
+                that._fireEvent("radio-click", {
                     checked: checked,
                     check: check[0],
                     node: node[0]
@@ -31882,8 +32266,7 @@ $.noConflict = function() {
 
                 that._recheck(check);
 
-                Utils.exec(o.onCheckClick, [checked, check[0], node[0]], element[0]);
-                element.fire("checkclick", {
+                that._fireEvent("check-click", {
                     checked: checked,
                     check: check[0],
                     node: node[0]
@@ -31954,7 +32337,7 @@ $.noConflict = function() {
 
         toggleNode: function(n){
             var node = $(n);
-            var element = this.element, o = this.options;
+            var o = this.options;
             var func;
             var toBeExpanded = !node.data("collapsed");//!node.hasClass("expanded");
 
@@ -31964,22 +32347,24 @@ $.noConflict = function() {
             func = toBeExpanded === true ? "slideUp" : "slideDown";
 
             if (!toBeExpanded) {
-                Utils.exec(o.onExpandNode, [node[0]], element[0]);
-                element.fire("expandnode", {
+
+                this._fireEvent("expand-node", {
                     node: node[0]
                 });
+
             } else {
-                Utils.exec(o.onCollapseNode, [node[0]], element[0]);
-                element.fire("collapsenode", {
+
+                this._fireEvent("collapse-node", {
                     node: node[0]
                 });
+
             }
 
             node.children("ul")[func](o.duration);
         },
 
         addTo: function(node, data){
-            var element = this.element, o = this.options;
+            var element = this.element;
             var target;
             var new_node;
             var toggle;
@@ -32001,8 +32386,7 @@ $.noConflict = function() {
 
             new_node.appendTo(target);
 
-            Utils.exec(o.onNodeInsert, [new_node[0], node ? node[0] : null], element[0]);
-            element.fire("nodeinsert", {
+            this._fireEvent("node-insert", {
                 node: new_node[0],
                 parent: node ? node[0] : null
             });
@@ -32011,7 +32395,6 @@ $.noConflict = function() {
         },
 
         insertBefore: function(node, data){
-            var element = this.element, o = this.options;
             var new_node = this._createNode(data);
 
             if (Utils.isNull(node)) {
@@ -32020,16 +32403,16 @@ $.noConflict = function() {
 
             node = $(node);
             new_node.insertBefore(node);
-            Utils.exec(o.onNodeInsert, [new_node[0], node[0]], element[0]);
-            element.fire("nodeinsert", {
+
+            this._fireEvent("node-insert", {
                 node: new_node[0],
                 parent: node ? node[0] : null
             });
+
             return new_node;
         },
 
         insertAfter: function(node, data){
-            var element = this.element, o = this.options;
             var new_node = this._createNode(data);
 
             if (Utils.isNull(node)) {
@@ -32038,22 +32421,22 @@ $.noConflict = function() {
 
             node = $(node);
             new_node.insertAfter(node);
-            Utils.exec(o.onNodeInsert, [new_node[0], node[0]], element[0]);
-            element.fire("nodeinsert", {
+
+            this._fireEvent("node-insert", {
                 node: new_node[0],
                 parent: node[0]
             });
+
             return new_node;
         },
 
         del: function(node){
-            var element = this.element, o = this.options;
+            var element = this.element;
             node = $(node);
             var parent_list = node.closest("ul");
             var parent_node = parent_list.closest("li");
 
-            Utils.exec(o.onNodeDelete, [node[0]], element[0]);
-            element.fire("nodedelete", {
+            this._fireEvent("node-delete", {
                 node: node[0]
             });
 
@@ -32067,13 +32450,12 @@ $.noConflict = function() {
         },
 
         clean: function(node){
-            var element = this.element, o = this.options;
             node = $(node);
             node.children("ul").remove();
             node.removeClass("expanded");
             node.children(".node-toggle").remove();
-            Utils.exec(o.onNodeClean, [node[0]], element[0]);
-            element.fire("nodeclean", {
+
+            this._fireEvent("node-clean", {
                 node: node[0]
             });
         },
@@ -32497,12 +32879,13 @@ $.noConflict = function() {
             result.val += Utils.exec(o.onBeforeSubmit, [formData], this.elem) === false ? 1 : 0;
 
             if (result.val === 0) {
-                Utils.exec(o.onValidateForm, [formData], form);
-                element.fire("validateform", {
+
+                this._fireEvent("validate-form", {
                     data: formData
                 });
 
                 setTimeout(function(){
+                    // TODO need fix event name to equivalent
                     Utils.exec(o.onSubmit, [formData], form);
                     element.fire("formsubmit", {
                         data: formData
@@ -32510,8 +32893,8 @@ $.noConflict = function() {
                     if (that._onsubmit !==  null) Utils.exec(that._onsubmit, null, form);
                 }, o.submitTimeout);
             } else {
-                Utils.exec(o.onErrorForm, [result.log, formData], form);
-                element.fire("errorform", {
+
+                this._fireEvent("error-form", {
                     log: result.log,
                     data: formData
                 });
@@ -32975,10 +33358,9 @@ $.noConflict = function() {
                         slides.eq(i).remove();
                     }
 
-                    Utils.exec(o.onWalk, [that.current(true)], element[0]);
-                    element.fire('walk', {
+                    that._fireEvent("walk", {
                         slide: that.current(true)
-                    })
+                    });
 
                     that._slideShow();
                 }, 100);
@@ -33005,28 +33387,30 @@ $.noConflict = function() {
         _end: function(){
             this.ended = this.options.autoplay;
             this._timer(false);
-            Utils.exec(this.options.onPlay, [this.current(true)], this.elem);
-            this.element.fire('end', {
+
+            this._fireEvent("end", {
                 slide: this.current(true)
             });
         },
 
         play: function(){
-            if (this.paused) {
-                Utils.exec(this.options.onPlay, [this.current(true)], this.elem);
-                this.element.fire('play', {
-                    slide: this.current(true)
-                });
-                this.paused = false;
-                this.next();
+            if (!this.paused) {
+                return ;
             }
+
+            this._fireEvent("play", {
+                slide: this.current(true)
+            });
+
+            this.paused = false;
+            this.next();
         },
 
         pause: function(){
             this._timer(false);
             this.paused = true;
-            Utils.exec(this.options.onPause, [this.current(true)], this.elem);
-            this.element.fire('pause', {
+
+            this._fireEvent("pause", {
                 slide: this.current(true)
             });
         },
@@ -33056,10 +33440,9 @@ $.noConflict = function() {
 
             this.slide = n - 1;
 
-            Utils.exec(this.options.onJump, [this.current(true)], this.elem);
-            this.element.fire('jump', {
+            this._fireEvent("jump", {
                 slide: this.current(true)
-            });
+            })
 
             this._goto(this.slide);
         },
@@ -33077,8 +33460,7 @@ $.noConflict = function() {
                 this.slide = 0;
             }
 
-            Utils.exec(o.onNext , [this.current(true)], this.elem);
-            this.element.fire('next', {
+            this._fireEvent("next", {
                 slide: this.current(true)
             });
 
@@ -33099,8 +33481,7 @@ $.noConflict = function() {
                 this.slide = this.slides.length - 1;
             }
 
-            Utils.exec(o.onPrev, [this.current(true)], this.elem);
-            this.element.fire('prev', {
+            this._fireEvent("prev", {
                 slide: this.current(true)
             });
 
@@ -33851,7 +34232,7 @@ $.noConflict = function() {
             }
 
             if (o._runtime === true) {
-                Metro.makeRuntime(element, "window");
+                this._runtime(element, "window");
             }
 
             win = this._window(o);
@@ -34004,6 +34385,12 @@ $.noConflict = function() {
                         .attr("tabindex", -1)
                         .html(item.html);
 
+                    if (item.attr && typeof item.attr === 'object') {
+                        $.each(item.attr, function(k, v){
+                            customButton.attr($.dashedName(k), v);
+                        });
+                    }
+
                     customButton.data("action", item.onclick);
 
                     buttons.prepend(customButton);
@@ -34108,36 +34495,62 @@ $.noConflict = function() {
             return overlay;
         },
 
+        width: function(v){
+            var win = this.win;
+
+            if (!Utils.isValue(v)) {
+                return win.width();
+            }
+
+            win.css("width", parseInt(v));
+
+            return this;
+        },
+
+        height: function(v){
+            var win = this.win;
+
+            if (!Utils.isValue(v)) {
+                return win.height();
+            }
+
+            win.css("height", parseInt(v));
+
+            return this;
+        },
+
         maximized: function(e){
-            var win = this.win,  element = this.element, o = this.options;
+            var win = this.win;
             var target = $(e.currentTarget);
             win.removeClass("minimized");
             win.toggleClass("maximized");
             if (target.hasClass("window-caption")) {
-                Utils.exec(o.onCaptionDblClick, [win[0]], element[0]);
-                element.fire("captiondblclick", {
+
+                this._fireEvent("caption-dbl-click", {
                     win: win[0]
                 });
+
             } else {
-                Utils.exec(o.onMaxClick, [win[0]], element[0]);
-                element.fire("maxclick", {
+
+                this._fireEvent("max-click", {
                     win: win[0]
                 });
+
             }
         },
 
         minimized: function(){
-            var win = this.win,  element = this.element, o = this.options;
+            var win = this.win;
             win.removeClass("maximized");
             win.toggleClass("minimized");
-            Utils.exec(o.onMinClick, [win[0]], element[0]);
-            element.fire("minclick", {
+
+            this._fireEvent("min-click", {
                 win: win[0]
             });
         },
 
         close: function(){
-            var that = this, win = this.win,  element = this.element, o = this.options;
+            var that = this, win = this.win,  o = this.options;
 
             if (Utils.exec(o.onCanClose, [win]) === false) {
                 return false;
@@ -34149,8 +34562,7 @@ $.noConflict = function() {
                 timeout = 500;
             }
 
-            Utils.exec(o.onClose, [win[0]], element[0]);
-            element.fire("close", {
+            this._fireEvent("close", {
                 win: win[0]
             });
 
@@ -34158,17 +34570,15 @@ $.noConflict = function() {
                 if (o.modal === true) {
                     win.siblings(".overlay").remove();
                 }
-                Utils.exec(o.onCloseClick, [win[0]], element[0]);
-                element.fire("closeclick", {
-                    win: win[0]
-                });
 
-                Utils.exec(o.onWindowDestroy, [win[0]], element[0]);
-                element.fire("windowdestroy", {
+                that._fireEvent("close-click", {
                     win: win[0]
                 });
 
                 if (o.closeAction === Metro.actions.REMOVE) {
+                    that._fireEvent("window-destroy", {
+                        win: win[0]
+                    });
                     win.remove();
                 } else {
                     that.hide();
@@ -34178,28 +34588,30 @@ $.noConflict = function() {
         },
 
         hide: function(){
-            var element = this.element, o = this.options;
-            this.win.css({
+            var win = this.win;
+
+            win.css({
                 display: "none"
             });
-            Utils.exec(o.onHide, [this.win[0]], element[0]);
-            element.fire("hide", {
-                win: this.win[0]
+
+            this._fireEvent("hide", {
+                win: win[0]
             });
         },
 
         show: function(){
-            var element = this.element, o = this.options;
+            var win = this.win;
 
-            this.win.removeClass("no-visible");
-            this.win.css({
-                display: "flex"
+            win
+                .removeClass("no-visible")
+                .css({
+                    display: "flex"
+                });
+
+            this._fireEvent("show", {
+                win: win[0]
             });
 
-            Utils.exec(o.onShow, [this.win[0]], element[0]);
-            element.fire("show", {
-                win: this.win[0]
-            });
         },
 
         toggle: function(){
@@ -34222,38 +34634,11 @@ $.noConflict = function() {
             a ? this.win.addClass("maximized") : this.win.removeClass("maximized");
         },
 
-        toggleButtons: function(a) {
-            var win = this.win;
-            var btnClose = win.find(".btn-close");
-            var btnMin = win.find(".btn-min");
-            var btnMax = win.find(".btn-max");
-
-            if (a === "data-btn-close") {
-                btnClose.toggle();
-            }
-            if (a === "data-btn-min") {
-                btnMin.toggle();
-            }
-            if (a === "data-btn-max") {
-                btnMax.toggle();
-            }
-        },
-
-        changeSize: function(a){
-            var element = this.element, win = this.win;
-            if (a === "data-width") {
-                win.css("width", element.data("width"));
-            }
-            if (a === "data-height") {
-                win.css("height", element.data("height"));
-            }
-        },
-
         changeClass: function(a){
             var element = this.element, win = this.win, o = this.options;
 
             if (a === "data-cls-window") {
-                win[0].className = "window " + (o.resizable ? " resizeable " : " ") + element.attr("data-cls-window");
+                win[0].className = "window " + (o.resizable ? " resizable " : " ") + element.attr("data-cls-window");
             }
             if (a === "data-cls-caption") {
                 win.find(".window-caption")[0].className = "window-caption " + element.attr("data-cls-caption");
@@ -34309,9 +34694,9 @@ $.noConflict = function() {
             return this.win.find(".window-caption .title").html();
         },
 
-        toggleDraggable: function(){
-            var element = this.element, win = this.win;
-            var flag = JSON.parse(element.attr("data-draggable"));
+        toggleDraggable: function(f){
+            var win = this.win;
+            var flag = Utils.bool(f);
             var drag = Metro.getPlugin(win, "draggable");
             if (flag === true) {
                 drag.on();
@@ -34320,9 +34705,9 @@ $.noConflict = function() {
             }
         },
 
-        toggleResizable: function(){
-            var element = this.element, win = this.win;
-            var flag = JSON.parse(element.attr("data-resizable"));
+        toggleResizable: function(f){
+            var win = this.win;
+            var flag = Utils.bool(f);
             var resize = Metro.getPlugin(win, "resizable");
             if (flag === true) {
                 resize.on();
@@ -34333,49 +34718,97 @@ $.noConflict = function() {
             }
         },
 
-        changeTopLeft: function(a){
-            var element = this.element, win = this.win;
-            var pos;
-            if (a === "data-top") {
-                pos = parseInt(element.attr("data-top"));
-                if (!isNaN(pos)) {
-                    return ;
-                }
-                win.css("top", pos);
-            }
-            if (a === "data-left") {
-                pos = parseInt(element.attr("data-left"));
-                if (!isNaN(pos)) {
-                    return ;
-                }
-                win.css("left", pos);
-            }
-        },
-
         changePlace: function (p) {
             var element = this.element, win = this.win;
             var place = Utils.isValue(p) ? p : element.attr("data-place");
             win.addClass(place);
         },
 
-        changeAttribute: function(attributeName){
-            switch (attributeName) {
+        pos: function(top, left){
+            var win = this.win;
+            win.css({
+                top: top,
+                left: left
+            });
+            return this;
+        },
+
+        top: function(v){
+            this.win.css({
+                top: v
+            });
+            return this;
+        },
+
+        left: function(v){
+            this.win.css({
+                left: v
+            });
+            return this;
+        },
+
+        changeAttribute: function(attr, value){
+            var changePos = function(a, v){
+                var win = this.win;
+                var pos;
+                if (a === "data-top") {
+                    pos = parseInt(v);
+                    if (!isNaN(pos)) {
+                        return ;
+                    }
+                    win.css("top", pos);
+                }
+                if (a === "data-left") {
+                    pos = parseInt(v);
+                    if (!isNaN(pos)) {
+                        return ;
+                    }
+                    win.css("left", pos);
+                }
+            };
+
+            var toggleButtons = function(a, v) {
+                var win = this.win;
+                var btnClose = win.find(".btn-close");
+                var btnMin = win.find(".btn-min");
+                var btnMax = win.find(".btn-max");
+                var _v = Utils.bool(v);
+                var func = _v ? "show" : "hide";
+
+                switch (a) {
+                    case "data-btn-close": btnClose[func](); break;
+                    case "data-btn-min": btnMin[func](); break;
+                    case "data-btn-max": btnMax[func](); break;
+                }
+            };
+
+            var changeSize = function(a, v){
+                var win = this.win;
+                if (a === "data-width") {
+                    win.css("width", +v);
+                }
+                if (a === "data-height") {
+                    win.css("height", +v);
+                }
+            };
+
+            switch (attr) {
                 case "data-btn-close":
                 case "data-btn-min":
-                case "data-btn-max": this.toggleButtons(attributeName); break;
+                case "data-btn-max": toggleButtons(attr, value); break;
                 case "data-width":
-                case "data-height": this.changeSize(attributeName); break;
+                case "data-height": changeSize(attr, value); break;
                 case "data-cls-window":
                 case "data-cls-caption":
-                case "data-cls-content": this.changeClass(attributeName); break;
+                case "data-cls-content": this.changeClass(attr); break;
                 case "data-shadow": this.toggleShadow(); break;
                 case "data-icon": this.setIcon(); break;
                 case "data-title": this.setTitle(); break;
                 case "data-content": this.setContent(); break;
-                case "data-draggable": this.toggleDraggable(); break;
-                case "data-resizable": this.toggleResizable(); break;
+                case "data-draggable": this.toggleDraggable(value); break;
+                case "data-resizable": this.toggleResizable(value); break;
                 case "data-top":
-                case "data-left": this.changeTopLeft(attributeName); break;
+                case "data-left": changePos(attr, value); break;
                 case "data-place": this.changePlace(); break;
             }
         },
@@ -34439,6 +34872,41 @@ $.noConflict = function() {
                 return false;
             }
             Metro.getPlugin(el, "window").close();
+        },
+
+        pos: function(el, top, left){
+            if (!this.isWindow(el)) {
+                return false;
+            }
+            Metro.getPlugin(el, "window").pos(top, left);
+        },
+
+        top: function(el, top){
+            if (!this.isWindow(el)) {
+                return false;
+            }
+            Metro.getPlugin(el, "window").top(top);
+        },
+
+        left: function(el, left){
+            if (!this.isWindow(el)) {
+                return false;
+            }
+            Metro.getPlugin(el, "window").left(left);
+        },
+
+        width: function(el, width){
+            if (!this.isWindow(el)) {
+                return false;
+            }
+            Metro.getPlugin(el, "window").width(width);
+        },
+
+        height: function(el, height){
+            if (!this.isWindow(el)) {
+                return false;
+            }
+            Metro.getPlugin(el, "window").height(height);
         },
 
         create: function(options){
@@ -34563,14 +35031,13 @@ $.noConflict = function() {
         },
 
         _createEvents: function(){
-            var that = this, element = this.element, o = this.options;
+            var that = this, element = this.element;
 
             element.on(Metro.events.click, ".wizard-btn-help", function(){
                 var pages = element.children("section");
                 var page = pages.get(that.current - 1);
 
-                Utils.exec(o.onHelpClick, [that.current, page, element[0]]);
-                element.fire("helpclick", {
+                that._fireEvent("help-click", {
                     index: that.current,
                     page: page
                 });
@@ -34580,8 +35047,8 @@ $.noConflict = function() {
                 that.prev();
                 var pages = element.children("section");
                 var page = pages.get(that.current - 1);
-                Utils.exec(o.onPrevClick, [that.current, page], element[0]);
-                element.fire("prevclick", {
+
+                that._fireEvent("prev-click", {
                     index: that.current,
                     page: page
                 });
@@ -34591,8 +35058,8 @@ $.noConflict = function() {
                 that.next();
                 var pages = element.children("section");
                 var page = pages.get(that.current - 1);
-                Utils.exec(o.onNextClick, [that.current, page], element[0]);
-                element.fire("nextclick", {
+
+                that._fireEvent("next-click", {
                     index: that.current,
                     page: page
                 });
@@ -34601,8 +35068,8 @@ $.noConflict = function() {
             element.on(Metro.events.click, ".wizard-btn-finish", function(){
                 var pages = element.children("section");
                 var page = pages.get(that.current - 1);
-                Utils.exec(o.onFinishClick, [that.current, page], element[0]);
-                element.fire("finishclick", {
+
+                that._fireEvent("finish-click", {
                     index: that.current,
                     page: page
                 });
@@ -34632,8 +35099,8 @@ $.noConflict = function() {
             this.toPage(this.current);
 
             page = $(element.children("section").get(this.current - 1));
-            Utils.exec(o.onNextPage, [this.current, page[0]], element[0]);
-            element.fire("nextpage", {
+
+            this._fireEvent("next-page", {
                 index: that.current,
                 page: page[0]
             });
@@ -34652,37 +35119,36 @@ $.noConflict = function() {
             this.toPage(this.current);
 
             page = $(element.children("section").get(this.current - 1));
-            Utils.exec(o.onPrevPage, [this.current, page[0]], element[0]);
-            element.fire("prevpage", {
+
+            this._fireEvent("prev-page", {
                 index: that.current,
                 page: page[0]
             });
         },
 
         last: function(){
-            var that = this, element = this.element, o = this.options;
+            var that = this, element = this.element;
             var page;
 
             this.toPage(element.children("section").length);
 
             page = $(element.children("section").get(this.current - 1));
-            Utils.exec(o.onLastPage, [this.current, page[0]], element[0]);
-            element.fire("lastpage", {
+
+            this._fireEvent("last-page", {
                 index: that.current,
                 page: page[0]
             });
-
         },
 
         first: function(){
-            var that = this, element = this.element, o = this.options;
+            var that = this, element = this.element;
             var page;
 
             this.toPage(1);
 
             page = $(element.children("section").get(0));
-            Utils.exec(o.onFirstPage, [this.current, page[0]], element[0]);
-            element.fire("firstpage", {
+
+            this._fireEvent("first-page", {
                 index: that.current,
                 page: page[0]
             });
@@ -34728,8 +35194,8 @@ $.noConflict = function() {
             }
 
             if (parseInt(o.finish) > 0 && this.current === parseInt(o.finish)) {
-                Utils.exec(o.onFinishPage, [this.current, target[0]], element[0]);
-                element.fire("finishpage", {
+
+                this._fireEvent("finish-page", {
                     index: this.current,
                     page: target[0]
                 });
@@ -34743,8 +35209,7 @@ $.noConflict = function() {
                 prev.removeClass("disabled");
             }
 
-            Utils.exec(o.onPage, [this.current, target[0]], element[0]);
-            element.fire("page", {
+            this._fireEvent("page", {
                 index: this.current,
                 page: target[0]
             });

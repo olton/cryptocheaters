@@ -374,20 +374,20 @@ $(function(){
         md_target.html(md.render(md_target.html()));
     }
 
-    $.document().on("click", ".report-evidences .evidence .photo-container", function(e){
-        const img = $(this).children("img");
-        const desc = $(this).siblings(".evidence-desc");
-        const title = "<h2>Scammer's photo</h2>" + (desc.length && desc.text().trim() !== '' ? "<hr><div class='evidence-image-desc'>"+desc.html()+"</div>" : "");
-        const content = "<div class='evidence-image-wrapper'><img src='"+img.attr("src")+"'/></div>";
-
-        Metro.dialog.create({
-            title: title,
-            content: content,
-            closeButton: true,
-            clsDialog: "light dialog-view-evidence",
-            removeOnClose: true
-        })
-    });
+    // $.document().on("click", ".report-evidences .evidence .photo-container", function(e){
+    //     const img = $(this).children("img");
+    //     const desc = $(this).siblings(".evidence-desc");
+    //     const title = "<h2>Scammer's photo</h2>" + (desc.length && desc.text().trim() !== '' ? "<hr><div class='evidence-image-desc'>"+desc.html()+"</div>" : "");
+    //     const content = "<div class='evidence-image-wrapper'><img src='"+img.attr("src")+"'/></div>";
+    //
+    //     Metro.dialog.create({
+    //         title: title,
+    //         content: content,
+    //         closeButton: true,
+    //         clsDialog: "light dialog-view-evidence",
+    //         removeOnClose: true
+    //     })
+    // });
 
     $.each(["pagination", "pagination-top", "pagination-bottom"], function(){
         const pagination = $("#"+this);

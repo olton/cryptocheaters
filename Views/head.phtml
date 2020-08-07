@@ -10,6 +10,8 @@
     <meta name="robots" content="index,follow" />
     <meta name="googlebot" content="index,follow" />
 
+    <meta name="metro4:cloak_duration" content="100" />
+
     <?php if (isset($styles)) foreach ($styles as $style) { ?>
         <link rel="stylesheet" href="/<?php echo TEMPLATE_PATH . $style . (PRODUCTION_MODE ? "" : "?rnd=". rand())?>">
     <?php } ?>

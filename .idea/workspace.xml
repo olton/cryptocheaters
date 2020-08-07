@@ -2,30 +2,45 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="989ad5b0-2c15-499e-a052-68c37e147710" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Views/scam-card.phtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/random-evidences.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/routes.php" beforeDir="false" afterPath="$PROJECT_DIR$/Config/routes.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/AuthController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/DefaultController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/DefaultController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/ReportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ReportController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/RequestController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/RequestController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/ReportModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ReportModel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/404.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/404.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/500.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/500.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/add.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/add.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/css/site.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/css/site.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.css.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/css/site.less" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/foot.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/foot.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/footer.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/footer.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/head.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/head.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/header.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/header.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/index.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/index.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/js/site.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/js/site.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-common.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-common.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-common.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-common.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-components.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-components.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-components.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-components.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-icons.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-icons.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-reset.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-reset.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/newest.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/newest.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/report.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/report.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/scams.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/scams.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/terms.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/terms.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/top.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/top.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/update.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/update.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sitemap.php" beforeDir="false" afterPath="$PROJECT_DIR$/sitemap.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +77,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Views" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Imena/dnmarket.com" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -79,6 +94,7 @@
       <recent name="G:\Projects\cryptocheaters.com\Models" />
     </key>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -105,12 +121,15 @@
       <workItem from="1589875021998" duration="3339000" />
       <workItem from="1591475465526" duration="14000" />
       <workItem from="1592289719956" duration="43428000" />
-      <workItem from="1592638109907" duration="2108000" />
+      <workItem from="1592638109907" duration="8380000" />
+      <workItem from="1592820875059" duration="14000" />
+      <workItem from="1592833923664" duration="1034000" />
+      <workItem from="1596801756081" duration="1368000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="3" />
   </component>
   <component name="WindowStateProjectService">
     <state x="860" y="354" key="#CLI_Interpreters" timestamp="1589875128652">
@@ -121,17 +140,18 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="987" y="342" key="#PHP/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1589875146252" />
-    <state x="1060" y="454" key="FileChooserDialogImpl" timestamp="1590135656175">
+    <state x="1060" y="454" key="FileChooserDialogImpl" timestamp="1592820887152">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
+    <state x="1060" y="454" key="FileChooserDialogImpl/0.0.2560.1400/2560.360.1858.1080/-2498.360.2498.1080@0.0.2560.1400" timestamp="1592820887152" />
     <state x="1060" y="454" key="FileChooserDialogImpl/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1590135656175" />
     <state x="781" y="344" key="SettingsEditor" timestamp="1592293971706">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="781" y="344" key="SettingsEditor/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1592293971706" />
-    <state x="929" y="249" width="1158" height="1009" key="find.popup" timestamp="1592639173378">
+    <state x="929" y="249" width="1158" height="1009" key="find.popup" timestamp="1592647078901">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="929" y="249" width="1158" height="1009" key="find.popup/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1592639173378" />
+    <state x="929" y="249" width="1158" height="1009" key="find.popup/2560.360.1920.1040/-2498.360.2498.1080/0.0.2560.1400@0.0.2560.1400" timestamp="1592647078901" />
   </component>
 </project>

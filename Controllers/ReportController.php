@@ -39,7 +39,8 @@ class ReportController extends GeneralController {
             "length" => $this->report_model->Total($filter),
             "order" => $order,
             "scripts" => ["metro/js/metro.min.js", "js/site.js"],
-            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
+            "evidences" => $this->report_model->RandEvidences(10),
         ];
 
         $view = new Viewer(TEMPLATE_PATH);
@@ -53,7 +54,8 @@ class ReportController extends GeneralController {
             "page_title" => "Newest Crypto Scam reports on CryptoScamAlert.com",
             "reports" => $this->report_model->Newest("1=1", 20),
             "scripts" => ["metro/js/metro.min.js", "js/site.js"],
-            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
+            "evidences" => $this->report_model->RandEvidences(10),
         ];
 
         $view = new Viewer(TEMPLATE_PATH);
@@ -77,7 +79,9 @@ class ReportController extends GeneralController {
             "page" => $page,
             "length" => $this->report_model->Total($filter),
             "scripts" => ["metro/js/metro.min.js", "js/site.js"],
-            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
+            "evidences" => $this->report_model->RandEvidences(10),
+
         ];
 
         $view = new Viewer(TEMPLATE_PATH);
@@ -93,12 +97,13 @@ class ReportController extends GeneralController {
         $params = [
             "page_title" => "Report of scam on CryptoScamAlert.com",
             "report" => $report,
-            "evidences" => $this->report_model->Evidences($id),
+            "photos" => $this->report_model->Evidences($id),
             "docs" => $this->report_model->Docs($id),
             "keywords" => $keywords,
             "description" => $description,
             "scripts" => ["markdown-it/markdown-it.js", "metro/js/metro.min.js", "js/site.js"],
-            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
+            "evidences" => $this->report_model->RandEvidences(10),
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("report", $params);
@@ -134,9 +139,9 @@ class ReportController extends GeneralController {
 
         $this->CheckSessionJSON();
 
-        $name = $POST['name'];
+        $name = trim($POST['name']);
         $type = $POST['type'];
-        $desc = $POST['desc'];
+        $desc = trim($POST['desc']);
         $link = $POST['link'];
         $tags = $POST['tags'];
         $user = $_SESSION['current'];
@@ -174,9 +179,9 @@ class ReportController extends GeneralController {
         }
 
         $report_id = $POST['report_id'];
-        $name = $POST['name'];
+        $name = trim($POST['name']);
         $type = $POST['type'];
-        $desc = $POST['desc'];
+        $desc = trim($POST['desc']);
         $link = $POST['link'];
         $tags = $POST['tags'];
         $evidences = $POST['evidence'];

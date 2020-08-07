@@ -1,0 +1,27 @@
+<?php if (isset($evidences) && is_array($evidences) && count($evidences) > 0) {?>
+
+    <div class="container-fluid bg-light">
+        <div class="container pt-10 pb-10">
+            <div class="display1 fg-hero2 mb-0"><span class="fg-dark">Crypto</span><span class="fg-red">ScamAlert</span> Gallery</div>
+            <div class="text-leader2">
+                Random scammers in the CryptoScamAlert database
+            </div>
+
+            <hr class="bg-gray thin mt-2">
+
+            <div data-role="image-grid" data-on-draw-item="imageGridDrawItem" data-cls-image-grid-image="border-radius-10" style="margin: 0 -12px">
+                <?php foreach ($evidences as $index => $evidence) {?>
+                <img data-link="/crypto_scam_report/<?php echo $evidence['evidence_report']?>" src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
+                <?php }?>
+            </div>
+
+            <script>
+                function imageGridDrawItem(item, image){
+                    var a = $(item).wrap( $("<a>").attr("href", $(image).attr("data-link")) )
+                }
+            </script>
+
+        </div>
+    </div>
+
+<?php }?>

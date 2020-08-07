@@ -32,7 +32,7 @@ echo "<url><loc>https://cryptoscamalert.com</loc></url>";
 
 if ($reports) {
     foreach ($reports as $key => $report) {
-        echo "<url><loc>https://cryptoscamalert.com/report/$key</loc></url>";
+        echo "<url><loc>https://cryptoscamalert.com/crypto_scam_report/$key</loc></url>";
     }
 }
 

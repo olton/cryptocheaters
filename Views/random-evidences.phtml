@@ -9,18 +9,11 @@
 
             <hr class="bg-gray thin mt-2">
 
-            <div data-role="image-grid" data-on-draw-item="imageGridDrawItem" data-cls-image-grid-image="border-radius-10" style="margin: 0 -12px">
-                <?php foreach ($evidences as $index => $evidence) {?>
-                <img data-link="/crypto_scam_report/<?php echo $evidence['evidence_report']?>" src="<?php echo $evidence['evidence_image']?>" data-evidence="<?php echo $evidence['evidence_id']?>" data-report="<?php echo $evidence['evidence_report']?>">
-                <?php }?>
+            <div id="image-grid" class="half-size"
+                 data-use-background="true"
+                 data-on-draw-item="imageGridDrawItem"
+                 data-cls-image-grid-item="border bd-white border-2" style="margin: 0 -10px">
             </div>
-
-            <script>
-                function imageGridDrawItem(item, image){
-                    var a = $(item).wrap( $("<a>").attr("href", $(image).attr("data-link")) )
-                }
-            </script>
-
         </div>
     </div>
 

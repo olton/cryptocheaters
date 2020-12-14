@@ -19,12 +19,15 @@ class RequestController extends GeneralController {
 
     public function RequestVerification(){
         $params = [
-            "page_title" => "Verify if your partner is legit or scam!",
+            "page_title" => "Verify if your potential partner is legit or scam! Check any company or individual before investing in crypto!",
             "description" => "Verify if your partner is legit or scam!Check company or individual before investing in crypto!",
             "keywords" => "report crypto scam, crypto scam, crypto cheaters, crypto scammers, ico scam, blogger scam",
             "scripts" => ["metro/js/metro.min.js", "js/site.js"],
-            "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
-
+            "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
+            "meta" => [
+                "description" => "Verify if your partner is legit or scam! Do not become a victim of crypto fraud! Check any company or individual before investing in crypto!",
+                "keywords" => "check crypto fraud, check partner before invest, check crypto scammer,report crypto scam, report crypto fraud,crypto scam, crypto scammers, ico scam, crypto blogger scam, telegram crypto scam, crypto cheaters, crypto ico scam,"
+            ]
         ];
         $view = new Viewer(TEMPLATE_PATH);
         echo $view->Render("request-verification", $params);

@@ -25,7 +25,8 @@ class ReportController extends GeneralController {
 
         $filter = "1=1";
         if (isset($GET['q'])) {
-            $q = $this->report_model->_e('%'.$GET['q'].'%');
+            $q = str_replace(["http://", "https://", "www.", "/"], "", trim($GET['q']));
+            $q = $this->report_model->_e('%'.$q.'%');
             $filter = "report_name like $q or report_tags like $q";
         }
 
@@ -38,7 +39,7 @@ class ReportController extends GeneralController {
             "query" => isset($GET['q']) ? $GET['q'] : "",
             "length" => $this->report_model->Total($filter),
             "order" => $order,
-            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "scripts" => ["metro/js/metro.min.js", "js/site.js", "js/get-images.js"],
             "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
             "evidences" => $this->report_model->RandEvidences(10),
         ];
@@ -53,7 +54,7 @@ class ReportController extends GeneralController {
         $params = [
             "page_title" => "Newest Crypto Scam reports on CryptoScamAlert.com",
             "reports" => $this->report_model->Newest("1=1", 20),
-            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "scripts" => ["metro/js/metro.min.js", "js/site.js", "js/get-images.js"],
             "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
             "evidences" => $this->report_model->RandEvidences(10),
         ];
@@ -78,7 +79,7 @@ class ReportController extends GeneralController {
             "rows" => $this->report_model->page_size,
             "page" => $page,
             "length" => $this->report_model->Total($filter),
-            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "scripts" => ["metro/js/metro.min.js", "js/site.js", "js/get-images.js"],
             "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
             "evidences" => $this->report_model->RandEvidences(10),
 
@@ -101,7 +102,7 @@ class ReportController extends GeneralController {
             "docs" => $this->report_model->Docs($id),
             "keywords" => $keywords,
             "description" => $description,
-            "scripts" => ["markdown-it/markdown-it.js", "metro/js/metro.min.js", "js/site.js"],
+            "scripts" => ["markdown-it/markdown-it.js", "metro/js/metro.min.js", "js/site.js", "js/get-images.js"],
             "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
             "evidences" => $this->report_model->RandEvidences(10),
         ];
@@ -231,5 +232,9 @@ class ReportController extends GeneralController {
         $result = $this->report_model->VoteReport($id, $_SESSION['current']);
 
         $this->ReturnJSON(true, "OK", ['votes'=>$result]);
+    }
+
+    public function GetRandomPhotos(){
+        $this->ReturnJSON("true", "OK", ["photos" => $this->report_model->RandEvidences(20)]);
     }
 }

@@ -19,11 +19,11 @@ class DefaultController extends GeneralController {
         $order = 'votes desc';
         $this->report_model->page_size = 6;
         $params = [
-            "page_title" => "CryptoScamAlert.com - Report Crypto Scam",
+            "page_title" => "Report Crypto Scam. Report crypto fraud and other suspicious activity involving cryptocurrency.",
             "reports" => $this->report_model->Index("1=1", $order, 1),
             "newest" => $this->report_model->Newest(),
             "evidences" => $this->report_model->RandEvidences(10),
-            "scripts" => ["metro/js/metro.min.js", "js/site.js"],
+            "scripts" => ["metro/js/metro.min.js", "js/site.js", "js/get-images.js"],
             "styles" => ["metro/css/metro-all.min.css", "css/site.css"]
 
         ];

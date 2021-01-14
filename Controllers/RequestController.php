@@ -1,6 +1,7 @@
 <?php
 namespace Controllers;
 
+include_once "../Config/conf.php";
 
 use Classes\Controller;
 use Classes\SimpleEmail;
@@ -34,7 +35,7 @@ class RequestController extends GeneralController {
     }
 
     public function RequestVerificationProcess(){
-        global $POST;
+        global $POST, $REQUEST_RECEIVERS;
 
         $name = $POST['name'];
         $email = $POST['email'];
@@ -68,7 +69,7 @@ class RequestController extends GeneralController {
             $this->mailer
                 ->SetCharset()
                 ->From( $email )
-                ->To(array("cryptocheaters@gmail.com", "sergey@pimenov.com.ua"))
+                ->To($REQUEST_RECEIVERS)
                 ->Subject("Verification Request")
                 ->Message($message)
                 ->Send();

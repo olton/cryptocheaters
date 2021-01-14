@@ -2,48 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="989ad5b0-2c15-499e-a052-68c37e147710" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Views/js/get-images.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Config/conf.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/routes.php" beforeDir="false" afterPath="$PROJECT_DIR$/Config/routes.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/DefaultController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/DefaultController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/ReportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ReportController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/RequestController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/RequestController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/css/site.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/css/site.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.css.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/css/site.less" beforeDir="false" afterPath="$PROJECT_DIR$/Views/css/site.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/footer.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/footer.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/head.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/head.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/index.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/index.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/login.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/login.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-all.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-animations.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-colors.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-common.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-common.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-common.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-common.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-components.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-components.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-components.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-components.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-icons.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-icons.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-icons.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro-reset.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro-reset.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/metro.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/metro.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/darcula.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-alert.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-dark.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/red-mirohost.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/css/schemes/sky-net.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/js/metro.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.json" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.svg" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/metro/mif/metro.woff" beforeDir="false" afterPath="$PROJECT_DIR$/Views/metro/mif/metro.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/random-evidences.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/random-evidences.phtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/request-verification.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/request-verification.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/signup.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/signup.phtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +98,11 @@
       <workItem from="1603717991670" duration="9000" />
       <workItem from="1605446437711" duration="682000" />
       <workItem from="1607808024223" duration="35000" />
-      <workItem from="1607963022433" duration="217000" />
+      <workItem from="1607963022433" duration="402000" />
+      <workItem from="1608647778524" duration="1215000" />
+      <workItem from="1609072240807" duration="23000" />
+      <workItem from="1610367333130" duration="32000" />
+      <workItem from="1610636306636" duration="99000" />
     </task>
     <servers />
   </component>

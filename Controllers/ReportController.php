@@ -52,7 +52,7 @@ class ReportController extends GeneralController {
         $this->report_model->page_size = 20;
 
         $params = [
-            "page_title" => "Newest Crypto Scam reports on CryptoScamAlert.com",
+            "page_title" => "Newest cryptocurrency scam reports on CryptoScamAlert.com",
             "reports" => $this->report_model->Newest("1=1", 20),
             "scripts" => ["metro/js/metro.min.js", "js/site.js", "js/get-images.js"],
             "styles" => ["metro/css/metro-all.min.css", "css/site.css"],
@@ -74,7 +74,7 @@ class ReportController extends GeneralController {
         $filter = "votes > 0";
 
         $params = [
-            "page_title" => "Top Crypto scammers reports on CryptoScamAlert.com",
+            "page_title" => "Top cryptocurrency scammers reports on CryptoScamAlert.com",
             "reports" => $this->report_model->Index($filter, $order, $page),
             "rows" => $this->report_model->page_size,
             "page" => $page,
@@ -96,7 +96,7 @@ class ReportController extends GeneralController {
         $description = substr($description, 0, strrpos($description, ".")+1);
 
         $params = [
-            "page_title" => "Report of scam on CryptoScamAlert.com",
+            "page_title" => "Report cryptocurrency scam to CryptoScamAlert.com",
             "report" => $report,
             "photos" => $this->report_model->Evidences($id),
             "docs" => $this->report_model->Docs($id),
@@ -112,7 +112,7 @@ class ReportController extends GeneralController {
 
     public function Add(){
         $params = [
-            "page_title" => "Report new Crypto scam to CryptoScamAlert.com",
+            "page_title" => "Report new cryptocurrency scam to CryptoScamAlert.com",
             "report_types" => $this->report_model->Types(),
             "scripts" => ["js/jquery-3.5.1.min.js", "editor.md/editormd.min.js", "editor.md/languages/en.js", "metro/js/metro.min.js", "js/site.js"],
             "styles" => ["metro/css/metro-all.min.css", "editor.md/css/editormd.min.css", "css/site.css"]
@@ -123,7 +123,7 @@ class ReportController extends GeneralController {
 
     public function Update($id){
         $params = [
-            "page_title" => "Report Crypto scam to CryptoScamAlert.com",
+            "page_title" => "Report cryptocurrency scam to CryptoScamAlert.com",
             "report_types" => $this->report_model->Types(),
             "report" => $this->report_model->Report($id),
             "evidences" => $this->report_model->Evidences($id),
